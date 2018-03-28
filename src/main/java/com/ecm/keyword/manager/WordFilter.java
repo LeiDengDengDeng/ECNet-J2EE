@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WordFilter {
 
@@ -38,6 +40,29 @@ public class WordFilter {
                 continue;
             }
             if(!stopWords.contains(str)){
+                resultList.add(str);
+            }
+        }
+
+        return resultList;
+    }
+
+
+    public List<String> filterDateFromWhat(List<String> list){
+        List<String> resultList = new ArrayList<String>();
+
+        for(String str : list){
+            Pattern pattern = Pattern.compile(
+                    "\\d+年\\d+月\\d+日\\d+时\\d+分|"
+                            + "\\d+年\\d+月\\d+日\\d+时|"
+                            + "\\d+年\\d+月\\d+日|"
+                            + "\\d+年\\d+月|"
+                            + "\\d+月\\d+日|"
+                            +"\\d+日|"
+                            + "\\d+时\\d+分|"
+                            + "\\d+时");
+            Matcher matcher = pattern.matcher(str);
+            if (!matcher.find()){
                 resultList.add(str);
             }
         }
