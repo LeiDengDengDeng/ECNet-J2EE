@@ -280,66 +280,53 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">推荐法条</h4>
             </div>
-            <div class="modal-body" style="max-height:300px; overflow: scroll;">
-                <!--<div class="alert alert-danger" role="alert"></div>-->
+            <div class="modal-body">
                 <div class="form-group">
-                    <!--<label for="laws">法条</label>-->
+                    <label for="node-edit-id-input">ID</label>
+                    <input type="text" class="form-control" id="node-law-id" disabled/>
+                </div>
+                <div class="form-group">
+                    <label for="node-edit-topic-input">摘要</label>
+                    <input type="text" class="form-control" id="node-law-topic" disabled>
+                </div>
+            </div>
+            <hr style="margin: 0px;"/>
+            <div class="modal-body" style="max-height:400px; overflow: scroll;">
+                <div class="form-group">
                     <div id="laws">
-                        <div class="form-group">
-                            <input type="checkbox" id="law-checkbox-1"/>
-                            <a title="犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。">中华人民共和国刑法_第六十七条</a>
-                            <!--<span title="111111">中华人民共和国刑法_第六十七条</span>-->
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox" id="law-checkbox-2"/>
-                            <span>最高人民法院、最高人民检察院关于办理利用互联网、移动通讯终端、声讯台制作、复制、出版、贩卖传播淫秽电子信息刑事案件具体应用法律若干问题的解释_第三条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox" id="law-checkbox-3"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院、最高人民检察院关于办理利用互联网、移动通讯终端、声讯台制作、复制、出版、贩卖传播淫秽电子信息刑事案件具体应用法律若干问题的解释_第三条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院关于审理人身损害赔偿案件适用法律若干问题的解释_第九条</span>
-                        </div>
-                        <div class="form-group">
-                            <input type="checkbox"/>
-                            <span>最高人民法院、最高人民检察院关于办理利用互联网、移动通讯终端、声讯台制作、复制、出版、贩卖传播淫秽电子信息刑事案件具体应用法律若干问题的解释_第三条</span>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<input type="checkbox" id="law-checkbox-1"/>-->
+                            <!--<a title="犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。">中华人民共和国刑法_第六十七条</a>-->
+                        <!--</div>-->
                     </div>
-                    <!--<input type="text" class="form-control" id="node-edit-id-input" value="" disabled/>-->
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="law-recommend-btn">引用</button>
+                <button type="button" class="btn btn-success" id="law-recommend-btn" onclick="lawAdviceEvent()">引用</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--批量法条推荐modal-->
+<div class="modal fade" id="mul-law-recommend-modal" tabindex="-1" role="dialog" aria-labelledby="node-edit-modal-title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">推荐法条</h4>
+            </div>
+            <hr style="margin: 0px;"/>
+            <div class="modal-body" style="max-height:500px; overflow: scroll;">
+                <div class="form-group">
+                    <div id="mul-laws">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="mul-law-recommend-btn" onclick="mulLawAdviceEvent()">引用</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
             </div>
         </div>
@@ -361,6 +348,7 @@
 
     <hr id="hr2" style="margin-top: 7px;margin-bottom: 7px;"/>
     <li id="advice-element-li"><a>推荐法条</a></li>
+    <li id="mul-advice-element-li"><a>批量推荐法条</a></li>
 </ul>
 
 </body>

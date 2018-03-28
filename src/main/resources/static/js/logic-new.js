@@ -63,6 +63,7 @@ $(document).ready(function () {
             $("#mod-element-li").hide();
             $("#hr2").hide();
             $("#advice-element-li").hide();
+            $("#mul-advice-element-li").hide();
 
             mouseX = event.pageX;
             mouseY = event.pageY;
@@ -212,7 +213,7 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
     // 根据内容长度决定node宽度
     node.setSize(topicLength, 24);
     // 设置树的方向
-    node.layout = {type: 'tree', direction: 'left', width: 70, height: 120};
+    node.layout = {type: 'tree', direction: 'left', width: 70, height: 250};
 
     node.addEventListener('mouseup', function (event) {
         nodeClickEvent(node.id, event);
@@ -264,6 +265,8 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
         }
         drawLink(parentNode, node);
     }
+
+    return node.id;
 }
 
 function drawLink(parentNode, node) {
@@ -293,7 +296,14 @@ function bindMenuClickEvent() {
 
     $('#advice-element-li').click(function (event) {
         $('#stageMenu').hide();
+        prepareLawModal(getId());
         $("#law-recommend-modal").modal('show');
+    });
+
+    $('#mul-advice-element-li').click(function (event) {
+        $('#stageMenu').hide();
+        prepareMulLawModal()
+        $("#mul-law-recommend-modal").modal('show');
     });
 
     function getId() {
@@ -416,7 +426,7 @@ function editBtnEvent() {
 
 function prepareDelModal(id) {
     var node = findNodeById(id);
-    var parentTopic = node && node.parentId != "null" ? findNodeById(node.parentId).topic : "";
+    var parentTopic = node && node.parentId != "null" && node.parentId != null ? findNodeById(node.parentId).topic : "";
     $("#node-del-modal .del-id-td").text(node.id);
     $("#node-del-modal .del-topic-td").text(node.topic);
     $("#node-del-modal .del-type-td").text(borderTypes[node.type]);
@@ -456,8 +466,10 @@ function delNode(id) {
         for (var i = 0; i < tree.length; i++) {
             var nodeZ = tree[i];
             if (nodeZ.id != node.id) {
+                // 删除所有与目标节点之间的连线
                 editLink(node.id, nodeZ.id, null, null);
-                if (parentNode.id != nodeZ.id) {
+                if (parentNode.id != nodeZ.id && findLinkByNodeId(parentNode.id, nodeZ.id) == null) {
+                    // 子节点与目标节点的父节点连线
                     drawLink(parentNode.node, nodeZ.node);
                 }
             }
@@ -517,6 +529,91 @@ function multipleDelNodesEvent() {
     $('#stageMenu').hide();
 }
 
+function prepareLawModal(id) {
+    var node = findNodeById(id);
+    $("#node-law-id").val(id);
+    $("#node-law-topic").val(node.topic);
+
+    var lawsDiv = $("#laws");
+    lawsDiv.empty();
+    // TODO:获得根据事实推荐的法条
+    var laws = [{
+        "name": "中华人民共和国刑法_第六十七条",
+        "content": "犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。"
+    }];
+
+    prepareLawsDiv(lawsDiv, laws);
+}
+
+function prepareMulLawModal() {
+    var lawsDiv = $("#mul-laws");
+    lawsDiv.empty();
+    // TODO:获得根据多个事实推荐的法条
+    var laws = [{
+        "name": "中华人民共和国刑法_第六十七条",
+        "content": "犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。"
+    }];
+
+    prepareLawsDiv(lawsDiv, laws);
+}
+
+function prepareLawsDiv(lawsDiv, laws) {
+    for (var i = 0, len = laws.length; i < len; i++) {
+        var div = document.createElement("div");
+        div.setAttribute("class", "form-group");
+        var checkbox = document.createElement("input");
+        checkbox.setAttribute("style", "margin-right:5px;");
+        checkbox.setAttribute("type", "checkbox");
+        checkbox.setAttribute("id", "checkbox-" + i);
+        var a = document.createElement("a");
+        a.setAttribute("id", "law-" + i);
+        a.setAttribute("title", laws[i].content);
+        a.text = laws[i].name;
+
+        div.append(checkbox);
+        div.append(a);
+        lawsDiv.append(div);
+    }
+}
+
+function lawAdviceEvent() {
+    var factNodeId = $("#node-law-id").val();
+    var factNode = findNodeById(factNodeId);
+    var parentId = factNode.parentId;
+    if (parentId == null || parentId == "null") {
+        parentId = drawNode(factNode.node.x + 80, factNode.node.y, null, "结论", 3, "系统自动生成的结论", null);
+
+        // 将事实节点与结论节点连接起来
+        moveNode(factNodeId, parentId);
+        factNode.parentId = parentId;
+        editLink(factNodeId, null, factNodeId, parentId);
+    }
+
+    var checkboxes = $("#laws input[type=checkbox]:checked");
+    for (var i = 0, len = checkboxes.length; i < len; i++) {
+        var id = checkboxes[i].id.substring(checkboxes[i].id.indexOf("-") + 1);
+
+        var lawA = $("#law-" + id);
+        var topic = lawA.text();
+        var detail = lawA.attr("title");
+        if (topic.length > 15) {
+            topic = "法条";
+            detail = lawA.text() + "\n" + lawA.attr("title");
+        }
+
+        // 不重复时添加节点
+        if (!isLawRepeated(parentId, topic, detail)) {
+            drawNode(factNode.node.x, factNode.node.y + 50, null, topic, 2, detail, parentId);
+        }
+    }
+
+    $("#law-recommend-modal").modal("hide");
+}
+
+function mulLawAdviceEvent() {
+    $("#mul-law-recommend-modal").modal("hide");
+}
+
 // 生成"指向"下拉框内容
 function prepareSelect($select, id, self) {
     $select.empty();
@@ -554,10 +651,31 @@ function nodeClickEvent(id, event) {
         var selectedNodes = getSelectedNodes();
         if (selectedNodes.length > 1) {
             // 多选nodes
+            var isFact = true;
+            for (var i = 0; i < selectedNodes.length; i++) {
+                if (borderColors.indexOf(selectedNodes[i].borderColor) != 1) {
+                    isFact = false;
+                    break;
+                }
+            }
+
             $("#add-element-li").hide();
+            $("#element-id").hide();
+            $("#element-name").hide();
+            $("#hr").hide();
+            $("#del-element-li").hide();
+            $("#mod-element-li").hide();
+            $("#hr2").hide();
+            $("#advice-element-li").hide();
             $("#mul-del-element-li").show();
+            if (isFact) {
+                // 多选事实nodes
+                $("#mul-advice-element-li").show();
+            }
         } else {
             // 单选node
+            $("#mul-advice-element-li").hide();
+            $("#mul-del-element-li").hide();
             $("#element-id").show();
             $("#element-name").show();
             $("#hr").show();
@@ -639,9 +757,6 @@ function editLink(oldNodeId, oldParentNodeId, newNodeId, newParentNodeId) {
     }
 
     if ((newNodeId != null && newNodeId != "null") && (newParentNodeId != null && newParentNodeId != "null")) {
-        // var newLink = new JTopo.Link(findNodeById(newParentNodeId).node, findNodeById(newNodeId).node);
-        // scene.add(newLink);
-        // links.push(newLink);
         drawLink(findNodeById(newParentNodeId).node, findNodeById(newNodeId).node);
     }
 }
@@ -711,7 +826,7 @@ function findLinkByNodeId(nodeAId, nodeZId) {
 }
 
 /**
- * 根据node的id获得node信息
+ * 根据node的id获得自定义node信息
  * @param id node的id
  * @returns {*}
  */
@@ -767,7 +882,7 @@ function getDirectChildren(parentId) {
 }
 
 /**
- * 获得scene中所有选中的节点
+ * 获得scene中所有选中的JTopo的node
  * @returns {*}
  */
 function getSelectedNodes() {
@@ -896,4 +1011,15 @@ function repeal() {
     if (historyForests.length == 0) {
         $("#revoke-btn").addClass("disabled");
     }
+}
+
+function isLawRepeated(parentId, lawTopic, lawDetail) {
+    var parentNodeChildren = getDirectChildren(parentId);
+    for (var i = 0; i < parentNodeChildren.length; i++) {
+        var childNode = findNodeById(parentNodeChildren[i]);
+        if (childNode.type == 2 && childNode.topic == lawTopic && childNode.detail == lawDetail) {
+            return true;
+        }
+    }
+    return false;
 }
