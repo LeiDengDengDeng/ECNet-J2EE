@@ -40,4 +40,6 @@ public interface ModelManageService {
 
     public void deleteArrowsByCid(int cid);
 
+    public void writeToExcel(int cid,String filePath);
+
 }

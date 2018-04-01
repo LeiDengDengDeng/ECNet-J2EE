@@ -187,7 +187,9 @@
                             <a id="save-btn" class="btn btn-primary btn-sm">保存</a>
                             <a id="revoke-btn" class="btn btn-warning btn-sm">撤销</a>
                             <a id="saveImg-btn" class="btn btn-info btn-sm">导出PNG</a>
-                            <a id="saveExcel-btn" class="btn btn-success btn-sm">导出Excel</a>
+                            <a id="saveExcel-btn" class="btn btn-success btn-sm"
+                            title="此操作会先保存">导出Excel</a>
+                            <a id="saveXML-btn" class="btn btn-warning btn-sm">导出XML</a>
                             <!--<a id="print-btn" class="btn btn-info btn-sm">打印此图</a>-->
                             <a id="layout-btn" class="btn btn-default btn-sm">自动排版</a>
                         </section>
@@ -277,7 +279,10 @@
 
                                             <div class="form-group">
                                                 <label for="body-evidenceReason">质证理由</label>
-                                                <input class="form-control" id="body-evidenceReason"/>
+                                                <select class="form-control" id="body-evidenceReason">
+                                                    <option value ="0">不采信</option>
+                                                    <option value ="1">采信</option>
+                                                </select>
                                             </div>
 
                                             <div class="form-group">
@@ -320,10 +325,10 @@
                                                 <input class="form-control" id="head-name"/>
                                             </div>
 
-                                            <!--<div class="form-group">-->
-                                            <!--<label for="head-keySentence">关键文本</label>-->
-                                            <!--<input class="form-control" id="head-keySentence"/>-->
-                                            <!--</div>-->
+                                            <div class="form-group">
+                                                <label for="head-keySentence">关键文本</label>
+                                                <input class="form-control" id="head-keySentence"/>
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="head-content">链头内容</label>

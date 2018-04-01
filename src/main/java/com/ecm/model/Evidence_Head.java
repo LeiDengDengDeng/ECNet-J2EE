@@ -19,6 +19,7 @@ public class Evidence_Head {
     @Column(name = "head")
     private String head;
     private String name;
+    private String keyText;
     private int x = -1;
     private int y = -1;
 
@@ -70,6 +71,14 @@ public class Evidence_Head {
         this.name = name;
     }
 
+    public String getKeyText() {
+        return keyText;
+    }
+
+    public void setKeyText(String keyText) {
+        this.keyText = keyText;
+    }
+
     public int getX() {
         return x;
     }
@@ -85,6 +94,4 @@ public class Evidence_Head {
     public void setY(int y) {
         this.y = y;
     }
-
-
 }
