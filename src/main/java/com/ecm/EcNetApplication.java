@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +24,21 @@ public class EcNetApplication extends SpringBootServletInitializer implements Em
 	public void customize(ConfigurableEmbeddedServletContainer container) {
 		container.setPort(8099);
 	}
+
 	public static void main(String[] args) {
-
-
-
 		SpringApplication.run(EcNetApplication.class, args);
 	}
+
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurerAdapter() {
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**/*")
+//						.allowedOrigins("*")
+//						.allowedMethods("GET", "POST", "HEAD", "PUT", "DELETE");
+//			}
+//		};
+//	}
 
 }
