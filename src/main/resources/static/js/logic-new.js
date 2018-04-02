@@ -64,6 +64,7 @@ $(document).ready(function () {
             $("#hr2").hide();
             $("#advice-element-li").hide();
             $("#mul-advice-element-li").hide();
+            $("#add-element-li").show();
 
             mouseX = event.pageX;
             mouseY = event.pageY;
@@ -1013,7 +1014,16 @@ function repeal() {
     }
 }
 
+/**
+ * 判断父节点下要添加的法条是否重复
+ * @param parentId
+ * @param lawTopic
+ * @param lawDetail
+ * @returns {boolean}
+ */
 function isLawRepeated(parentId, lawTopic, lawDetail) {
+    if (parentId == null || parent == "null") return false;
+
     var parentNodeChildren = getDirectChildren(parentId);
     for (var i = 0; i < parentNodeChildren.length; i++) {
         var childNode = findNodeById(parentNodeChildren[i]);

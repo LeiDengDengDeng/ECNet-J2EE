@@ -27,6 +27,8 @@ public class Evidence_Body {
     private int y = -1;//链体y坐标
     private int isDefendant;//0-原告证据   1-被告证据
 
+    private int logicNodeID; // 关联LogicNode中的id
+
     @Transient
     private List<Evidence_Head> headList=new ArrayList<>();//持有的head
 
@@ -172,5 +174,13 @@ public class Evidence_Body {
 
     public void addHead(Evidence_Head head) {
         headList.add(head);
+    }
+
+    public int getLogicNodeID() {
+        return logicNodeID;
+    }
+
+    public void setLogicNodeID(int logicNodeID) {
+        this.logicNodeID = logicNodeID;
     }
 }
