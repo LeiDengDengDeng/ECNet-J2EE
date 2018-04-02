@@ -20,7 +20,7 @@ function initEvidences() {
         async: false,
         success: function (data) {
             // alert(data['trusts'][1]['body']['body']);
-            initGraph(data['trusts'],data['freeHeaders'],data['joints'],data['arrows']);
+            initGraph(data['trusts'],data['freeHeaders'],data['joints'],data['arrows'],data['facts']);
             initRejection(data['untrusts']);
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {

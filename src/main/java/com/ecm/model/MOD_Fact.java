@@ -6,9 +6,9 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="MOD_JOINT")
+@Table(name="MOD_FACT")
 @IdClass(MODPK.class)
-public class MOD_Joint {
+public class MOD_Fact {
 
     @Id
     private int id;
@@ -18,8 +18,9 @@ public class MOD_Joint {
     private String content;
     private int x;
     private int y;
-    private int factID = -1;
     private String type;
+
+    private int logicNodeID; // 关联LogicNode中的id
 
     public int getId() {
         return id;
@@ -77,11 +78,11 @@ public class MOD_Joint {
         this.type = type;
     }
 
-    public int getFactID() {
-        return factID;
+    public int getLogicNodeID() {
+        return logicNodeID;
     }
 
-    public void setFactID(int factID) {
-        this.factID = factID;
+    public void setLogicNodeID(int logicNodeID) {
+        this.logicNodeID = logicNodeID;
     }
 }

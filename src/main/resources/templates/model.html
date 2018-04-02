@@ -148,7 +148,7 @@
 
                             <div class = 'btn-group' >
                                 <div id="add-header-btn" class="btn-primary btn-sm btn"
-                                     title="证据链头是两个相互印证的证据链节中一证据被他证据相印证的部分。   拖拽此按钮或者使用快捷键 h">
+                                     title="证据链头是两个相互印证的证据链节中一证据被他证据相印证的部分。   拖拽此按钮">
                                     <i class="fa fa-circle-o" aria-hidden="true"></i> 链头
                                 </div>
                                 <button id="add-header-btn-toggle" class="btn-default btn-sm btn toggle" data-toggle="toggle" title="按下快速绘图按钮，可连续绘制">
@@ -158,7 +158,7 @@
 
                             <div class = 'btn-group'>
                                 <div id="add-joint-btn" class="btn-primary btn-sm btn"
-                                     title="所谓证据联结点, 简而言之, 就是案件中作为证据链节表现形式的证据与证据之间相互印证的地方。  拖拽此按钮或者使用快捷键 j">
+                                     title="所谓证据联结点, 简而言之, 就是案件中作为证据链节表现形式的证据与证据之间相互印证的地方。  拖拽此按钮">
                                     <i class="fa fa-chain" aria-hidden="true"></i> 联结点
                                 </div>
                                 <button id="add-joint-btn-toggle" class="btn-default btn-sm btn toggle" data-toggle="toggle" title="按下快速绘图按钮，可连续绘制">
@@ -167,18 +167,29 @@
                             </div>
 
                             <div class = 'btn-group'>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="boxSelection">支持框选
-                                    </label>
+                                <div id="add-fact-btn" class="btn-primary btn-sm btn"
+                                     title="拖拽此按钮">
+                                    <i class="fa fa-square-o" aria-hidden="true"></i> 事实
+                                </div>
+                                <button id="add-fact-btn-toggle" class="btn-default btn-sm btn toggle" data-toggle="toggle" title="按下快速绘图按钮，可连续绘制">
+                                    <i class="fa fa-bolt" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <div class = 'btn-group' style="margin-left: 2%;">
+                                <input class="mui-switch" type="checkbox" id="boxSelection">
+                                <label style="vertical-align:bottom;font-size: 16px;">支持框选</label>
                             </div>
                         </section>
 
                         <!--绘图相关操作面板-->
                         <section class="graph-tools-wrapper col-md-6" style="margin-top: 0;">
-                            <a id="save-btn" class="btn btn-success btn-sm">保存</a>
+                            <a id="save-btn" class="btn btn-primary btn-sm">保存</a>
                             <a id="revoke-btn" class="btn btn-warning btn-sm">撤销</a>
                             <a id="saveImg-btn" class="btn btn-info btn-sm">导出PNG</a>
+                            <a id="saveExcel-btn" class="btn btn-success btn-sm"
+                            title="此操作会先保存">导出Excel</a>
+                            <a id="saveXML-btn" class="btn btn-warning btn-sm">导出XML</a>
                             <!--<a id="print-btn" class="btn btn-info btn-sm">打印此图</a>-->
                             <a id="layout-btn" class="btn btn-default btn-sm">自动排版</a>
                         </section>
@@ -197,6 +208,7 @@
                                     <li id="add-header-li"><a>链头</a></li>
                                     <li id="add-body-li"><a>链体</a></li>
                                     <li id="add-joint-li"><a>连接点</a></li>
+                                    <li id="add-fact-li"><a>事实</a></li>
                                 </ul>
                             </li>
                             <li id="paste-element-li"><a>粘贴图元</a></li>
@@ -267,7 +279,10 @@
 
                                             <div class="form-group">
                                                 <label for="body-evidenceReason">质证理由</label>
-                                                <input class="form-control" id="body-evidenceReason"/>
+                                                <select class="form-control" id="body-evidenceReason">
+                                                    <option value ="0">不采信</option>
+                                                    <option value ="1">采信</option>
+                                                </select>
                                             </div>
 
                                             <div class="form-group">
@@ -310,10 +325,10 @@
                                                 <input class="form-control" id="head-name"/>
                                             </div>
 
-                                            <!--<div class="form-group">-->
-                                            <!--<label for="head-keySentence">关键文本</label>-->
-                                            <!--<input class="form-control" id="head-keySentence"/>-->
-                                            <!--</div>-->
+                                            <div class="form-group">
+                                                <label for="head-keySentence">关键文本</label>
+                                                <input class="form-control" id="head-keySentence"/>
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="head-content">链头内容</label>
@@ -396,6 +411,44 @@
                                             <button id="joint-save-btn" class="btn btn-success btn-sm">保存</button>
                                             <button id="joint-reset-btn" class="btn btn-warning btn-sm">重置</button>
                                             <button id="joint-del-btn" class="btn btn-danger btn-sm">删除图元</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="fact-panel" data-jid="" hidden>
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion"
+                                           href="#collapseJoint">
+                                            事实
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseFact" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <form id="factForm">
+                                            <div class="form-group">
+                                                <label for="fact-name">事实名称</label>
+                                                <input class="form-control" id="fact-name"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="fact-type">事实类型</label>
+                                                <input class="form-control" id="fact-type"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="fact-content">事实内容</label>
+                                                <input class="form-control" id="fact-content"/>
+                                            </div>
+                                        </form>
+
+                                        <div class="pull-right">
+                                            <button id="fact-save-btn" class="btn btn-success btn-sm">保存</button>
+                                            <button id="fact-reset-btn" class="btn btn-warning btn-sm">重置</button>
+                                            <button id="fact-del-btn" class="btn btn-danger btn-sm">删除图元</button>
                                         </div>
 
                                     </div>

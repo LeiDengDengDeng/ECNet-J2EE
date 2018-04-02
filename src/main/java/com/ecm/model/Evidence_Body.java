@@ -22,10 +22,13 @@ public class Evidence_Body {
     private String name;//链体名称
     private String committer;
     private String reason;
-    private String conclusion;
     private int x = -1;//链体x坐标
     private int y = -1;//链体y坐标
     private int isDefendant;//0-原告证据   1-被告证据
+    @Column(name = "trust")
+    private int trust=1;//0-不采信 1-采信
+
+    private int logicNodeID; // 关联LogicNode中的id
 
     @Transient
     private List<Evidence_Head> headList=new ArrayList<>();//持有的head
@@ -37,9 +40,6 @@ public class Evidence_Body {
     public void setHeadList(List<Evidence_Head> headList) {
         this.headList = headList;
     }
-
-    @Column(name = "trust")
-    private int trust=1;//0-不采信 1-采信
 
     public int getId() {
         return id;
@@ -87,6 +87,14 @@ public class Evidence_Body {
 
     public void setTrust(int trust) {
         this.trust = trust;
+    }
+
+    public String getTrustToString(){
+        if(trust==1){
+            return "采信";
+        }else
+            return "不采信";
+
     }
 
     public String getTypeToString(){
@@ -138,14 +146,6 @@ public class Evidence_Body {
         this.reason = reason;
     }
 
-    public String getConclusion() {
-        return conclusion;
-    }
-
-    public void setConclusion(String conclusion) {
-        this.conclusion = conclusion;
-    }
-
     public int getX() {
         return x;
     }
@@ -172,5 +172,13 @@ public class Evidence_Body {
 
     public void addHead(Evidence_Head head) {
         headList.add(head);
+    }
+
+    public int getLogicNodeID() {
+        return logicNodeID;
+    }
+
+    public void setLogicNodeID(int logicNodeID) {
+        this.logicNodeID = logicNodeID;
     }
 }

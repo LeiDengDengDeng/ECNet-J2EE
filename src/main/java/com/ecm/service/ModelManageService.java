@@ -30,10 +30,16 @@ public interface ModelManageService {
 
     public void deleteJointById(int id);
 
+    public void saveFacts(List<MOD_Fact> facts);
+
+    public void deleteFactById(int id);
+
     public void deleteJointsByCid(int cid);
 
     public void saveArrows(List<MOD_Arrow> arrows);
 
     public void deleteArrowsByCid(int cid);
+
+    public void writeToExcel(int cid,String filePath);
 
 }

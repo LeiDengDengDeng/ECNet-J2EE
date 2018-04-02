@@ -3,9 +3,11 @@ var headerIndex = 0;//当前链头id
 var headerList = {};//存储链头，{id:node}
 var bodyIndex = 0;//当前链体id
 var bodyList = {};//存储链体，{id:{'node':node,'type':'XXX','committer':'XXX','reason':'XXXXXX',
-// 'conclusion':'XXXXXX','documentID':-1,'isDefendant':1,'trust':1}}
+// 'conclusion':'1/0','documentID':-1,'isDefendant':1}}
 var jointIndex = 0;//当前连接点（事实）id
 var jointList = {};//存储连接点（事实），{id:{'node':node,'type':'XXX'}}
+var factIndex = 0;//当前事实节点id
+var factList = {};//存储事实节点，{id:{'node':node,'type':'XXX'}}
 var arrowIndex = 0;//当前箭头id
 var arrowList = {};//存储箭头，{id:node}
 var linkIndex = 0;//当前连线id
@@ -15,6 +17,7 @@ var operationList = [];//存储每一步操作，[{'type':'add/copy','nodes':[]}
 var header_delete = [];//删除的链头id
 var body_delete = [];//删除的链体id
 var joint_delete = [];//删除的连接点id
+var fact_delete = [];//删除的事实节点id
 
 var isNodeClicked_right = false;//节点（链头、链体、连接点、连线、箭头）右键点击
 var isNodeClicked_left = false;//节点（链头、链体、连接点、连线、箭头）左键点击
@@ -26,15 +29,19 @@ var header_radius = 20;//链头节点半径
 var body_width = 80;//链体节点长
 var body_height = 30;//链体节点宽
 var joint_width = 30;//连接点边长
+var fact_borderRadius = 6;//事实节点borderRadius
 var header_color = 'rgba(127,185,136,0.8)';//链头边框颜色
 var header_color_num = '127,185,136';
 var body_color = 'rgba(97,158,255,0.8)';//链体边框颜色
 var body_color_num = '97,158,255';
 var joint_color = 'rgba(101,43,105,0.8)';//连接点边框颜色
 var joint_color_num = '101,43,105';
+var fact_color = 'rgba(253, 185, 51,0.8)';//连接点边框颜色
+var fact_color_num = '253, 185, 51';
 var continuous_header = false;//是否连续绘制链头
 var continuous_body = false;//是否连续绘制链体
 var continuous_joint = false;//是否连续绘制连接点
+var continuous_fact = false;//是否连续绘制事实
 var isCopied = false;//是否点击复制图元
 var nodeList_copied = [];//已选中复制的节点
 var x_origin,y_origin = 0;//拖拽节点的初始位置
@@ -43,6 +50,7 @@ var tranX_scene,tranY_scene = 0;//拖拽场景的初始位置
 var sourceNode;//拖拽节点（当选中多个节点进行拖拽时，鼠标拖拽的节点即参照节点）
 var mouseX,mouseY;//鼠标位置
 var hasDragged = false;//是否已拖拽图标（为了处理点击效果）
+var typeStr = ["证人证言","被告人供述和辩解","书证","鉴定结论","勘验","检查笔录","其他"];
 
 $(document).ready(function(){
 
@@ -62,11 +70,12 @@ $(document).ready(function(){
         continuous_header = false;
         continuous_body = false;
         continuous_joint = false;
+        continuous_fact = false;
 
         $('#add-header-btn-toggle').css({'background-color':'white'});
         $('#add-body-btn-toggle').css({'background-color':'white'});
         $('#add-joint-btn-toggle').css({'background-color':'white'});
-
+        $('#add-fact-btn-toggle').css({'background-color':'white'});
     });
 
     stage.addEventListener("mousedown", function(event){
@@ -133,6 +142,10 @@ $(document).ready(function(){
             }else if(continuous_joint){
                 var nodePosition = getNodePosition(event);
                 drawJoint(true,nodePosition.x,nodePosition.y);
+
+            }else if(continuous_fact){
+                var nodePosition = getNodePosition(event);
+                drawFact(true,nodePosition.x,nodePosition.y);
             }
         }
 
@@ -167,26 +180,31 @@ $(document).ready(function(){
             continuous_header = false;
             continuous_body = false;
             continuous_joint = false;
+            continuous_fact = false;
 
             $('#add-header-btn-toggle').css({'background-color':'white'});
             $('#add-body-btn-toggle').css({'background-color':'white'});
             $('#add-joint-btn-toggle').css({'background-color':'white'});
+            $('#add-fact-btn-toggle').css({'background-color':'white'});
 
             $('#add-header-btn-toggle').attr('disabled',"true");
             $('#add-body-btn-toggle').attr('disabled',"true");
             $('#add-joint-btn-toggle').attr('disabled',"true");
+            $('#add-fact-btn-toggle').attr('disabled',"true");
         }else{
             stage.mode = "normal";
 
             $('#add-header-btn-toggle').removeAttr("disabled");
             $('#add-body-btn-toggle').removeAttr("disabled");
             $('#add-joint-btn-toggle').removeAttr("disabled");
+            $('#add-fact-btn-toggle').removeAttr("disabled");
         }
     });
 
     dragHeader();
     dragBody();
     dragJoint();
+    dragFact();
     dragHandle();
 
     quickDraw();
@@ -199,10 +217,43 @@ $(document).ready(function(){
         saveHeaders();
         saveJoints();
         saveArrows();
+        saveFacts();
         alert('保存成功！')
     });
     $('#saveImg-btn').click(function () {
-        stage.saveImageInfo(undefined, undefined, "证据链模型图");;
+        stage.saveImageInfo(undefined, undefined, "证据链模型图");
+    });
+    $('#saveExcel-btn').click(function () {
+
+        // var bList = [];
+        // for(var bid in bodyList) {
+        //     var body = bodyList[bid];
+        //
+        //     if (body != null) {
+        //         var node = body['node'];
+        //         var heads = [];
+        //         var outL = node.outLinks;
+        //         if (outL != null && outL.length > 0) {
+        //             for (var i = 0; i < outL.length; i++) {
+        //                 var h = outL[i].nodeZ;
+        //                 heads.push({"content": h.content, "keyText": h.keyText})
+        //             }
+        //         }
+        //         var b = {
+        //             "id": bid, "name": node.text, "content": node.content, "type": typeStr[body['type']],
+        //             "committer": body['committer'], "reason": body['reason'], "conclusion": body['conclusion'],
+        //             "heads": heads
+        //         };
+        //         bList.push(b);
+        //     }
+        // }
+        saveBodies();
+        saveHeaders();
+        saveJoints();
+        saveArrows();
+        saveFacts();
+        window.location.href="/model/exportExcel?cid="+cid;
+
     });
     $('#revoke-btn').click(function () {
         undo();
@@ -212,6 +263,48 @@ $(document).ready(function(){
     });
 
 });
+
+//存储Excel
+function saveExcel() {
+    var bList = [];
+    for(var bid in bodyList){
+        var body = bodyList[bid];
+
+        if(body!=null){
+            var node = body['node'];
+            var heads = [];
+            var outL = node.outLinks;
+            if(outL!=null&&outL.length>0){
+                for(var i=0;i<outL.length;i++){
+                    var h = outL[i].nodeZ;
+                    heads.push({"content":h.content,"keyText":h.keyText})
+                }
+            }
+            var b = {"id":bid,"name":node.text,"content":node.content,"type":typeStr[body['type']],
+                "committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
+                "heads":heads};
+            bList.push(b);
+        }
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/model/exportExcel",
+        data: JSON.stringify(bList),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        success: function (data) {
+            // alert("%%%%%%");
+            return data;
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("@*");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
 
 //存储链头
 function saveHeaders() {
@@ -223,7 +316,7 @@ function saveHeaders() {
             var documentID = -1;
             var bodyID = -1;
 
-            if(node.inLinks!=null){
+            if(node.inLinks!=null&&node.inLinks.length>0){
                 bodyID = node.inLinks[0].nodeA.id;
                 documentID = bodyList[bodyID]['documentID'];
             }
@@ -277,7 +370,7 @@ function saveBodies() {
         if(body!=null){
             var node = body['node'];
             var b = {"id":bid,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
-                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"conclusion":body['conclusion'],"isDefendant":body['isDefendant']};
+                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],"isDefendant":body['isDefendant']};
             bList.push(b);
         }
     }
@@ -324,7 +417,11 @@ function saveJoints() {
 
         if(joint!=null){
             var node = joint['node'];
-            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,"type":joint['type']};
+            var factID = -1;
+            if(node.outLinks!=null&&node.outLinks.length>0){
+                factID = node.outLinks[0].nodeZ.id;
+            }
+            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
             jList.push(j);
         }
     }
@@ -409,6 +506,53 @@ function saveArrows() {
     });
 }
 
+//存储事实
+function saveFacts() {
+    var fList = [];
+    for(var fid in factList){
+        var fact = factList[fid];
+
+        if(fact!=null){
+            var node = fact['node'];
+            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,"type":fact['type']};
+            fList.push(f);
+        }
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/model/deleteFacts",
+        data: JSON.stringify(fact_delete),
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        success: function (data) {
+
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("51!");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+
+    $.ajax({
+        type: "post",
+        url: "/model/saveFacts",
+        data: JSON.stringify(fList),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        success: function (data) {
+
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("5*");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
 //将移动操作加入operationList
 function addMoveOperations() {
     var x_now,y_now;
@@ -451,6 +595,9 @@ function undo() {
             }else if(node.node_type=='joint'){
                 deleteJoint(node.id);
 
+            }else if(node.node_type=='fact'){
+                deleteFact(node.id);
+
             }else if(node.node_type=='arrow'){
                 deleteArrow(node);
 
@@ -466,15 +613,22 @@ function undo() {
             var node = n['node'];
 
             if(node.node_type=='header'){
-                drawHeader(false,node.x,node.y,node.id,node.text,node.content);
+                drawHeader(false,node.x,node.y,node.id,node.text,node.content,node.keyText);
+                header_delete.splice($.inArray(node.id,header_delete),1);
 
             }else if(node.node_type=='body'){
                 drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']['type'],
                     n['content']['committer'],n['content']['reason'],n['content']['conclusion'],
-                    n['content']['documentID'],n['content']['isDefendant'],n['content']['trust']);
+                    n['content']['documentID'],n['content']['isDefendant']);
+                body_delete.splice($.inArray(node.id,body_delete),1);
 
             }else if(node.node_type=='joint'){
                 drawJoint(false,node.x,node.y,node.id,node.text,node.content,n['content']['type']);
+                joint_delete.splice($.inArray(node.id,joint_delete),1);
+
+            }else if(node.node_type=='fact'){
+                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['type']);
+                fact_delete.splice($.inArray(node.id,fact_delete),1);
 
             }else if(node.node_type=='arrow'){
                 addArrow(node.nodeA,node.nodeZ,node.id,node.text,node.content);
@@ -518,9 +672,12 @@ function quickDraw() {
             continuous_header = true;
             continuous_body = false;
             continuous_joint = false;
+            continuous_fact = false;
+
             $(this).css({'background-color':'grey'});
             $('#add-body-btn-toggle').css({'background-color':'white'});
             $('#add-joint-btn-toggle').css({'background-color':'white'});
+            $('#add-fact-btn-toggle').css({'background-color':'white'});
         }
     });
 
@@ -533,9 +690,12 @@ function quickDraw() {
             continuous_body = true;
             continuous_header = false;
             continuous_joint = false;
+            continuous_fact = false;
+
             $(this).css({'background-color':'grey'});
             $('#add-header-btn-toggle').css({'background-color':'white'});
             $('#add-joint-btn-toggle').css({'background-color':'white'});
+            $('#add-fact-btn-toggle').css({'background-color':'white'});
         }
     });
 
@@ -548,9 +708,30 @@ function quickDraw() {
             continuous_joint = true;
             continuous_header = false;
             continuous_body = false;
+            continuous_fact = false;
+
             $(this).css({'background-color':'grey'});
             $('#add-header-btn-toggle').css({'background-color':'white'});
             $('#add-body-btn-toggle').css({'background-color':'white'});
+            $('#add-fact-btn-toggle').css({'background-color':'white'});
+        }
+    });
+
+    $('#add-fact-btn-toggle').click(function () {
+
+        if(continuous_fact){
+            continuous_fact = false;
+            $(this).css({'background-color':'white'});
+        }else{
+            continuous_fact = true;
+            continuous_joint = false;
+            continuous_header = false;
+            continuous_body = false;
+
+            $(this).css({'background-color':'grey'});
+            $('#add-header-btn-toggle').css({'background-color':'white'});
+            $('#add-body-btn-toggle').css({'background-color':'white'});
+            $('#add-joint-btn-toggle').css({'background-color':'white'});
         }
     });
 }
@@ -581,6 +762,7 @@ function dragHandle() {
                 "height": "0",
                 "width": "0",
                 "border": '0px',
+                "border-radius":'0px',
                 "background-color":'transparent'});
         }
     });
@@ -591,17 +773,19 @@ function dragHandle() {
 
             if(event.pageX-$("#canvas").offset().left>=0&&event.pageY-$("#canvas").offset().top>=0){
                 var nodePosition = getNodePosition(event);
-                if($("#draggableDiv").find('i').attr('class')!=null){
-                    var className = $("#draggableDiv").find('i').attr('class');
+                var eType = $("#draggableDiv").attr('data-eType');
 
-                    if(className.indexOf('circle')>-1){
-                        drawHeader(true,nodePosition.x,nodePosition.y);
+                if(eType=='header'){
+                    drawHeader(true,nodePosition.x,nodePosition.y);
 
-                    }else if(className.indexOf('square')>-1) {
-                        drawJoint(true,nodePosition.x, nodePosition.y);
-                    }
-                }else{
+                }else if(eType=='body'){
                     drawBody(true,nodePosition.x, nodePosition.y);
+
+                }else if(eType=='joint'){
+                    drawJoint(true,nodePosition.x, nodePosition.y);
+
+                }else if(eType=='fact'){
+                    drawFact(true,nodePosition.x, nodePosition.y);
                 }
             }
         }
@@ -623,6 +807,7 @@ function dragHeader() {
                 "font-size": (header_radius*1.8)+"px",
                 "color": header_color,
                 "border":'0px'});
+            $(draggableDiv).attr('data-eType','header');
 
             var clickElement = "<i class=\"fa fa-circle-thin\" aria-hidden=\"true\"></i>";
             $("#draggableDiv").html(clickElement);
@@ -647,6 +832,7 @@ function dragBody() {
                 "top": event.pageY-$(this).parent().parent().offset().top,
                 "left": event.pageX-$(this).parent().parent().offset().left-(body_width/2),
                 "border":'2px solid '+body_color});
+            $(draggableDiv).attr('data-eType','body');
 
             draggableDiv.trigger(event);
         }
@@ -664,16 +850,42 @@ function dragJoint() {
             // console.log('x:'+event.pageX+';y:'+event.pageY+';left:'+$(this).parent().offset().left+';top:'+$(this).parent().offset().top);
             $(draggableDiv).css({
                 "display": "block",
-                "width": joint_width+"px",
-                "height": joint_width+"px",
+                "width": joint_width/1.2+"px",
+                "height": joint_width/1.2+"px",
                 "top": event.pageY-$(this).parent().parent().offset().top-(joint_width/2),
                 "left": event.pageX-$(this).parent().parent().offset().left-(joint_width/2),
-                "font-size": joint_width*1.2+"px",
-                "color": joint_color,
-                "border":'0px'});
+                // "font-size": joint_width*1.2+"px",
+                // "color": joint_color,
+                // "border":'0px'
+                "border":'2px solid '+joint_color});
+            $(draggableDiv).attr('data-eType','joint');
 
-            var clickElement = "<i class=\"fa fa-square-o\" aria-hidden=\"true\"></i>";
-            $("#draggableDiv").html(clickElement);
+            // var clickElement = "<i class=\"fa fa-square-o\" aria-hidden=\"true\"></i>";
+            // $("#draggableDiv").html(clickElement);
+            draggableDiv.trigger(event);
+        }
+        //取消默认行为
+        return false;
+    });
+}
+
+//add-fact-btn与拖拽方法绑定
+function dragFact() {
+    $( "#add-fact-btn" ).bind("mousedown", function (event) {
+
+        if(event.button == 0){
+            var draggableDiv = $("#draggableDiv");
+            // console.log('x:'+event.pageX+';y:'+event.pageY+';left:'+$(this).parent().offset().left+';top:'+$(this).parent().offset().top);
+            $(draggableDiv).css({
+                "display": "block",
+                "width": body_width/1.2+"px",
+                "height": body_height/1.2+"px",
+                "top": event.pageY-$(this).parent().parent().offset().top,
+                "left": event.pageX-$(this).parent().parent().offset().left-(body_width/2),
+                "border":'2px solid '+fact_color,
+                "border-radius":fact_borderRadius/1.2+"px"});
+            $(draggableDiv).attr('data-eType','fact');
+
             draggableDiv.trigger(event);
         }
         //取消默认行为
@@ -722,10 +934,12 @@ function handleMultipleSelected(event) {
     var link_num = 0;
     var arrow_num = 0;
     var joint_num = 0;
+    var fact_num = 0;
 
     var header_index = [];
     var body_index = [];
     var joint_index = [];
+    var fact_index = [];
 
     for(var i = 0;i<nodeList_selected.length;i++){
 
@@ -746,11 +960,15 @@ function handleMultipleSelected(event) {
         }else if(nodeList_selected[i].node_type=='joint'){
             joint_index.push(i);
             joint_num++;
+
+        }else if(nodeList_selected[i].node_type=='fact'){
+            fact_index.push(i);
+            fact_num++;
         }
     }
     // console.log("header_num:"+header_num+";body_num:"+body_num+";link_num:"+link_num+";arrow_num:"+arrow_num+";joint_num:"+joint_num);
 
-    if(header_num>=1&&body_num==1&&link_num==0&&arrow_num==0&&joint_num==0){//多个链头一个链体可以创建连线
+    if(header_num>=1&&body_num==1&&link_num==0&&arrow_num==0&&joint_num==0&&fact_num==0){//多个链头一个链体可以创建连线
         $("#nodeMenu2").css({
             top: getMousePosition_rdiv(event).y,
             left: getMousePosition_rdiv(event).x
@@ -760,7 +978,7 @@ function handleMultipleSelected(event) {
         nodeTo = nodeList_selected[body_index[0]];
         return 1;
 
-    }else if(header_num>=1&&body_num==0&&link_num==0&&arrow_num==0&&joint_num==1){//多个链头一个连接点可以创建箭头
+    }else if(header_num>=1&&body_num==0&&link_num==0&&arrow_num==0&&joint_num==1&&fact_num==0){//多个链头一个连接点可以创建箭头
         $("#nodeMenu3").css({
             top: getMousePosition_rdiv(event).y,
             left: getMousePosition_rdiv(event).x
@@ -770,7 +988,17 @@ function handleMultipleSelected(event) {
         nodeTo = nodeList_selected[joint_index[0]];
         return 2;
 
-    }else{
+    }else if(header_num==0&&body_num==0&&link_num==0&&arrow_num==0&&joint_num>=1&&fact_num==1) {//多个连接点一个事实节点可以创建连线
+        $("#nodeMenu2").css({
+            top: getMousePosition_rdiv(event).y,
+            left: getMousePosition_rdiv(event).x
+        }).show();
+
+        nodeFroms = joint_index;
+        nodeTo = nodeList_selected[fact_index[0]];
+        return 3;
+
+    } else{
         $("#nodeMenu").css({
             top: getMousePosition_rdiv(event).y,
             left: getMousePosition_rdiv(event).x
@@ -780,7 +1008,7 @@ function handleMultipleSelected(event) {
 }
 
 //处理节点右键菜单显示
-function handleNodeMenu(event,type,node){
+function handleNodeMenu(event,type){
 
     if(event.button == 0) {// 左键
         isNodeClicked_left = true;
@@ -845,13 +1073,30 @@ function bindMenuClick() {
         drawJoint(true,nodePosition.x,nodePosition.y);
     });
 
+    //新增图元-事实
+    $('#add-fact-li').click(function (event) {
+        $('#stageMenu').hide();
+        var nodePosition = getNodePosition(event);
+        drawFact(true,nodePosition.x,nodePosition.y);
+    });
+
     //创建连线
     $('#add-link-li').click(function () {
         $(this).parent().hide();
 
         var nodes = [];
+        var isFact = false;
+        if(nodeTo.node_type=='fact'){
+            isFact = true;
+        }
         for(var i = 0;i<nodeFroms.length;i++){
-            var node = addLink(nodeTo,scene.selectedElements[nodeFroms[i]]);
+            var node;
+            if(!isFact){
+                node = addLink(nodeTo,scene.selectedElements[nodeFroms[i]]);
+            }else{
+                node = addLink(scene.selectedElements[nodeFroms[i]],nodeTo);
+            }
+
             if(node!=-1){
                 nodes.push(node);
             }
@@ -930,12 +1175,16 @@ function bindMenuClick() {
             }else if(node.node_type=='body'){
                 var body = bodyList[node.id];
                 n['content'] = {'type':body['type'],'committer':body['committer'],'reason':body['reason'],
-                    'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant'],'trust':body['trust']};
+                    'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant']};
                 deleteBody(node.id);
 
             }else if(node.node_type=='joint'){
                 n['content'] = {'type':jointList[node.id]['type']};
                 deleteJoint(node.id);
+
+            }else if(node.node_type=='fact'){
+                n['content'] = {'type':factList[node.id]['type']};
+                deleteFact(node.id);
 
             }else if(node.node_type=='arrow'){
                 deleteArrow(node);
@@ -965,6 +1214,7 @@ function paste(mouse_x,mouse_y) {
     var hs = {};//{old_id:new_id};
     var bs = {};
     var js = {};
+    var fs = {};
     // console.log("len:"+toPasted.length);
 
     for(var i = 0;i<nodeList_copied.length;i++){
@@ -977,29 +1227,61 @@ function paste(mouse_x,mouse_y) {
             var si = $.inArray(snode,toPasted);
             var ei = $.inArray(enode,toPasted);
 
-            if(si>=0&&ei>=0){
-                hs[enode.id] = -1;
-                bs[snode.id] = -1;
-                toPasted.splice(si,1);
-                toPasted.splice($.inArray(enode,toPasted),1);
-            }else{
-                if(hs[enode.id]!=null){
-                    if(si>=0){
-                        bs[snode.id] = -1;
-                        toPasted.splice(si,1);
-                    }else{
-                        if(bs[snode.id]==null||bs[snode.id]==undefined)
-                            toPasted.splice($.inArray(node,toPasted),1);
-                    }
+            if(snode.node_type=='body'){
+
+                if(si>=0&&ei>=0){
+                    hs[enode.id] = -1;
+                    bs[snode.id] = -1;
+                    toPasted.splice(si,1);
+                    toPasted.splice($.inArray(enode,toPasted),1);
                 }else{
-                    if(ei==-1){
-                        toPasted.splice($.inArray(node,toPasted),1);
-                    }else{
-                        if(bs[snode.id]!=null){
-                            hs[enode.id] = -1;
-                            toPasted.splice(ei,1);
+                    if(hs[enode.id]!=null){
+                        if(si>=0){
+                            bs[snode.id] = -1;
+                            toPasted.splice(si,1);
                         }else{
+                            if(bs[snode.id]==null||bs[snode.id]==undefined)
+                                toPasted.splice($.inArray(node,toPasted),1);
+                        }
+                    }else{
+                        if(ei==-1){
                             toPasted.splice($.inArray(node,toPasted),1);
+                        }else{
+                            if(bs[snode.id]!=null){
+                                hs[enode.id] = -1;
+                                toPasted.splice(ei,1);
+                            }else{
+                                toPasted.splice($.inArray(node,toPasted),1);
+                            }
+                        }
+                    }
+                }
+            }else if(snode.node_type=='joint'){
+
+                if(si>=0&&ei>=0){
+                    js[snode.id] = -1;
+                    fs[enode.id] = -1;
+                    toPasted.splice(si,1);
+                    toPasted.splice($.inArray(enode,toPasted),1);
+                }else{
+                    if(fs[enode.id]!=null){
+                        if(si>=0){
+                            js[snode.id] = -1;
+                            toPasted.splice(si,1);
+                        }else{
+                            if(js[snode.id]==null||js[snode.id]==undefined)
+                                toPasted.splice($.inArray(node,toPasted),1);
+                        }
+                    }else{
+                        if(ei==-1){
+                            toPasted.splice($.inArray(node,toPasted),1);
+                        }else{
+                            if(js[snode.id]!=null){
+                                fs[enode.id] = -1;
+                                toPasted.splice(ei,1);
+                            }else{
+                                toPasted.splice($.inArray(node,toPasted),1);
+                            }
                         }
                     }
                 }
@@ -1038,7 +1320,7 @@ function paste(mouse_x,mouse_y) {
                     }
                 }
             }
-        }else if(node.node_type=='header'||node.node_type=='body'||node.node_type=='joint'){
+        }else{
 
             if(node.x>maxX){
                 maxX = node.x;
@@ -1066,22 +1348,47 @@ function paste(mouse_x,mouse_y) {
         if(node.node_type=='link'){
             var snode = node.nodeA;
             var enode = node.nodeZ;
-            var body = bodyList[snode.id];
-            var enew;
+            var enew,snew;
 
-            var snew = drawBody(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,body['type'],
-                body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant'],body['trust']);
+            if(snode.node_type=='body'){
 
-            if(hs[enode.id]!=null&&hs[enode.id]!=-1){
-                enew = headerList[hs[enode.id]];
-            }else{
-                enew = drawHeader(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content);
-                nodes.push(enew);
-                hs[enode.id] = enew.id;
+                if(bs[snode.id]!=null&&bs[snode.id]!=-1){
+                    snew = bodyList[bs[snode.id]]['node'];
+                }else{
+                    var body = bodyList[snode.id];
+                    snew = drawBody(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,body['type'],
+                        body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant']);
+                    nodes.push(snew);
+                    bs[snode.id] = snew.id;
+                }
+
+                if(hs[enode.id]!=null&&hs[enode.id]!=-1){
+                    enew = headerList[hs[enode.id]];
+                }else{
+                    enew = drawHeader(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,enode.keyText);
+                    nodes.push(enew);
+                    hs[enode.id] = enew.id;
+                }
+            }else if(snode.node_type=='joint'){
+
+                if(js[snode.id]!=null&&js[snode.id]!=-1){
+                    snew = jointList[js[snode.id]];
+                }else{
+                    snew = drawJoint(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,jointList[snode.id]['type']);
+                    nodes.push(snew);
+                    js[snode.id] = snew.id;
+                }
+
+                if(fs[enode.id]!=null&&fs[enode.id]!=-1){
+                    enew = factList[fs[enode.id]]['node'];
+                }else{
+                    enew = drawFact(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,factList[enode.id]['type']);
+                    nodes.push(enew);
+                    fs[enode.id] = enew.id;
+                }
             }
-            var nl = addLink(snew,enew);
 
-            nodes.push(snew);
+            var nl = addLink(snew,enew);
             nodes.push(nl);
 
         }else if(node.node_type=='arrow'){
@@ -1094,7 +1401,7 @@ function paste(mouse_x,mouse_y) {
             if(hs[snode.id]!=null&&hs[snode.id]!=-1){
                 snew = headerList[hs[snode.id]];
             }else{
-                snew = drawHeader(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content);
+                snew = drawHeader(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,snode.keyText);
                 nodes.push(snew);
                 hs[snode.id] = snew.id;
             }
@@ -1105,19 +1412,24 @@ function paste(mouse_x,mouse_y) {
 
         }else if(node.node_type=='header'){
 
-            var node_new = drawHeader(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content);
+            var node_new = drawHeader(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,node.keyText);
             nodes.push(node_new);
 
         }else if(node.node_type=='body'){
 
             var body = bodyList[node.id];
             var node_new = drawBody(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,body['type'],
-                body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant'],body['trust']);
+                body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant']);
             nodes.push(node_new);
 
         }else if(node.node_type=='joint'){
 
             var node_new = drawJoint(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,jointList[node.id]['type']);
+            nodes.push(node_new);
+
+        }else if(node.node_type=='fact'){
+
+            var node_new = drawFact(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,factList[node.id]['type']);
             nodes.push(node_new);
         }
     }
@@ -1168,7 +1480,7 @@ function bindRightPanel() {
         if(bodyList[bid]!=null){
             var body = bodyList[bid];
             var cont = {'type':body['type'],'committer':body['committer'],'reason':body['reason'],
-                'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant'],'trust':body['trust']};
+                'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant']};
             //添加操作至operationList
             operationList.push({'type':'delete','nodes':[{'node':body['node'],'content':cont}]});
             deleteBody(bid);
@@ -1254,12 +1566,45 @@ function bindRightPanel() {
                 'content':{'type':jointList[jid]['type']}}]});
         deleteJoint(jid);
     });
+
+    //事实节点
+    $('#fact-save-btn').click(function () {
+        var fid = $('#fact-panel').attr('data-fid');
+        factList[fid]['node'].text = $('#fact-name').val();
+        factList[fid]['type'] = $('#fact-type').val();
+        factList[fid]['node'].content = $('#fact-content').val();
+    });
+
+    $('#fact-reset-btn').click(function () {
+        var fid = $('#fact-panel').attr('data-fid');
+        $('#fact-name').val(factList[fid]['node'].text);
+        $('#fact-type').val(factList[fid]['type']);
+        $('#fact-content').val(factList[fid]['node'].content);
+    });
+
+    $('#fact-del-btn').click(function () {
+        var fid = $('#fact-panel').attr('data-fid');
+        //添加操作至operationList
+        operationList.push({'type':'delete','nodes':[{'node':factList[fid]['node'],
+                'content':{'type':factList[fid]['type']}}]});
+        deleteFact(fid);
+    });
 }
 
-//添加连线(链体，链头，id)
+//添加连线(链体，链头，id)/(连接点，事实，id)
 function addLink(nodeFrom,nodeTo,id){
-    // var hasLink = false;
-    //
+    var hasLink = false;
+
+    if(nodeFrom.node_type=='body'){
+        if(nodeTo.inLinks!=null&&nodeTo.inLinks.length>0){
+            hasLink = true;
+        }
+    }else if(nodeTo.node_type=='fact'){
+        if(nodeFrom.outLinks!=null&&nodeFrom.outLinks.length>0){
+            hasLink = true;
+        }
+    }
+
     // //判断是否已存在连线
     // if(nodeFrom.outLinks!=null)
     //     for(var i = 0;i<nodeFrom.outLinks.length;i++){
@@ -1269,7 +1614,7 @@ function addLink(nodeFrom,nodeTo,id){
     //         }
     //     }
 
-    if(nodeTo.inLinks==null||nodeTo.inLinks.length==0){
+    if(!hasLink){
         if(id==null)
             id = linkIndex++;
 
@@ -1284,7 +1629,7 @@ function addLink(nodeFrom,nodeTo,id){
         link.node_type = 'link';
 
         link.addEventListener('mouseup', function(event){
-            handleNodeMenu(event,'link',this);
+            handleNodeMenu(event,'link');
         });
 
         link.addEventListener('mouseout', function(){
@@ -1295,7 +1640,8 @@ function addLink(nodeFrom,nodeTo,id){
         // linkList[link.id] = link;
         scene.add(link);
 
-        addHeaderofChain(nodeTo.text,nodeTo.id,nodeFrom.id);
+        if(nodeFrom.node_type=='body')
+            addHeaderofChain(nodeTo.text,nodeTo.id,nodeFrom.id);
 
         return link;
     }
@@ -1312,18 +1658,18 @@ function deleteLink(link) {
 //添加箭头(链头，连接点)，返回箭头节点，未创建返回-1
 function addArrow(nodeFrom,nodeTo,id,name,content) {
 
-    var hasArrow = false;
+    // var hasArrow = false;
+    //
+    // //判断是否已存在箭头
+    // if(nodeFrom.outLinks!=null)
+    //     for(var i = 0;i<nodeFrom.outLinks.length;i++){
+    //         if(nodeFrom.outLinks[i].nodeZ==nodeTo){
+    //             hasArrow = true;
+    //             break;
+    //         }
+    //     }
 
-    //判断是否已存在箭头
-    if(nodeFrom.outLinks!=null)
-        for(var i = 0;i<nodeFrom.outLinks.length;i++){
-            if(nodeFrom.outLinks[i].nodeZ==nodeTo){
-                hasArrow = true;
-                break;
-            }
-        }
-
-    if(!hasArrow){
+    if(nodeFrom.outLinks==null||nodeFrom.outLinks.length==0){
 
         if(name==null)
             name = '新箭头'+(arrowIndex+1);
@@ -1350,6 +1696,7 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
             $('#body-panel').attr('hidden', 'hidden');
             $('#head-panel').attr('hidden', 'hidden');
             $('#joint-panel').attr('hidden', 'hidden');
+            $('#fact-panel').attr('hidden', 'hidden');
 
             $('#arrow-name').val(arrow.text);
             $('#arrow-content').val(arrow.content);
@@ -1358,7 +1705,7 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
         });
 
         arrow.addEventListener('mouseup', function(event){
-            handleNodeMenu(event,'arrow',this);
+            handleNodeMenu(event,'arrow');
         });
 
         arrow.addEventListener('mouseout', function(event){
@@ -1380,7 +1727,7 @@ function deleteArrow(arrow) {
 }
 
 //绘制链头，返回链头节点
-function drawHeader(isNew,x,y,id,name,content){
+function drawHeader(isNew,x,y,id,name,content,keyText){
 
     if(id==null)
         id = headerIndex++;
@@ -1408,6 +1755,7 @@ function drawHeader(isNew,x,y,id,name,content){
     circleNode.setLocation(x-header_radius, y-header_radius);
     circleNode.textPosition = 'Bottom_Center'; // 文本位置
     circleNode.node_type = 'header';
+    circleNode.keyText = keyText;
 
     headerList[circleNode.id] = circleNode;
     scene.add(circleNode);
@@ -1420,8 +1768,10 @@ function drawHeader(isNew,x,y,id,name,content){
         $('#body-panel').attr('hidden', 'hidden');
         $('#arrow-panel').attr('hidden', 'hidden');
         $('#joint-panel').attr('hidden', 'hidden');
+        $('#fact-panel').attr('hidden', 'hidden');
 
         $('#head-name').val(circleNode.text);
+        $('#head-keySentence').val(circleNode.keyText);
         $('#head-content').val(circleNode.content);
         $('#head-panel').removeAttr("hidden");
         $('#head-panel').attr('data-hid',circleNode.id);
@@ -1430,7 +1780,7 @@ function drawHeader(isNew,x,y,id,name,content){
     });
 
     circleNode.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'header',this);
+        handleNodeMenu(event,'header');
     });
     circleNode.addEventListener('mousedown', function(event){
         // console.log(this.x+"&&"+this.y);
@@ -1471,7 +1821,7 @@ function deleteHeader(headerID) {
 }
 
 //绘制链体，返回链体节点
-function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,documentID,isDefendant,trust){
+function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,documentID,isDefendant){
 
     if(id==null)
         id = bodyIndex++;
@@ -1490,8 +1840,8 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
         documentID = -1;
     if(isDefendant==null)
         isDefendant = 1;
-    if(trust==null)
-        trust = 1;
+    if(conclusion==null)
+        conclusion = 1;
 
     var node = new JTopo.Node(name);
     node.id = id;
@@ -1507,7 +1857,7 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
     node.node_type = 'body';
 
     bodyList[node.id] = {'node':node,'type':type,'committer':committer,'reason':reason,'conclusion':conclusion,
-    'documentID':documentID,'isDefendant':isDefendant,'trust':trust};
+    'documentID':documentID,'isDefendant':isDefendant};
     scene.add(node);
     //添加操作至operationList
     if(isNew==true)
@@ -1517,6 +1867,7 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
         $('#head-panel').attr('hidden', 'hidden');
         $('#arrow-panel').attr('hidden', 'hidden');
         $('#joint-panel').attr('hidden', 'hidden');
+        $('#fact-panel').attr('hidden', 'hidden');
 
         var bid = node.id;
         $('#body-name').val(node.text);
@@ -1531,7 +1882,7 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
         highlightEvidence();
     });
     node.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'body',this);
+        handleNodeMenu(event,'body');
     });
     node.addEventListener('mousedown', function(event){
         // console.log(this.x+";"+this.y);
@@ -1605,6 +1956,7 @@ function drawJoint(isNew,x,y,id,name,content,type){
         $('#head-panel').attr('hidden', 'hidden');
         $('#arrow-panel').attr('hidden', 'hidden');
         $('#body-panel').attr('hidden', 'hidden');
+        $('#fact-panel').attr('hidden', 'hidden');
 
         $('#joint-name').val(node.text);
         $('#joint-type').val(jointList[node.id]['type']);
@@ -1614,7 +1966,7 @@ function drawJoint(isNew,x,y,id,name,content,type){
     });
 
     node.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'joint',this);
+        handleNodeMenu(event,'joint');
     });
     node.addEventListener('mousedown', function(event){
         // console.log(this.x+"**"+this.y);
@@ -1641,9 +1993,86 @@ function deleteJoint(jointID) {
             deleteArrow(inl[i]);
         }
     }
+    // if(joint.outLinks!=null&&joint.outLinks.length>0){
+    //     deleteLink(joint.outLinks[0]);
+    // }
+
     scene.remove(joint);
     jointList[jointID] = null;
     $('#joint-panel').attr('hidden', 'hidden');
+}
+
+//绘制事实，返回事实节点
+function drawFact(isNew,x,y,id,name,content,type) {
+    if(id==null)
+        id = factIndex++;
+
+    if(name==null||name.length==0){
+        if(content==null||content.length==0||content.length>10)
+            name = '事实节点'+(id+1);
+        else
+            name = content;
+    }
+    if(content==null||content.length==0){
+        content = name;
+    }
+
+    var node = new JTopo.Node(name);
+    node.id = id;
+    node.content = content;
+    node.fillColor = '255, 255, 255'; // 填充颜色
+    node.borderColor = fact_color_num;
+    node.borderWidth = 2;
+    node.borderRadius = fact_borderRadius;
+    node.setSize(body_width,body_height);
+    node.setLocation(x-(body_width/2),y-(body_height/2));
+    node.shadow = "true";
+    node.node_type = 'fact';
+
+    factList[node.id] = {'node':node,'type':type};
+    scene.add(node);
+    //添加操作至operationList
+    if(isNew)
+        operationList.push({'type':'add','nodes':[node]});
+
+    node.click(function () {
+        $('#head-panel').attr('hidden', 'hidden');
+        $('#arrow-panel').attr('hidden', 'hidden');
+        $('#body-panel').attr('hidden', 'hidden');
+        $('#joint-panel').attr('hidden', 'hidden');
+
+        $('#fact-name').val(node.text);
+        $('#fact-type').val(factList[node.id]['type']);
+        $('#fact-content').val(node.content);
+        $('#fact-panel').removeAttr("hidden");
+        $('#fact-panel').attr('data-fid',node.id);
+    });
+
+    node.addEventListener('mouseup', function(event){
+        handleNodeMenu(event,'fact');
+    });
+    node.addEventListener('mousedown', function(event){
+        // console.log(this.x+"**"+this.y);
+        x_origin = this.x;
+        y_origin = this.y;
+        sourceNode = this;
+    });
+    node.addEventListener('mouseout', function(event){
+        isNodeClicked_right = false;
+        isNodeClicked_left = false;
+    });
+
+    return node;
+}
+
+//删除事实节点
+function deleteFact(factID) {
+    fact_delete.push(factID);
+    var fact = factList[factID]['node'];
+
+    scene.remove(fact);
+    factList[factID] = null;
+    $('#fact-panel').attr('hidden', 'hidden');
 }
 
 //点击图元左侧列表相应证据高亮
@@ -1679,7 +2108,7 @@ function highlightEvidence() {
 }
 
 //初始化右侧建模图
-function initGraph(trusts,freeHeaders,joints,arrows) {
+function initGraph(trusts,freeHeaders,joints,arrows,facts) {
 
     var x = 10 + (body_width/2);
     var y = 10 + header_radius;
@@ -1692,6 +2121,8 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
     var pre_hy = -1;
     var pre_jx = -1;
     var pre_jy = -1;
+    var pre_fx = -1;
+    var pre_fy = -1;
 
     for(var i = 0;i<trusts.length;i++){
         var body = trusts[i]['body'];
@@ -1704,21 +2135,21 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
             }else{
                 b_x = x;
             }
-        }else{
-            pre_bx = b_x;
         }
+        pre_bx = b_x;
+
         if(b_y<=0){
             if(pre_by>=0){
                 b_y = pre_by + body_height + headerGap_y;
             }else{
-                b_y = y+(body_height + headerGap_y)*i;
+                b_y = y;
+                y+=body_height + headerGap_y;
             }
-        }else{
-            pre_by = b_y;
         }
+        pre_by = b_y;
 
         var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['body'],body['type'],body['committer'],
-            body['reason'],body['conclusion'],body['documentid'],body['isDefendant'],body['trust']);
+            body['reason'],body['trust'],body['documentid'],body['isDefendant']);
 
         var headers = trusts[i]['headers'];
         for(var j = 0;j<headers.length;j++){
@@ -1732,9 +2163,9 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
                 }else{
                     h_x = x + body_width/2 + headerGap_x + header_radius;
                 }
-            }else{
-                pre_hx = h_x;
             }
+            pre_hx = h_x;
+
             if(h_y<=0){
                 if(pre_hy>=0){
                     h_y = pre_hy + headerGap_y + (header_radius*2);
@@ -1742,19 +2173,18 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
                     h_y = y;
                     y += headerGap_y + (header_radius*2);
                 }
-            }else{
-                pre_hy = h_y;
             }
+            pre_hy = h_y;
 
-            var h = drawHeader(false,h_x,h_y,header['id'],header['name'],header['head']);
+            var h = drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText']);
             addLink(b,h);
 
-            if(j==headers.length-1){
+            if(headerIndex<header['id']){
                 headerIndex = header['id']+1;
             }
         }
 
-        if(i==trusts.length-1){
+        if(bodyIndex<body['id']){
             bodyIndex = body['id']+1;
         }
     }
@@ -1770,9 +2200,9 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
             }else{
                 h_x = x + body_width/2 + headerGap_x + header_radius;
             }
-        }else{
-            pre_hx = h_x;
         }
+        pre_hx = h_x;
+
         if(h_y<=0){
             if(pre_hy>=0){
                 h_y = pre_hy + headerGap_y + (header_radius*2);
@@ -1780,13 +2210,49 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
                 h_y = y;
                 y += headerGap_y + (header_radius*2);
             }
-        }else{
-            pre_hy = h_y;
         }
-        drawHeader(false,h_x,h_y,header['id'],header['name'],header['head']);
+        pre_hy = h_y;
+
+        drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText']);
+
+        if(headerIndex<header['id']){
+            headerIndex = header['id']+1;
+        }
     }
 
+    y = 10 + header_radius;
     x+=body_width/2 + headerGap_x + header_radius;
+    for(var i = 0;i<facts.length;i++){
+        var fact = facts[i];
+        var f_x = fact['x'];
+        var f_y = fact['y'];
+
+        if(f_x<=0){
+            if(pre_fx>=0){
+                f_x = pre_fx;
+            }else{
+                f_x = x + header_radius + jointGap + joint_width/2 + body_width/2 + headerGap_x + (joint_width/2);
+            }
+        }
+        pre_fx = f_x;
+
+        if(f_y<=0){
+            if(pre_fy>=0){
+                f_y = pre_jy + body_height + headerGap_y;
+            }else{
+                f_y = y;
+                y+=joint_width + headerGap_y;
+            }
+        }
+        pre_fy = f_y;
+
+        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type']);
+        if(factIndex<fact['id']){
+            factIndex = fact['id']+1;
+        }
+    }
+
+    y = 10 + header_radius;
     for(var i = 0;i<joints.length;i++){
         var joint = joints[i];
         var j_x = joint['x'];
@@ -1798,20 +2264,25 @@ function initGraph(trusts,freeHeaders,joints,arrows) {
             }else{
                 j_x = x + header_radius + jointGap + joint_width/2;
             }
-        }else{
-            pre_jx = j_x;
         }
+        pre_jx = j_x;
+
         if(j_y<=0){
             if(pre_jy>=0){
                 j_y = pre_jy + joint_width + headerGap_y;
             }else{
-                j_y = y+(joint_width + headerGap_y)*i;
+                j_y = y;
+                y+=joint_width + headerGap_y;
             }
-        }else{
-            pre_jy = j_y;
         }
+        pre_jy = j_y;
 
-        drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],joint['type']);
+        var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],joint['type']);
+        if(joint['factID']>=0)
+            addLink(jnode,factList[joint['factID']]['node']);
+        if(jointIndex<joint['id']){
+            jointIndex = joint['id']+1;
+        }
     }
 
     for(var i = 0;i<arrows.length;i++){
@@ -1826,68 +2297,125 @@ function typeSetting() {
     var nodes = [];
     var x = 10 + (body_width/2);
     var y = 10 + header_radius;
-    var headerGap_x = 100;
+    var headerGap_x = 120;
     var headerGap_y = 40;
     var jointGap = 150;
     var t = 0;
 
     for(var bid in bodyList){
+        if(bodyList[bid]!=null){
+            var body = bodyList[bid]['node'];
+            var ox = body.x;
+            var oy = body.y;
+            body.x = x;
 
-        var body = bodyList[bid]['node'];
-        var ox = body.x;
-        var oy = body.y;
-        body.x = x;
+            var outLinks = body.outLinks;
+            if(outLinks!=null)
+                body.y = y+((outLinks.length-1)*(2*header_radius + headerGap_y)/2);
+            else{
+                y+=body_height + headerGap_y;
+                body.y = y;
+            }
 
-        var outLinks = body.outLinks;
-        if(outLinks!=null)
-            body.y = y+((outLinks.length-1)*(2*header_radius + headerGap_y)/2);
-        else
-            body.y = y+(body_height + headerGap_y)*t;
+            nodes.push({'node':body,'x':ox,'y':oy});
 
-        nodes.push({'node':body,'x':ox,'y':oy});
+            if(outLinks!=null){
+                for (var i = 0; i < outLinks.length; i++) {
+                    var header = outLinks[i].nodeZ;
+                    var hox = header.x;
+                    var hoy = header.y;
+                    header.x = x + body_width / 2 + headerGap_x + header_radius;
+                    header.y = y;
+                    y += headerGap_y + (header_radius * 2);
 
-        if(outLinks!=null)
-        for(var i = 0;i<outLinks.length;i++){
-            var header = outLinks[i].nodeZ;
-            var hox = header.x;
-            var hoy = header.y;
-            header.x = x + body_width/2 + headerGap_x + header_radius;
-            header.y = y;
-            y += headerGap_y + (header_radius*2);
-
-            nodes.push({'node':header,'x':hox,'y':hoy});
+                    nodes.push({'node': header, 'x': hox, 'y': hoy});
+                }
+            }
+            t++;
         }
-        t++;
+    }
+
+    x+=body_width/2 + headerGap_x + header_radius;
+    for(var hid in headerList){
+        if(headerList[hid]!=null){
+            var header = headerList[hid];
+            if(header.inLinks==null||header.inLinks.length==0){
+                var hox = header.x;
+                var hoy = header.y;
+                header.x = x;
+                header.y = y;
+                y += headerGap_y + (header_radius*2);
+
+                nodes.push({'node':header,'x':hox,'y':hoy});
+            }
+        }
     }
 
     t = 0;
-    x+=body_width/2 + headerGap_x + header_radius;
+    y = 10 + header_radius;
     for(var jid in jointList){
-        var joint = jointList[jid]['node'];
-        var ox = joint.x;
-        var oy = joint.y;
-        joint.x = x + header_radius + jointGap + joint_width/2;
-        var y_max = 0;
-        var y_min = 10000000;
-        var inLinks = joint.inLinks;
+        if(jointList[jid]!=null){
+            var joint = jointList[jid]['node'];
+            var ox = joint.x;
+            var oy = joint.y;
+            joint.x = x + header_radius + jointGap + joint_width/2;
+            var y_max = 0;
+            var y_min = 10000000;
+            var inLinks = joint.inLinks;
 
-        if(inLinks!=null){
-            for(var i = 0;i<inLinks.length;i++){
-                var header = inLinks[i].nodeA;
-                if(header.y>y_max){
-                    y_max = header.y;
+            if(inLinks!=null&&inLinks.length>0){
+                for(var i = 0;i<inLinks.length;i++){
+                    var header = inLinks[i].nodeA;
+                    if(header.y>y_max){
+                        y_max = header.y;
+                    }
+                    if(header.y<y_min){
+                        y_min = header.y;
+                    }
                 }
-                if(header.y<y_min){
-                    y_min = header.y;
-                }
+                joint.y = (y_min + y_max)/2;
+                y = joint.y;
+            }else{
+                y += joint_width + headerGap_y;
+                joint.y = y;
             }
-            joint.y = (y_min + y_max)/2;
-        }else{
-            joint.y = y+(joint_width + headerGap_y)*t;
+            t++;
+            nodes.push({'node':joint,'x':ox,'y':oy});
         }
-        t++;
+    }
 
-        nodes.push({'node':joint,'x':ox,'y':oy});
+    t = 0;
+    y = 10 + header_radius;
+    x+=header_radius + jointGap + joint_width/2;
+    for(var fid in factList){
+        if(factList[fid]!=null){
+            var fact = factList[fid]['node'];
+            var ox = fact.x;
+            var oy = fact.y;
+            fact.x = x + body_width/2 + headerGap_x + (joint_width/2);
+            var y_max = 0;
+            var y_min = 10000000;
+            var inLinks = fact.inLinks;
+
+            if(inLinks!=null&&inLinks.length>0){
+                for(var i = 0;i<inLinks.length;i++){
+                    var joint = inLinks[i].nodeA;
+                    if(joint.y>y_max){
+                        y_max = joint.y;
+                    }
+                    if(joint.y<y_min){
+                        y_min = joint.y;
+                    }
+                }
+                fact.y = (y_min + y_max)/2;
+                y = fact.y;
+            }else{
+                y+=body_height + headerGap_y;
+                fact.y = y;
+            }
+            t++;
+            nodes.push({'node':fact,'x':ox,'y':oy});
+        }
     }
 
     operationList.push({'type':'typesetting','nodes':nodes});
