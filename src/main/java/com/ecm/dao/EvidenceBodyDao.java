@@ -23,6 +23,9 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
 
     public List<Evidence_Body> findAllByCaseID(int caseID);
 
+    @Query(value = "select b.logicNodeID from Evidence_Body b where b.= ?1")
+    public int getLogicNodeIDByID(int id);
+
     public Evidence_Body save(Evidence_Body evi);
 
     public void deleteById(int id);

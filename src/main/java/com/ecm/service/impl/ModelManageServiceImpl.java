@@ -83,23 +83,9 @@ public class ModelManageServiceImpl implements ModelManageService {
         return res;
     }
 
-//    @Override
-//    public List<MOD_Joint> getJoints(int cid) {
-//        return jointDao.findAllByCaseID(cid);
-//    }
-//
-//    @Override
-//    public List<MOD_Arrow> getArrows(int cid) {
-//        return arrowDao.findAllByCaseID(cid);
-//    }
-
     @Override
-    public void saveHeaders(List<Evidence_Head> headers) {
-        for(int i = 0;i<headers.size();i++){
-//            System.out.println("hid:"+headers.get(i).getId());
-            Evidence_Head head = evidenceHeadDao.save(headers.get(i));
-//            System.out.println("hid_new:"+head.getId());
-        }
+    public void saveHeader(Evidence_Head header) {
+        evidenceHeadDao.save(header);
     }
 
     @Override
@@ -115,10 +101,13 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveBodies(List<Evidence_Body> bodies) {
-        for(int i = 0;i<bodies.size();i++){
-            evidenceBodyDao.save(bodies.get(i));
-        }
+    public void saveBody(Evidence_Body body) {
+        evidenceBodyDao.save(body);
+    }
+
+    @Override
+    public int getLogicNodeIDofBody(int bid) {
+        return evidenceBodyDao.getLogicNodeIDByID(bid);
     }
 
     @Override
@@ -134,10 +123,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveJoints(List<MOD_Joint> joints) {
-        for(int i = 0;i<joints.size();i++){
-            jointDao.save(joints.get(i));
-        }
+    public void saveJoint(MOD_Joint joint) {
+        jointDao.save(joint);
     }
 
     @Override
@@ -147,10 +134,13 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveFacts(List<MOD_Fact> facts) {
-        for(int i = 0;i<facts.size();i++){
-            factDao.save(facts.get(i));
-        }
+    public void saveFact(MOD_Fact fact) {
+        factDao.save(fact);
+    }
+
+    @Override
+    public int getLogicNodeIDofFact(int fid) {
+        return factDao.getLogicNodeIDByID(fid);
     }
 
     @Override
@@ -166,10 +156,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveArrows(List<MOD_Arrow> arrows) {
-        for(int i = 0;i<arrows.size();i++){
-            arrowDao.save(arrows.get(i));
-        }
+    public void saveArrow(MOD_Arrow arrow) {
+        arrowDao.save(arrow);
     }
 
     @Override
@@ -182,16 +170,16 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void writeToExcel(int cid,String filePath) {
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
-        //创建sheet页
-        HSSFSheet sheet = workbook.createSheet("证据清单");
+        //创建证据清单sheet
+        HSSFSheet sheet1 = workbook.createSheet("证据清单");
         CellRangeAddress callRangeAddress = new CellRangeAddress(0,0,1,9);//起始行,结束行,起始列,结束列
-        sheet.addMergedRegion(callRangeAddress);
+        sheet1.addMergedRegion(callRangeAddress);
 
-        HSSFRow row = sheet.createRow(0);
+        HSSFRow row = sheet1.createRow(0);
         HSSFCell cell = row.createCell(1);
         cell.setCellValue("证据清单");
 
-        HSSFRow row2 = sheet.createRow(1);
+        HSSFRow row2 = sheet1.createRow(1);
         String[] titles = {"序号","证据名称","证据明细","证据种类（下拉）","提交人","质证理由","质证结论（下拉）","链头信息","该链头在证据中的关键文本（短句）"};
         for(int i=1;i<=titles.length;i++)
         {
@@ -204,7 +192,7 @@ public class ModelManageServiceImpl implements ModelManageService {
         List<Evidence_Body> bodies = evidenceBodyDao.findAllByCaseID(cid);
         int rowNum = 2;
         for(int i = 0;i<bodies.size();i++){
-            HSSFRow hrow = sheet.createRow(rowNum);
+            HSSFRow hrow = sheet1.createRow(rowNum);
             Evidence_Body body = bodies.get(i);
             int bid = body.getId();
             List<Evidence_Head> headers = evidenceHeadDao.findAllByCaseIDAndBodyid(cid,bid);
@@ -214,7 +202,7 @@ public class ModelManageServiceImpl implements ModelManageService {
 
             for(int j = 1;j<=7;j++){
                 CellRangeAddress cra = new CellRangeAddress(rowNum,rowNum+hNum-1,j,j);
-                sheet.addMergedRegion(cra);
+                sheet1.addMergedRegion(cra);
             }
             HSSFCell ctemp1 = hrow.createCell(1);
             ctemp1.setCellValue(bid);
@@ -241,7 +229,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                 for(int k = 1;k<headers.size();k++){
                     rowNum++;
                     h = headers.get(k);
-                    HSSFRow rowtemp = sheet.createRow(rowNum);
+                    HSSFRow rowtemp = sheet1.createRow(rowNum);
                     HSSFCell ctempk_8 = rowtemp.createCell(8);
                     ctempk_8.setCellValue(h.getHead());
                     HSSFCell ctempk_9 = rowtemp.createCell(9);
@@ -253,6 +241,9 @@ public class ModelManageServiceImpl implements ModelManageService {
                 rowNum+=(3-headers.size());
             }
         }
+
+        //创建事实清单sheet
+        HSSFSheet sheet2 = workbook.createSheet("事实清单");
 
         File file = new File(filePath);
         try {

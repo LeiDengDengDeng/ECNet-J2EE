@@ -3,11 +3,11 @@ var headerIndex = 0;//当前链头id
 var headerList = {};//存储链头，{id:node}
 var bodyIndex = 0;//当前链体id
 var bodyList = {};//存储链体，{id:{'node':node,'type':'XXX','committer':'XXX','reason':'XXXXXX',
-// 'conclusion':'1/0','documentID':-1,'isDefendant':1}}
+// 'conclusion':'1/0','documentID':-1,'isDefendant':1,'logicNodeID':xx}}
 var jointIndex = 0;//当前连接点（事实）id
 var jointList = {};//存储连接点（事实），{id:{'node':node,'type':'XXX'}}
 var factIndex = 0;//当前事实节点id
-var factList = {};//存储事实节点，{id:{'node':node,'type':'XXX'}}
+var factList = {};//存储事实节点，{id:{'node':node,'type':'XXX','logicNodeID':xx}}
 var arrowIndex = 0;//当前箭头id
 var arrowList = {};//存储箭头，{id:node}
 var linkIndex = 0;//当前连线id
@@ -224,29 +224,6 @@ $(document).ready(function(){
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-
-        // var bList = [];
-        // for(var bid in bodyList) {
-        //     var body = bodyList[bid];
-        //
-        //     if (body != null) {
-        //         var node = body['node'];
-        //         var heads = [];
-        //         var outL = node.outLinks;
-        //         if (outL != null && outL.length > 0) {
-        //             for (var i = 0; i < outL.length; i++) {
-        //                 var h = outL[i].nodeZ;
-        //                 heads.push({"content": h.content, "keyText": h.keyText})
-        //             }
-        //         }
-        //         var b = {
-        //             "id": bid, "name": node.text, "content": node.content, "type": typeStr[body['type']],
-        //             "committer": body['committer'], "reason": body['reason'], "conclusion": body['conclusion'],
-        //             "heads": heads
-        //         };
-        //         bList.push(b);
-        //     }
-        // }
         saveBodies();
         saveHeaders();
         saveJoints();
@@ -617,9 +594,7 @@ function undo() {
                 header_delete.splice($.inArray(node.id,header_delete),1);
 
             }else if(node.node_type=='body'){
-                drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']['type'],
-                    n['content']['committer'],n['content']['reason'],n['content']['conclusion'],
-                    n['content']['documentID'],n['content']['isDefendant']);
+                drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']);
                 body_delete.splice($.inArray(node.id,body_delete),1);
 
             }else if(node.node_type=='joint'){
@@ -627,7 +602,7 @@ function undo() {
                 joint_delete.splice($.inArray(node.id,joint_delete),1);
 
             }else if(node.node_type=='fact'){
-                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['type']);
+                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['type'],n['content']['logicNodeID']);
                 fact_delete.splice($.inArray(node.id,fact_delete),1);
 
             }else if(node.node_type=='arrow'){
@@ -1183,7 +1158,7 @@ function bindMenuClick() {
                 deleteJoint(node.id);
 
             }else if(node.node_type=='fact'){
-                n['content'] = {'type':factList[node.id]['type']};
+                n['content'] = {'type':factList[node.id]['type'],'logicNodeID':factList[node.id]['logicNodeID']};
                 deleteFact(node.id);
 
             }else if(node.node_type=='arrow'){
@@ -1356,8 +1331,7 @@ function paste(mouse_x,mouse_y) {
                     snew = bodyList[bs[snode.id]]['node'];
                 }else{
                     var body = bodyList[snode.id];
-                    snew = drawBody(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,body['type'],
-                        body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant']);
+                    snew = drawBody(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,body);
                     nodes.push(snew);
                     bs[snode.id] = snew.id;
                 }
@@ -1382,7 +1356,7 @@ function paste(mouse_x,mouse_y) {
                 if(fs[enode.id]!=null&&fs[enode.id]!=-1){
                     enew = factList[fs[enode.id]]['node'];
                 }else{
-                    enew = drawFact(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,factList[enode.id]['type']);
+                    enew = drawFact(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,factList[enode.id]['type'],factList[enode.id]['logicNodeID']);
                     nodes.push(enew);
                     fs[enode.id] = enew.id;
                 }
@@ -1418,8 +1392,7 @@ function paste(mouse_x,mouse_y) {
         }else if(node.node_type=='body'){
 
             var body = bodyList[node.id];
-            var node_new = drawBody(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,body['type'],
-                body['committer'],body['reason'], body['conclusion'], body['documentID'],body['isDefendant']);
+            var node_new = drawBody(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,body);
             nodes.push(node_new);
 
         }else if(node.node_type=='joint'){
@@ -1429,7 +1402,7 @@ function paste(mouse_x,mouse_y) {
 
         }else if(node.node_type=='fact'){
 
-            var node_new = drawFact(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,factList[node.id]['type']);
+            var node_new = drawFact(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,factList[node.id]['type'],factList[node.id]['logicNodeID']);
             nodes.push(node_new);
         }
     }
@@ -1586,7 +1559,7 @@ function bindRightPanel() {
         var fid = $('#fact-panel').attr('data-fid');
         //添加操作至operationList
         operationList.push({'type':'delete','nodes':[{'node':factList[fid]['node'],
-                'content':{'type':factList[fid]['type']}}]});
+                'content':{'type':factList[fid]['type'],'logicNodeID':factList[fid]['logicNodeID']}}]});
         deleteFact(fid);
     });
 }
@@ -1821,7 +1794,7 @@ function deleteHeader(headerID) {
 }
 
 //绘制链体，返回链体节点
-function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,documentID,isDefendant){
+function drawBody(isNew,x,y,id,name,content,detail){
 
     if(id==null)
         id = bodyIndex++;
@@ -1836,12 +1809,24 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
         content = name;
     }
 
+    var documentID = null;
+    var isDefendant = null;
+    var conclusion = null;
+    var logicNodeID = null;
+    if(detail!=null){
+        documentID = detail.documentID;
+        isDefendant = detail.isDefendant;
+        conclusion = detail.conclusion;
+        logicNodeID = detail.logicNodeID;
+    }
     if(documentID==null)
         documentID = -1;
     if(isDefendant==null)
         isDefendant = 1;
     if(conclusion==null)
         conclusion = 1;
+    if(logicNodeID==null)
+        logicNodeID = -1;
 
     var node = new JTopo.Node(name);
     node.id = id;
@@ -1856,8 +1841,8 @@ function drawBody(isNew,x,y,id,name,content,type,committer,reason,conclusion,doc
     node.textPosition = 'Bottom_Center'; // 文本位置
     node.node_type = 'body';
 
-    bodyList[node.id] = {'node':node,'type':type,'committer':committer,'reason':reason,'conclusion':conclusion,
-    'documentID':documentID,'isDefendant':isDefendant};
+    bodyList[node.id] = {'node':node,'type':detail.type,'committer':detail.committer,'reason':detail.reason,
+        'conclusion':conclusion, 'documentID':documentID,'isDefendant':isDefendant,'logicNodeID':logicNodeID};
     scene.add(node);
     //添加操作至operationList
     if(isNew==true)
@@ -2003,7 +1988,7 @@ function deleteJoint(jointID) {
 }
 
 //绘制事实，返回事实节点
-function drawFact(isNew,x,y,id,name,content,type) {
+function drawFact(isNew,x,y,id,name,content,type,logicNodeID) {
     if(id==null)
         id = factIndex++;
 
@@ -2016,6 +2001,8 @@ function drawFact(isNew,x,y,id,name,content,type) {
     if(content==null||content.length==0){
         content = name;
     }
+    if(logicNodeID==null)
+        logicNodeID = -1;
 
     var node = new JTopo.Node(name);
     node.id = id;
@@ -2029,7 +2016,7 @@ function drawFact(isNew,x,y,id,name,content,type) {
     node.shadow = "true";
     node.node_type = 'fact';
 
-    factList[node.id] = {'node':node,'type':type};
+    factList[node.id] = {'node':node,'type':type,'logicNodeID':logicNodeID};
     scene.add(node);
     //添加操作至operationList
     if(isNew)
@@ -2148,8 +2135,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_by = b_y;
 
-        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['body'],body['type'],body['committer'],
-            body['reason'],body['trust'],body['documentid'],body['isDefendant']);
+        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['content'],body);
 
         var headers = trusts[i]['headers'];
         for(var j = 0;j<headers.length;j++){
@@ -2246,7 +2232,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_fy = f_y;
 
-        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type']);
+        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type'],fact['logicNodeID']);
         if(factIndex<fact['id']){
             factIndex = fact['id']+1;
         }

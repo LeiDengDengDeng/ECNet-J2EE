@@ -555,12 +555,12 @@
             function(){
 
                 if($("#list_div").width()=="0"){
-                    $("#list_div").animate({ opacity: "1",width: "32%"}, { duration: 1000});
-                    $("#graph_div").animate({ width: "66%"}, { duration: 1000});
+                    $("#list_div").animate({ opacity: "1",width: "32%"}, { duration: 800});
+                    $("#graph_div").animate({ width: "66%"}, { duration: 800});
                     $("#list_hide").html("隐藏<<");
                 }else{
-                    $("#list_div").animate({  opacity: "0",width: "0"}, { duration: 1000});
-                    $("#graph_div").animate({ width: "98%"}, { duration: 1000});
+                    $("#list_div").animate({  opacity: "0",width: "0"}, { duration: 800});
+                    $("#graph_div").animate({ width: "98%"}, { duration: 800});
                     $("#list_hide").html("显示>>");
                 }
             });
