@@ -47,6 +47,18 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
+    public void modEvidenceOrFactNode(int id, String detail) {
+        LogicNode node = logicNodeDao.findById(id);
+        node.setDetail(detail);
+        logicNodeDao.save(node);
+    }
+
+    @Override
+    public LogicNode getNode(int id) {
+        return logicNodeDao.findById(id);
+    }
+
+    @Override
     public LogicNode saveNode(LogicNode node) {
         return logicNodeDao.save(node);
     }

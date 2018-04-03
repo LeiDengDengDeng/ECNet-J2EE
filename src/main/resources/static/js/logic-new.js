@@ -196,6 +196,8 @@ $(document).ready(function () {
     $('#print-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "文书说理逻辑图");
     });
+
+    drawNode(50, 50, null, "1", 1, "1", null);
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -558,6 +560,42 @@ function prepareMulLawModal() {
     prepareLawsDiv(lawsDiv, laws);
 }
 
+function lawsFrequencyBtn(isMultiple) {
+    if (isMultiple) {
+        $("#mulFrequencyBtn").addClass("active");
+        $("#mulLawSumBtn").removeClass("active");
+        $("#mulMindBtn").removeClass("active");
+    } else {
+        $("#frequencyBtn").addClass("active");
+        $("#lawSumBtn").removeClass("active");
+        $("#mindBtn").removeClass("active");
+    }
+}
+
+function lawsSumBtn(isMultiple) {
+    if (isMultiple) {
+        $("#mulFrequencyBtn").removeClass("active");
+        $("#mulLawSumBtn").addClass("active");
+        $("#mulMindBtn").removeClass("active");
+    } else {
+        $("#frequencyBtn").removeClass("active");
+        $("#lawSumBtn").addClass("active");
+        $("#mindBtn").removeClass("active");
+    }
+}
+
+function lawsMindBtn(isMultiple) {
+    if (isMultiple) {
+        $("#mulFrequencyBtn").removeClass("active");
+        $("#mulLawSumBtn").removeClass("active");
+        $("#mulMindBtn").addClass("active");
+    } else {
+        $("#frequencyBtn").removeClass("active");
+        $("#lawSumBtn").removeClass("active");
+        $("#mindBtn").addClass("active");
+    }
+}
+
 function prepareLawsDiv(lawsDiv, laws) {
     for (var i = 0, len = laws.length; i < len; i++) {
         var div = document.createElement("div");
@@ -612,6 +650,8 @@ function lawAdviceEvent() {
 }
 
 function mulLawAdviceEvent() {
+    var factNodes = getSelectedNodes();
+
     $("#mul-law-recommend-modal").modal("hide");
 }
 

@@ -290,7 +290,11 @@
                     <input type="text" class="form-control" id="node-law-topic" disabled>
                 </div>
             </div>
-            <hr style="margin: 0px;"/>
+            <ul class="nav nav-tabs">
+                <li id="frequencyBtn" role="presentation" class="active"><a onclick="lawsFrequencyBtn(false)">频次推荐</a></li>
+                <li id="lawSumBtn" role="presentation"><a onclick="lawsSumBtn(false)">法合推荐</a></li>
+                <li id="mindBtn" role="presentation"><a onclick="lawsMindBtn(false)">智能算法推荐</a></li>
+            </ul>
             <div class="modal-body" style="max-height:400px; overflow: scroll;">
                 <div class="form-group">
                     <div id="laws">
@@ -318,7 +322,11 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">推荐法条</h4>
             </div>
-            <hr style="margin: 0px;"/>
+            <ul class="nav nav-tabs">
+                <li id="mulFrequencyBtn" role="presentation" class="active"><a onclick="lawsFrequencyBtn(true)">频次推荐</a></li>
+                <li id="mulLawSumBtn" role="presentation"><a onclick="lawsSumBtn(true)">法合推荐</a></li>
+                <li id="mulMindBtn" role="presentation"><a onclick="lawsMindBtn(true)">智能算法推荐</a></li>
+            </ul>
             <div class="modal-body" style="max-height:500px; overflow: scroll;">
                 <div class="form-group">
                     <div id="mul-laws">
