@@ -107,7 +107,7 @@ public class ModelManageServiceImpl implements ModelManageService {
 
     @Override
     public int getLogicNodeIDofBody(int bid) {
-        return evidenceBodyDao.getLogicNodeIDByID(bid);
+        return evidenceBodyDao.findLogicId(bid);
     }
 
     @Override
