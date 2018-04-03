@@ -52,14 +52,16 @@ public class EvidenceController {
       String[] tests=text.split(SplitType.getType(text).getRegex());
       for(String str:tests){
             if(!str.isEmpty()){
+                int logicNodeId=logicService.addEvidenceOrFactNode(ajxh,str,0);
                 Evidence_Body evidence_body=new Evidence_Body();
                 evidence_body.setCaseID(ajxh);
                 evidence_body.setDocumentid(evidence_document.getId());
                 evidence_body.setBody(str);
                 evidence_body.setType(typeCalculator.calType(str));
+                evidence_body.setLogicNodeID(logicNodeId);
                 evidence_body=evidenceService.save(evidence_body);
 
-                logicService.addEvidenceOrFactNode(ajxh,str,0);
+
                 JSONObject jsonObject = new JSONObject();
 
                 jsonObject.put("id",evidence_body.getId());
@@ -79,29 +81,34 @@ public class EvidenceController {
 
     @PostMapping(value = "/deleteBody")
     public int deleteBody(@RequestParam("id") int id){
-        System.out.println(id);
+       // System.out.println(id);
+
+        logicService.deleteNode(evidenceService.findLogicId(id));
         evidenceService.deleteBodyById(id);
         evidenceService.deleteHeadAllByBody(id);
-        logicService.deleteNode(evidenceService.findLogicId(id));
         return 0;
     }
 
 
     @PostMapping(value = "/addBody")
     public Evidence_Body addBody(@RequestParam("ajxh") int ajxh, @RequestParam("type") int type, @RequestParam("body") String body,@RequestParam("document_id") int document_id){
+
+        int logicNodeId=logicService.addEvidenceOrFactNode(ajxh,body,0);
         Evidence_Body evidence_body=new Evidence_Body();
         evidence_body.setCaseID(ajxh);
         evidence_body.setDocumentid(document_id);
         evidence_body.setType(type);
         evidence_body.setBody(body);
+        evidence_body.setLogicNodeID(logicNodeId);
         evidenceService.save(evidence_body);
-        logicService.addEvidenceOrFactNode(ajxh,body,0);
+
         return evidence_body;
     }
     @PostMapping(value = "/updateBodyById")
     public void updateBodyById(@RequestParam("id") int id,@RequestParam("body") String body){
+
+        logicService.modEvidenceOrFactNode(evidenceService.findLogicId(id),body);
          evidenceService.updateBodyById(body,id);
-         logicService.modEvidenceOrFactNode(evidenceService.findLogicId(id),body);
 
     }
     @PostMapping(value = "/updateTypeById")
@@ -181,6 +188,7 @@ evidenceService.deleteHeadById(id);
         String fileName = file.getOriginalFilename();
         /*System.out.println("fileName-->" + fileName);
         System.out.println("getContentType-->" + contentType);*/
+
         String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\upload";
         try {
             FileUtil.uploadFile(file.getBytes(), filePath, fileName);

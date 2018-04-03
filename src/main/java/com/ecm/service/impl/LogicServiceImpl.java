@@ -6,6 +6,7 @@ import com.ecm.model.LogicNodeMaxValue;
 import com.ecm.service.LogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class LogicServiceImpl implements LogicService {
     public LogicNode saveNode(LogicNode node) {
         return logicNodeDao.save(node);
     }
-
+    @Transactional
     @Override
     public void deleteNode(int id) {
         logicNodeDao.deleteById(id);
