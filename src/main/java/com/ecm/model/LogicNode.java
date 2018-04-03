@@ -1,8 +1,6 @@
 package com.ecm.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by deng on 2018/3/28.
@@ -11,6 +9,7 @@ import javax.persistence.Table;
 @Table(name = "logic_node")
 public class LogicNode {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private int caseID;
 
