@@ -11,6 +11,8 @@ import java.util.List;
  * Created by deng on 2018/3/28.
  */
 public interface LogicNodeDao extends JpaRepository<LogicNode, Integer> {
+    LogicNode findById(int id);
+
     List<LogicNode> findByCaseID(int caseID);
 
     LogicNode save(LogicNode logicNode);

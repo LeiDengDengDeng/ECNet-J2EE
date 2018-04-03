@@ -12,6 +12,10 @@ public interface LogicService {
 
     int addEvidenceOrFactNode(int caseID, String detail, int type);
 
+    void modEvidenceOrFactNode(int id, String detail);
+
+    LogicNode getNode(int id);
+
     LogicNode saveNode(LogicNode node);
 
     void deleteNode(int id);
