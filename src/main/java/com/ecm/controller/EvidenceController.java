@@ -2,6 +2,7 @@ package com.ecm.controller;
 
 import com.ecm.keyword.manager.TypeCalculator;
 import com.ecm.keyword.model.SplitType;
+import com.ecm.keyword.reader.ExcelUtil;
 import com.ecm.keyword.reader.FileUtil;
 import com.ecm.model.Evidence_Body;
 import com.ecm.model.Evidence_Document;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -183,20 +186,27 @@ evidenceService.deleteHeadById(id);
 
 
     @PostMapping(value = "/importExcel")
-    public  String importExcel(@RequestParam("file") MultipartFile file,@RequestParam("ajxh") int ajxh,HttpServletRequest request){
+    public void importExcel(@RequestParam("file") MultipartFile file,@RequestParam("ajxh") int ajxh,HttpServletResponse response) throws IOException {
         String contentType = file.getContentType();
         String fileName = file.getOriginalFilename();
         /*System.out.println("fileName-->" + fileName);
         System.out.println("getContentType-->" + contentType);*/
-
-        String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\upload";
+         String sepa = java.io.File.separator;
+        String filePath = System.getProperty("user.dir")+sepa+"src"+sepa+"main"+sepa+"resources"+sepa+"upload"+sepa;
         try {
             FileUtil.uploadFile(file.getBytes(), filePath, fileName);
         } catch (Exception e) {
             // TODO: handle exception
         }
-        //返回json
-        return "uploadimg success";
+
+        List<Evidence_Body> list=ExcelUtil.evidenceToList(filePath+sepa+fileName);
+
+
+
+        response.sendRedirect("/upload");
 
     }
-    }
+
+
+
+}
