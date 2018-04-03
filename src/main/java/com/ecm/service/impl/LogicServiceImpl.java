@@ -24,7 +24,7 @@ public class LogicServiceImpl implements LogicService {
     }
 
     public int addEvidenceOrFactNode(int caseID, String detail, int type) {
-        if (type != 0 || type != 3) {
+        if (type != 0 && type != 1) {
             return -1;
         }
 

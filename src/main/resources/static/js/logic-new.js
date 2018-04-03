@@ -196,8 +196,6 @@ $(document).ready(function () {
     $('#print-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "文书说理逻辑图");
     });
-
-    drawNode(50, 50, null, "1", 1, "1", null);
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -650,7 +648,8 @@ function lawAdviceEvent() {
 }
 
 function mulLawAdviceEvent() {
-    var factNodes = getSelectedNodes();
+    // var factNodes = getSelectedNodes();
+    // foo
 
     $("#mul-law-recommend-modal").modal("hide");
 }
