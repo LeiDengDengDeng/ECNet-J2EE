@@ -93,11 +93,12 @@
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
                         <li><a id='exist_click'>退出登录</a></li>
                     </ul>
-                    <form action="" method="post" class="navbar-form navbar-right" role="search">
+                    <form action="/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
                         <div class="input-group">
-                            <input type="text" class="form-control" autocomplete="off" placeholder="键入关键字搜索" maxlength="15">
+                            <input type="text" name="ajxh" class="form-control" value="41722" hidden="hidden">
+                            <input type="file" name="file" class="form-control">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">搜索</button>
+                            <button class="btn btn-default" type="submit">提交</button>
                             </span> </div>
                     </form>
                 </div>
@@ -110,13 +111,16 @@
                     <a href="/model">证据链建模</a>
                 </li>
                 <li >
-                    <a href="law.html">说理与法条推荐</a>
+                    <a href="/logic-new">说理与法条推荐</a>
                 </li>
                 <li >
                     <a href="text.html">文书展示</a>
                 </li>
 
             </ol>
+
+
+
         </nav>
     </div>
 
@@ -157,10 +161,9 @@
             </div>
 
             <div id="after1">
-
-
                 <br>
-                <br>      <br>
+                <br>
+                <br>
 
             </div>
         </div>

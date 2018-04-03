@@ -97,6 +97,17 @@ public class Evidence_Body {
 
     }
 
+
+    public void setTrustByString(String str){
+        if(str.contains("不")){
+            trust=0;
+        }else{
+            trust=1;
+        }
+
+
+    }
+
     public String getTypeToString(){
         switch(type)
         {
@@ -117,6 +128,31 @@ public class Evidence_Body {
 
             default:
                 return "其他";
+
+        }
+
+    }
+
+    public void setTypeByString(String str){
+        switch(str)
+        {
+            case "证人证言":
+               type= 0;
+
+            case "被告人供述和辩解":
+                type= 1;
+
+            case "书证":
+                type= 2;
+
+            case "鉴定结论":
+                type= 3;
+
+            case "勘验、检查笔录":
+                type= 4;
+
+            default:
+                type= 5;
 
         }
 
@@ -180,5 +216,25 @@ public class Evidence_Body {
 
     public void setLogicNodeID(int logicNodeID) {
         this.logicNodeID = logicNodeID;
+    }
+
+    @Override
+    public String toString() {
+        return "Evidence_Body{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", documentid=" + documentid +
+                ", body='" + body + '\'' +
+                ", type=" + type +
+                ", name='" + name + '\'' +
+                ", committer='" + committer + '\'' +
+                ", reason='" + reason + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", isDefendant=" + isDefendant +
+                ", trust=" + trust +
+                ", logicNodeID=" + logicNodeID +
+                ", headList=" + headList.toString() +
+                '}';
     }
 }
