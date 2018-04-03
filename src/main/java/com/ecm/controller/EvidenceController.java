@@ -7,6 +7,7 @@ import com.ecm.model.Evidence_Document;
 
 import com.ecm.model.Evidence_Head;
 import com.ecm.service.EvidenceService;
+import com.ecm.service.LogicService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class EvidenceController {
 
     @Autowired
     private EvidenceService evidenceService;
+    @Autowired
+    private LogicService logicService;
 
     @PostMapping(value = "/document")
     public JSONArray save(@RequestParam("ajxh") int ajxh, @RequestParam("type") int type, @RequestParam("text") String text){
@@ -52,7 +55,7 @@ public class EvidenceController {
                 evidence_body.setBody(str);
                 evidence_body.setType(typeCalculator.calType(str));
                 evidence_body=evidenceService.save(evidence_body);
-
+                logicService.addEvidenceOrFactNode(ajxh,str,0);
                 JSONObject jsonObject = new JSONObject();
 
                 jsonObject.put("id",evidence_body.getId());
@@ -64,6 +67,7 @@ public class EvidenceController {
             }
 
         }
+
 
         return res;
 
