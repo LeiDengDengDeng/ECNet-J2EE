@@ -2,6 +2,7 @@ package com.ecm.controller;
 
 import com.ecm.keyword.manager.TypeCalculator;
 import com.ecm.keyword.model.SplitType;
+import com.ecm.keyword.reader.FileUtil;
 import com.ecm.model.Evidence_Body;
 import com.ecm.model.Evidence_Document;
 
@@ -10,11 +11,13 @@ import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -55,6 +58,7 @@ public class EvidenceController {
                 evidence_body.setBody(str);
                 evidence_body.setType(typeCalculator.calType(str));
                 evidence_body=evidenceService.save(evidence_body);
+
                 logicService.addEvidenceOrFactNode(ajxh,str,0);
                 JSONObject jsonObject = new JSONObject();
 
@@ -78,6 +82,7 @@ public class EvidenceController {
         System.out.println(id);
         evidenceService.deleteBodyById(id);
         evidenceService.deleteHeadAllByBody(id);
+        logicService.deleteNode(evidenceService.findLogicId(id));
         return 0;
     }
 
@@ -90,11 +95,13 @@ public class EvidenceController {
         evidence_body.setType(type);
         evidence_body.setBody(body);
         evidenceService.save(evidence_body);
+        logicService.addEvidenceOrFactNode(ajxh,body,0);
         return evidence_body;
     }
     @PostMapping(value = "/updateBodyById")
     public void updateBodyById(@RequestParam("id") int id,@RequestParam("body") String body){
          evidenceService.updateBodyById(body,id);
+         logicService.modEvidenceOrFactNode(evidenceService.findLogicId(id),body);
 
     }
     @PostMapping(value = "/updateTypeById")
@@ -167,4 +174,21 @@ evidenceService.deleteHeadById(id);
         evidenceService.updateHeadById(head,id);
     }
 
+
+    @PostMapping(value = "/importExcel")
+    public  String importExcel(@RequestParam("file") MultipartFile file,@RequestParam("ajxh") int ajxh,HttpServletRequest request){
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        /*System.out.println("fileName-->" + fileName);
+        System.out.println("getContentType-->" + contentType);*/
+        String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\upload";
+        try {
+            FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        //返回json
+        return "uploadimg success";
+
+    }
     }

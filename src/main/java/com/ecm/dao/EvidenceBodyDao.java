@@ -46,4 +46,7 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
     @Query("update Evidence_Body c  set c.trust = ?1 where c.id=?2")
     public void updateTrustById(int trust, int id);
 
+    @Query(value = "select u.logicNodeID from Evidence_Body u where u.id = ?1")
+    public int findLogicId(int id);
+
 }
