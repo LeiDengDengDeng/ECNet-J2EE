@@ -10,33 +10,33 @@ public interface ModelManageService {
 
     public JSONObject getEvidences(int cid);
 
-//    public List<MOD_Joint> getJoints(int cid);
-//
-//    public List<MOD_Arrow> getArrows(int cid);
-
-    public void saveHeaders(List<Evidence_Head> headers);
+    public void saveHeader(Evidence_Head header);
 
     public void deleteHeaderById(int id);
 
     public void deleteHeadersByCid(int cid);
 
-    public void saveBodies(List<Evidence_Body> bodies);
+    public void saveBody(Evidence_Body body);
+
+    public int getLogicNodeIDofBody(int bid);
 
     public void deleteBodyById(int id);
 
     public void deleteBodiesByCid(int cid);
 
-    public void saveJoints(List<MOD_Joint> joints);
+    public void saveJoint(MOD_Joint joint);
 
     public void deleteJointById(int id);
 
-    public void saveFacts(List<MOD_Fact> facts);
+    public void saveFact(MOD_Fact fact);
+
+    public int getLogicNodeIDofFact(int fid);
 
     public void deleteFactById(int id);
 
     public void deleteJointsByCid(int cid);
 
-    public void saveArrows(List<MOD_Arrow> arrows);
+    public void saveArrow(MOD_Arrow arrow);
 
     public void deleteArrowsByCid(int cid);
 
