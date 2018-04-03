@@ -33,4 +33,5 @@ public interface EvidenceService{
     public void deleteHeadAllByBody(int body_id);
 
     public List<Evidence_Head> findHeadByBody(int bodyid);
+    public int findLogicId(int bodyid);
 }

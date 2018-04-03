@@ -184,4 +184,9 @@ public class EvidenceServiceImpl implements EvidenceService {
     public List<Evidence_Head> findHeadByBody(int bodyid) {
         return evidenceHeadDao.findAllByBodyid(bodyid);
     }
+
+    @Override
+    public int findLogicId(int bodyid) {
+        return evidenceBodyDao.findLogicId(bodyid);
+    }
 }

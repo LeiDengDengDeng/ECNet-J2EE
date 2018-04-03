@@ -58,6 +58,7 @@ public class EvidenceController {
                 evidence_body.setBody(str);
                 evidence_body.setType(typeCalculator.calType(str));
                 evidence_body=evidenceService.save(evidence_body);
+
                 logicService.addEvidenceOrFactNode(ajxh,str,0);
                 JSONObject jsonObject = new JSONObject();
 
@@ -81,6 +82,7 @@ public class EvidenceController {
         System.out.println(id);
         evidenceService.deleteBodyById(id);
         evidenceService.deleteHeadAllByBody(id);
+        logicService.deleteNode(evidenceService.findLogicId(id));
         return 0;
     }
 
@@ -93,11 +95,13 @@ public class EvidenceController {
         evidence_body.setType(type);
         evidence_body.setBody(body);
         evidenceService.save(evidence_body);
+        logicService.addEvidenceOrFactNode(ajxh,body,0);
         return evidence_body;
     }
     @PostMapping(value = "/updateBodyById")
     public void updateBodyById(@RequestParam("id") int id,@RequestParam("body") String body){
          evidenceService.updateBodyById(body,id);
+         logicService.modEvidenceOrFactNode(evidenceService.findLogicId(id),body);
 
     }
     @PostMapping(value = "/updateTypeById")
@@ -177,7 +181,7 @@ evidenceService.deleteHeadById(id);
         String fileName = file.getOriginalFilename();
         /*System.out.println("fileName-->" + fileName);
         System.out.println("getContentType-->" + contentType);*/
-        String filePath = request.getSession().getServletContext().getRealPath("upload/");
+        String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\upload";
         try {
             FileUtil.uploadFile(file.getBytes(), filePath, fileName);
         } catch (Exception e) {
