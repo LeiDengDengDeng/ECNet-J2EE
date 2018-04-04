@@ -10,6 +10,7 @@ import com.ecm.model.Evidence_Body;
 import com.ecm.model.Evidence_Document;
 import com.ecm.model.Evidence_Head;
 import com.ecm.service.EvidenceService;
+import com.ecm.service.LogicService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class EvidenceServiceImpl implements EvidenceService {
     public EvidenceBodyDao evidenceBodyDao;
     @Autowired
     public EvidenceHeadDao evidenceHeadDao;
+    @Autowired
+    public LogicService logicService;
     @Autowired
     public MOD_ArrowDao arrowDao;
 
@@ -78,6 +81,14 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Transactional
     @Override
     public void deleteBodyAll(int document_id) {
+        List<Integer> bodyIdList=evidenceBodyDao.findAllByDocumentid(document_id);
+
+
+        for (Integer i:bodyIdList
+             ) {
+
+            logicService.deleteNode(evidenceBodyDao.findLogicId(i));
+        }
         evidenceBodyDao.deleteAllByDocumentid(document_id);
     }
     @Transactional

@@ -93,12 +93,12 @@
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
                         <li><a id='exist_click'>退出登录</a></li>
                     </ul>
-                    <form action="/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
+                    <form id="excelForm" action="/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
                         <div class="input-group">
-                            <input type="text" name="ajxh" class="form-control" value="41722" hidden="hidden">
+                            <input type="text" name="ajxh" class="hidden form-control" value="41722">
                             <input type="file" name="file" class="form-control">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit">提交</button>
+                            <button class="btn btn-default" onclick="uploadExcel()">提交</button>
                             </span> </div>
                     </form>
                 </div>
@@ -786,6 +786,38 @@
                 }
             });
             $(".head_chain[headid='"+id+"']").remove();
+        }
+
+
+
+
+        function uploadExcel(){
+            $('#excelForm').submit(      //ajax方式提交表单
+                {
+                    url: '/evidence/importExcel',
+                    type: 'post',
+                    beforeSubmit: function () {},
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            // var targetUrl =$('#excelForm').attr("action");
+            // var data = new FormData($('#excelForm')[0]);
+            // $.ajax({
+            //     type:'post',
+            //     url:targetUrl,
+            //     cache: false,    //上传文件不需缓存
+            //     processData: false, //需设置为false。因为data值是FormData对象，不需要对数据做处理
+            //     contentType: false, //需设置为false。因为是FormData对象，且已经声明了属性enctype="multipart/form-data"
+            //     data:data,
+            //     dataType:'json',
+            //     success:function(data){
+            //         alert(data);
+            //     },
+            //     error:function(){
+            //         alert("请求失败")
+            //     }
+            // })
         }
 </script>
 

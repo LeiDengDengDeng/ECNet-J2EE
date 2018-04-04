@@ -46,4 +46,8 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
     @Query(value = "select u.logicNodeID from Evidence_Body u where u.id = ?1")
     public int findLogicId(int id);
 
+
+    @Query(value = "select u.id from Evidence_Body u where u.documentid = ?1")
+    public List<Integer> findAllByDocumentid(int id);
+
 }
