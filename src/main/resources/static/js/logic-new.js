@@ -59,7 +59,6 @@ $(document).ready(function () {
             $("#element-name").hide();
             $("#hr").hide();
             $("#del-element-li").hide();
-            $("#mul-del-element-li").hide();
             $("#mod-element-li").hide();
             $("#hr2").hide();
             $("#advice-element-li").hide();
@@ -196,6 +195,10 @@ $(document).ready(function () {
     $('#print-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "文书说理逻辑图");
     });
+
+    $('#save-btn').click(function () {
+        saveData();
+    });
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -214,7 +217,7 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
     // 根据内容长度决定node宽度
     node.setSize(topicLength, 24);
     // 设置树的方向
-    node.layout = {type: 'tree', direction: 'left', width: 70, height: 250};
+    node.layout = {type: 'tree', direction: 'left', width: 70, height: 230};
 
     node.addEventListener('mouseup', function (event) {
         nodeClickEvent(node.id, event);
@@ -268,6 +271,19 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
     }
 
     return node.id;
+}
+
+/**
+ * 将两个节点连起来，同时修改了forest数据、links数据以及node的parentId属性
+ * @param nodeId
+ * @param parentId
+ */
+function linkTwoSingleNode(nodeId, parentId) {
+    var node = findNodeById(nodeId);
+
+    moveNode(nodeId, parentId);
+    editLink(nodeId, node.parentId, nodeId, parentId);
+    node.parentId = parentId;
 }
 
 function drawLink(parentNode, node) {
@@ -395,17 +411,13 @@ function editBtnEvent() {
 
     var node = findNodeById(id);
 
-    // 修改forest内数据
-    moveNode(id, leadTo);
-
-    // 修改连线
-    editLink(id, node.parentId, id, leadTo);
+    // 修改forest内数据、修改连线、修改node的parentId
+    linkTwoSingleNode(id, leadTo);
 
     // 修改node信息
     node.topic = topic;
     node.detail = detail;
     node.type = type;
-    node.parentId = leadTo;
 
     // 修改图上的node文字、宽度、边框颜色
     var topicLength = 32 + topic.replace(/[\u0391-\uFFE5]/g, "aa").length * 8;
@@ -519,17 +531,6 @@ function delNodeAndItsChildren(delNodes, id) {
     }
 }
 
-function multipleDelNodesEvent() {
-    saveScene();
-
-    var selectedNodes = getSelectedNodes();
-    for (var i = 0; i < selectedNodes.length; i++) {
-        delNode(selectedNodes[i].id);
-    }
-
-    $('#stageMenu').hide();
-}
-
 function prepareLawModal(id) {
     var node = findNodeById(id);
     $("#node-law-id").val(id);
@@ -621,9 +622,10 @@ function lawAdviceEvent() {
         parentId = drawNode(factNode.node.x + 80, factNode.node.y, null, "结论", 3, "系统自动生成的结论", null);
 
         // 将事实节点与结论节点连接起来
-        moveNode(factNodeId, parentId);
-        factNode.parentId = parentId;
-        editLink(factNodeId, null, factNodeId, parentId);
+        linkTwoSingleNode(factNodeId, parentId);
+        // moveNode(factNodeId, parentId);
+        // factNode.parentId = parentId;
+        // editLink(factNodeId, null, factNodeId, parentId);
     }
 
     var checkboxes = $("#laws input[type=checkbox]:checked");
@@ -707,7 +709,6 @@ function nodeClickEvent(id, event) {
             $("#mod-element-li").hide();
             $("#hr2").hide();
             $("#advice-element-li").hide();
-            $("#mul-del-element-li").show();
             if (isFact) {
                 // 多选事实nodes
                 $("#mul-advice-element-li").show();
@@ -715,7 +716,6 @@ function nodeClickEvent(id, event) {
         } else {
             // 单选node
             $("#mul-advice-element-li").hide();
-            $("#mul-del-element-li").hide();
             $("#element-id").show();
             $("#element-name").show();
             $("#hr").show();
@@ -729,6 +729,12 @@ function nodeClickEvent(id, event) {
                 $("#hr2").hide();
                 $("#advice-element-li").hide();
             }
+            if (node.type == 0 || node.type == 1) {
+                // 证据节点和事实节点不允许编辑和删除
+                $("#mod-element-li").hide();
+                $("#del-element-li").hide();
+            }
+
             $("#element-id").html("<a>id：" + id + "</a>");
             $("#element-name").html("<a>名称：" + node.topic + "</a>");
         }
@@ -775,6 +781,22 @@ function nodeClickEvent(id, event) {
             case 3:
                 $infoPanel.addClass("panel-info");
                 break;
+        }
+
+        if (node.type == 0 || node.type == 1) {
+            $("#panel-del-btn").addClass("disabled");
+            $("#panel-save-btn").addClass("disabled");
+            $("#panel-topic-input").attr("readonly","readonly");
+            $("#panel-detail-input").attr("readonly","readonly");
+            $("#panel-type-select").attr("disabled","disabled");
+            $("#panel-leadTo-select").attr("disabled","disabled");
+        }else{
+            $("#panel-del-btn").removeClass("disabled");
+            $("#panel-save-btn").removeClass("disabled");
+            $("#panel-topic-input").removeAttr("readonly");
+            $("#panel-detail-input").removeAttr("readonly");
+            $("#panel-type-select").removeAttr("disabled");
+            $("#panel-leadTo-select").removeAttr("disabled");
         }
 
         $infoPanel.show();
@@ -1041,11 +1063,7 @@ function repeal() {
     var lastLinks = historyLinks.pop();
     for (var i = 0, len = lastLinks.length; i < len; i++) {
         var nodeId = lastLinks[i].nodeId, parentNodeId = lastLinks[i].parentNodeId;
-
-        moveNode(nodeId, parentNodeId);
-        findNodeById(nodeId).parentId = parentNodeId;
-
-        drawLink(findNodeById(parentNodeId).node, findNodeById(nodeId).node);
+        linkTwoSingleNode(nodeId, parentNodeId);
     }
 
     if (historyForests.length == 0) {
@@ -1071,4 +1089,45 @@ function isLawRepeated(parentId, lawTopic, lawDetail) {
         }
     }
     return false;
+}
+
+/**
+ * 加载从数据库中读取获得的节点信息至画布上
+ * @param data
+ */
+function loadData(data) {
+    // 先画节点
+    for (var i = 0; i < data.length; i++) {
+        if (idCounter < data[i].nodeID) idCounter = data[i].nodeID;
+        drawNode(data[i].x, data[i].y, data[i].nodeID, data[i].topic, data[i].type, data[i].detail, null);
+    }
+
+    // 节点画完后再连线
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].parentNodeID == -1) continue;
+        linkTwoSingleNode(data[i].nodeID, data[i].parentNodeID)
+    }
+}
+
+function saveData() {
+    var nodes = Array.of();
+    for (var m = 0, len1 = forest.length; m < len1; m++) {
+        var tree = forest[m];
+        for (var n = 0, len2 = tree.length; n < len2; n++) {
+            var parentId = tree[n].parentId == null || tree[n].parentId == "null" ? -1 : tree[n].parentId;
+
+            nodes.push({
+                caseID: cid,
+                nodeID: tree[n].id,
+                parentNodeID: parentId,
+                topic: tree[n].topic,
+                detail: tree[n].detail,
+                type: tree[n].type,
+                x: tree[n].node.x,
+                y: tree[n].node.y
+            });
+        }
+    }
+
+    saveLogicNodes(JSON.stringify(nodes));
 }

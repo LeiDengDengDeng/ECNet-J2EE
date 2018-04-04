@@ -4,7 +4,6 @@ import com.ecm.model.LogicNode;
 import com.ecm.service.LogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.rmi.runtime.Log;
 
 import java.util.List;
 
@@ -22,8 +21,8 @@ public class LogicController {
         return logicService.getAllNodesByCaseID(caseID);
     }
 
-    @PostMapping(value = "add")
-    public int add(@RequestBody LogicNode logicNode){
-        return logicService.saveNode(logicNode).getId();
+    @PostMapping(value = "saveAll")
+    public void saveAll(@RequestParam("caseID") int caseID, @RequestBody List<LogicNode> logicNodes) {
+        logicService.saveAllNodesInSameCase(caseID, logicNodes);
     }
 }
