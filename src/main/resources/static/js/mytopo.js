@@ -224,11 +224,11 @@ $(document).ready(function(){
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        saveBodies();
-        saveHeaders();
-        saveJoints();
-        saveArrows();
-        saveFacts();
+        // saveBodies();
+        // saveHeaders();
+        // saveJoints();
+        // saveArrows();
+        // saveFacts();
         window.location.href="/model/exportExcel?cid="+cid;
 
     });
@@ -347,7 +347,8 @@ function saveBodies() {
         if(body!=null){
             var node = body['node'];
             var b = {"id":bid,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
-                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],"isDefendant":body['isDefendant']};
+                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
+                "isDefendant":body['isDefendant'],"logicNodeID":body['logicNodeID']};
             bList.push(b);
         }
     }
@@ -491,7 +492,8 @@ function saveFacts() {
 
         if(fact!=null){
             var node = fact['node'];
-            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,"type":fact['type']};
+            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
+                "type":fact['type'],"logicNodeID":fact['logicNodeID']};
             fList.push(f);
         }
     }
