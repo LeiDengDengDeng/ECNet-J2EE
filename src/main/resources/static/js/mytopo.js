@@ -224,12 +224,21 @@ $(document).ready(function(){
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        // saveBodies();
-        // saveHeaders();
-        // saveJoints();
-        // saveArrows();
-        // saveFacts();
+        saveBodies();
+        saveHeaders();
+        saveJoints();
+        saveArrows();
+        saveFacts();
         window.location.href="/model/exportExcel?cid="+cid;
+
+    });
+    $('#saveXML-btn').click(function () {
+        saveBodies();
+        saveHeaders();
+        saveJoints();
+        saveArrows();
+        saveFacts();
+        window.location.href="/model/exportXML?cid="+cid;
 
     });
     $('#revoke-btn').click(function () {
@@ -407,7 +416,7 @@ function saveJoints() {
     $.ajax({
         type: "post",
         url: "/model/deleteJoints",
-        data: JSON.stringify(joint_delete),
+        data: {"jids":JSON.stringify(joint_delete),"cid":cid},
         contentType: "application/json; charset=utf-8",
         async: false,
         success: function (data) {
@@ -423,7 +432,7 @@ function saveJoints() {
     $.ajax({
         type: "post",
         url: "/model/saveJoints",
-        data: JSON.stringify(jList),
+        data: {"fids":JSON.stringify(jList),"cid":cid},
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
         async: false,

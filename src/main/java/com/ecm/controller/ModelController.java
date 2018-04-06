@@ -84,10 +84,10 @@ public class ModelController {
     }
 
     @RequestMapping(value="/deleteJoints")
-    public void deleteJoints(@RequestBody List<Integer> jids){
+    public void deleteJoints(@RequestParam("jids") List<Integer> jids,@RequestParam("cid") int cid){
 
         for(int i = 0;i<jids.size();i++){
-            modelManageService.deleteJointById(jids.get(i));
+            modelManageService.deleteJointById(jids.get(i),cid);
         }
     }
 
@@ -107,12 +107,12 @@ public class ModelController {
     }
 
     @RequestMapping(value="/deleteFacts")
-    public void deleteFacts(@RequestBody List<Integer> fids){
+    public void deleteFacts(@RequestParam("fids") List<Integer> fids,@RequestParam("cid") int cid){
 
         for(int i = 0;i<fids.size();i++){
             int fid = fids.get(i);
-            modelManageService.deleteFactById(fid);
-            int lid = modelManageService.getLogicNodeIDofFact(fid);
+            modelManageService.deleteFactById(fid,cid);
+            int lid = modelManageService.getLogicNodeIDofFact(fid,cid);
             if(lid>=0)
                 logicService.deleteNode(lid);
         }
@@ -138,6 +138,21 @@ public class ModelController {
         int cid = Integer.parseInt(request.getParameter("cid"));
         modelManageService.writeToExcel(cid,filePath);
 
+        return exportFile(filePath);
+    }
+
+    @RequestMapping(value="/exportXML")
+    public ResponseEntity<InputStreamResource> exportXML(HttpServletRequest request)
+            throws IOException {
+        String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\download\\证据链.xml";
+        int cid = Integer.parseInt(request.getParameter("cid"));
+        modelManageService.writeToXML(cid,filePath);
+
+        return exportFile(filePath);
+    }
+
+    private ResponseEntity<InputStreamResource> exportFile(String filePath)
+            throws IOException{
         FileSystemResource fileSystemResource = new FileSystemResource(filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");

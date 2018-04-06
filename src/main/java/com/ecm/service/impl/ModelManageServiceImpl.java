@@ -12,12 +12,18 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -133,8 +139,8 @@ public class ModelManageServiceImpl implements ModelManageService {
 
     @Override
     @Transactional
-    public void deleteJointById(int id) {
-        jointDao.deleteById(id);
+    public void deleteJointById(int id,int cid) {
+        jointDao.deleteByIdAndCaseID(id,cid);
     }
 
     @Override
@@ -143,14 +149,14 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public int getLogicNodeIDofFact(int fid) {
-        return factDao.getLogicNodeIDByID(fid);
+    public int getLogicNodeIDofFact(int fid,int cid) {
+        return factDao.getLogicNodeIDByIDAndCaseID(fid,cid);
     }
 
     @Override
     @Transactional
-    public void deleteFactById(int id) {
-        factDao.deleteById(id);
+    public void deleteFactById(int id,int cid) {
+        factDao.deleteByIdAndCaseID(id,cid);
     }
 
     @Override
@@ -372,12 +378,12 @@ public class ModelManageServiceImpl implements ModelManageService {
             HSSFRow hrow = sheet2.createRow(endRow);
             MOD_Fact fact = facts.get(i);
             int fid = fact.getId();
-            List<MOD_Joint> joints = jointDao.findAllByFactID(fid);
+            List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fid,cid);
             int jNum = joints.size();
 
             for(int j = 0;j<jNum;j++){
                 MOD_Joint joint = joints.get(j);
-                List<Integer> hids = arrowDao.getHeaderIdByJointId(joint.getId());
+                List<Integer> hids = arrowDao.getHeaderIdByJointIdAndCaseID(joint.getId(),cid);
                 int hNum = hids.size();
                 HSSFRow rowtemp;
                 if(j==0){
@@ -486,6 +492,122 @@ public class ModelManageServiceImpl implements ModelManageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void writeToXML(int cid, String filePath) {
+        //构造空的Document
+        Document doc = DocumentHelper.createDocument();
+        // 构造根元素
+        Element rootElmt = doc.addElement("evidenceList");
+        Element evidencesElmt = rootElmt.addElement("evidences");
+        List<Evidence_Body> bodies = evidenceBodyDao.findAllByCaseID(cid);
+
+        for(int i = 0;i<bodies.size();i++){
+            Evidence_Body body = bodies.get(i);
+            Element element = evidencesElmt.addElement("evidence");
+            element.addAttribute("id", body.getId()+"");
+            Element ename = element.addElement("name");
+            ename.setText(body.getName());
+            Element econtent = element.addElement("content");
+            econtent.setText(body.getBody());
+            Element etype = element.addElement("type");
+            etype.setText(body.getTypeToString());
+            Element ecommitter = element.addElement("committer");
+            ecommitter.setText(body.getCommitter());
+            Element ereason = element.addElement("reason");
+            ereason.setText(body.getReason());
+            Element etrust = element.addElement("trust");
+            etrust.setText(body.getTrustToString());
+
+            List<Evidence_Head> heads = evidenceHeadDao.findAllByBodyid(body.getId());
+            if(heads.size()>=1){
+                Element headElement = element.addElement("heads");
+                for(int j = 0;j<heads.size();j++){
+                    Evidence_Head head = heads.get(j);
+                    Element hel = headElement.addElement("head");
+                    hel.addAttribute("id",head.getId()+"");
+                    Element hname = hel.addElement("name");
+                    hname.setText(head.getName());
+                    Element hcontent = hel.addElement("content");
+                    hcontent.setText(head.getHead());
+                }
+            }
+        }
+
+        Element factsElmt = rootElmt.addElement("facts");
+        List<MOD_Fact> facts = factDao.findAllByCaseID(cid);
+        for(int i = 0;i<facts.size();i++){
+            MOD_Fact fact = facts.get(i);
+            Element element = factsElmt.addElement("fact");
+            element.addAttribute("id", fact.getId()+"");
+            Element fname = element.addElement("name");
+            fname.setText(fact.getName());
+            Element fcontent = element.addElement("content");
+            fcontent.setText(fact.getContent());
+            Element ftype = element.addElement("type");
+            ftype.setText(fact.getType());
+
+            List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fact.getId(),cid);
+            if(joints.size()>=1){
+                Element jointElement = element.addElement("joints");
+                for(int j = 0;j<joints.size();j++){
+                    MOD_Joint joint = joints.get(j);
+                    Element jel = jointElement.addElement("head");
+                    jel.addAttribute("id",joint.getId()+"");
+                    Element jname = jel.addElement("name");
+                    jname.setText(joint.getName());
+                    Element jcontent = jel.addElement("content");
+                    jcontent.setText(joint.getContent());
+                }
+            }
+        }
+
+        List<MOD_Arrow> arrows = arrowDao.findAllByCaseID(cid);
+        if(arrows.size()>=1){
+            Element arrowsElmt = rootElmt.addElement("relations");
+            for(int i = 0;i<arrows.size();i++){
+                MOD_Arrow arrow = arrows.get(i);
+                Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
+                MOD_Joint joint = jointDao.findByIdAndCaseID(arrow.getNodeTo_jid(),cid);
+                Element rel = arrowsElmt.addElement("relation");
+                rel.addAttribute("id",joint.getId()+"");
+
+                Element aname = rel.addElement("name");
+                aname.setText(arrow.getName());
+                Element acontent = rel.addElement("content");
+                acontent.setText(arrow.getContent());
+                Element afrom = rel.addElement("from");
+                afrom.addAttribute("type","head");
+                afrom.addAttribute("id",arrow.getNodeFrom_hid()+"");
+                afrom.addAttribute("name",head.getName());
+                afrom.setText(head.getHead());
+                Element ato = rel.addElement("to");
+                ato.addAttribute("type","joint");
+                ato.addAttribute("id",arrow.getNodeTo_jid()+"");
+                ato.addAttribute("name",joint.getName());
+                ato.setText(joint.getContent());
+            }
+        }
+
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(filePath);
+            //定义输出格式 和 字符集
+            OutputFormat format = OutputFormat.createPrettyPrint();
+            format.setEncoding("UTF-8");
+            //定义用于输出xml文件的XMLWriter对象
+            XMLWriter xmlWriter = new XMLWriter(fw,format);
+            xmlWriter.write(doc);
+            xmlWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeToXMLSchema(int cid, String filePath) {
+
     }
 
     private void setRegionStyle(HSSFSheet sheet, CellRangeAddress region, HSSFCellStyle cs) {

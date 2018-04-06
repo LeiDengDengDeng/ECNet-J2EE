@@ -26,13 +26,13 @@ public interface ModelManageService {
 
     public void saveJoint(MOD_Joint joint);
 
-    public void deleteJointById(int id);
+    public void deleteJointById(int id,int cid);
 
     public void saveFact(MOD_Fact fact);
 
-    public int getLogicNodeIDofFact(int fid);
+    public int getLogicNodeIDofFact(int fid,int cid);
 
-    public void deleteFactById(int id);
+    public void deleteFactById(int id,int cid);
 
     public void deleteJointsByCid(int cid);
 
@@ -42,4 +42,7 @@ public interface ModelManageService {
 
     public void writeToExcel(int cid,String filePath);
 
+    public void writeToXML(int cid,String filePath);
+
+    public void writeToXMLSchema(int cid,String filePath);
 }

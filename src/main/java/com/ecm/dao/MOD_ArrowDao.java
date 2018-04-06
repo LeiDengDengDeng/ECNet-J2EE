@@ -20,6 +20,6 @@ public interface MOD_ArrowDao extends JpaRepository<MOD_Arrow, MODPK> {
 
     public List<MOD_Arrow> findAllByCaseID(int cid);
 
-    @Query(value = "select a.nodeFrom_hid from MOD_Arrow a where a.nodeTo_jid=?1")
-    public List<Integer> getHeaderIdByJointId(int jid);
+    @Query(value = "select a.nodeFrom_hid from MOD_Arrow a where a.nodeTo_jid=?1 and a.caseID=?2")
+    public List<Integer> getHeaderIdByJointIdAndCaseID(int jid,int cid);
 }
