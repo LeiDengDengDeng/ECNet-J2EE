@@ -21,26 +21,15 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-//        if($.session.get('username')==null){
-//            window.location.href="/login";
-//        }else if($.session.get('cid')==null){
-//            window.location.href="/manage";
-//        }
+        //        if($.session.get('username')==null){
+        //            window.location.href="/login";
+        //        }else if($.session.get('cid')==null){
+        //            window.location.href="/manage";
+        //        }
         /*]]>*/
     </script>
 </head>
 <body style="background-color: #FFFFFF">
-<!--<nav class="navbar navbar-default navbar-fixed-top no-print">-->
-<!--<div class="container">-->
-<!--<a class="navbar-brand" href="#">文书可视化工具集</a>-->
-<!--<ul class="nav navbar-nav">-->
-<!--<li><a href="./index.html" target="_blank">查看证据链关系图</a></li>-->
-<!--<li><a href="./new.html" target="_blank">新建证据链关系图</a></li>-->
-<!--<li><a href="./logic.html" target="_blank">查看文书说理逻辑图</a></li>-->
-<!--<li class="active"><a href="./logic-new.html" target="_blank">新建文书说理逻辑图</a></li>-->
-<!--</ul>-->
-<!--</div>-->
-<!--</nav>-->
 <section class="container-fluid">
     <div class="row">
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -101,6 +90,9 @@
                 终止: x:<b id="endPosX"></b>, y:<b id="endPosY"></b>
             </span>
                 <span class="file-operation-btns">
+                <a id="excel-btn" class="btn btn-danger btn-sm" style="background-color: #c0a16b;border-color: #c0a16b">导出excel</a>
+                <a id="xml-btn" class="btn btn-danger btn-sm"
+                   style="background-color: blueviolet;border-color: blueviolet">导出xml</a>
                 <a id="compose-btn" class="btn btn-danger btn-sm" onclick="compose()">自动排版</a>
                 <a id="line-btn" class="btn btn-primary btn-sm" onclick="curveGraph()">显示曲线图</a>
                 <a id="print-btn" class="btn btn-default btn-sm">打印此图</a>
@@ -345,6 +337,10 @@
                     <label for="node-edit-topic-input">摘要</label>
                     <input type="text" class="form-control" id="node-law-topic" disabled>
                 </div>
+                <div class="form-group">
+                    <label for="node-edit-topic-input">详情</label>
+                    <input type="text" class="form-control" id="node-law-detail" disabled>
+                </div>
             </div>
             <ul class="nav nav-tabs">
                 <li id="frequencyBtn" role="presentation" class="active"><a onclick="lawsFrequencyBtn(false)">频次推荐</a>
@@ -352,12 +348,13 @@
                 <li id="lawSumBtn" role="presentation"><a onclick="lawsSumBtn(false)">法合推荐</a></li>
                 <li id="mindBtn" role="presentation"><a onclick="lawsMindBtn(false)">智能算法推荐</a></li>
             </ul>
-            <div class="modal-body" style="max-height:400px; overflow: scroll;">
+            <div class="modal-body" style="max-height:300px; overflow: scroll;">
                 <div class="form-group">
                     <div id="laws">
                         <!--<div class="form-group">-->
-                        <!--<input type="checkbox" id="law-checkbox-1"/>-->
-                        <!--<a title="犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。">中华人民共和国刑法_第六十七条</a>-->
+                            <!--<input type="checkbox" id="law-checkbox-1"/>-->
+                            <!--<a>中华人民共和国刑法_第六十七条</a>-->
+                            <!--<textarea class="form-control" style="display: none" disabled >犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。</textarea>-->
                         <!--</div>-->
                     </div>
                 </div>
@@ -424,14 +421,13 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-//    var username = $.session.get('username');
-//    $('#userLabel').text(username);
-//    var cid = $.session.get('cid');
+    //    var username = $.session.get('username');
+    //    $('#userLabel').text(username);
+    //    var cid = $.session.get('cid');
     var cid = 41722;
 
     $('#exist_click').click(function () {
-        if(confirm('是否确认退出？'))
-        {
+        if (confirm('是否确认退出？')) {
             $.session.remove('username');
             window.location.href = '/login';
         }

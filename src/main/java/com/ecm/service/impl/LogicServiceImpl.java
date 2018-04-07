@@ -6,21 +6,33 @@ import com.ecm.model.EvidenceFactLink;
 import com.ecm.model.LogicNode;
 import com.ecm.model.LogicNodeMaxValue;
 import com.ecm.service.LogicService;
+import com.ecm.util.LogicExcelGenerator;
+import com.ecm.util.LogicXMLGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by deng on 2018/3/28.
  */
 @Service
+@PropertySource(value = {"classpath:application.properties"}, encoding = "utf-8")
 public class LogicServiceImpl implements LogicService {
     @Autowired
     private LogicNodeDao logicNodeDao;
     @Autowired
     private EvidenceFactLinkDao evidenceFactLinkDao;
+
+    @Value("${download.logicnode.xml}")
+    private String downloadXMLPath;
+
+    @Value("${download.logicnode.excel}")
+    private String downloadExcelPath;
 
     @Override
     public List<LogicNode> getAllNodesByCaseID(int caseID) {
@@ -107,6 +119,25 @@ public class LogicServiceImpl implements LogicService {
     @Transactional
     public void deleteNode(int id) {
         logicNodeDao.deleteById(id);
+    }
+
+    @Override
+    public String generateXMLFile(int caseID) {
+        List<LogicNode> nodes = logicNodeDao.findByCaseID(caseID);
+        try {
+            new LogicXMLGenerator(downloadXMLPath, nodes).generateXMLFile();
+            return downloadXMLPath;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String generateExcelFile(int caseID) {
+        List<LogicNode> nodes = logicNodeDao.findByCaseID(caseID);
+        new LogicExcelGenerator(downloadExcelPath, nodes).generateExcelFile();
+        return downloadExcelPath;
     }
 
     private LogicNodeMaxValue getLogicNodeMaxValue(int caseID) {
