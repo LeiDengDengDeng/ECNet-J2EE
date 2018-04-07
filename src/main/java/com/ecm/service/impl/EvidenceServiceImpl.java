@@ -66,7 +66,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     public Evidence_Body save(Evidence_Body evidence_body) {
         return evidenceBodyDao.save(evidence_body);
     }
-
+    @Transactional
     @Override
     public Evidence_Head save(Evidence_Head evidence_head) {
         return evidenceHeadDao.save(evidence_head);

@@ -13,6 +13,11 @@ import com.ecm.service.LogicService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
+import static com.ecm.keyword.reader.ExcelUtil.getExcelWorkbook;
+import static com.ecm.keyword.reader.ExcelUtil.getSheetByNum;
 
 
 @RestController
@@ -199,14 +207,65 @@ evidenceService.deleteHeadById(id);
             // TODO: handle exception
         }
 
-        List<Evidence_Body> list=ExcelUtil.evidenceToList(filePath+sepa+fileName);
+       Evidence_Document evidence_document=ExcelUtil.saveDocument(filePath+sepa+fileName,41722,0);
+        int id=evidenceService.findIdByAjxhAndType(41722,0);
+        if(id!=-1){
+            evidence_document.setId(id);
+        }
+        evidence_document=evidenceService.saveOrUpdate(evidence_document);
+        //System.out.println(evidence_document.getText());
+        int documentId=evidence_document.getId();
 
-
+        excelToEvidenceList(filePath+sepa+fileName,41722,documentId);
 
         response.sendRedirect("/upload");
 
     }
 
 
+    public  void excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
+        evidenceService.deleteBodyAll(documentId);
+        Workbook book = null;
+        book = getExcelWorkbook(file_dir);
+        Sheet sheet = getSheetByNum(book, 0);
+        int lastRowNum = sheet.getLastRowNum();
+        System.out.println("last number is " + lastRowNum);
+        String text = "";
+        int xh = 1;
+        Evidence_Body evidenceBody = new Evidence_Body();
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row != null) {
+                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+                    System.out.println("reading line is " + i);
+                    text = row.getCell(3).getStringCellValue();
+                    //System.out.println(evidenceBody.toString());
+                    evidenceBody = new Evidence_Body();
 
+                    int logicNodeId=logicService.addEvidenceOrFactNode(caseId,text,0);
+                    evidenceBody.setCaseID(caseId);
+                    evidenceBody.setBody(text);
+                    evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
+                    evidenceBody.setTrustByString(row.getCell(7).getStringCellValue());
+                    evidenceBody.setDocumentid(documentId);
+                    evidenceBody.setLogicNodeID(logicNodeId);
+                    evidenceBody=evidenceService.save(evidenceBody);
+                    evidenceService.deleteHeadAllByBody(evidenceBody.getId());
+                }
+                Evidence_Head evidence_head = new Evidence_Head();
+                evidence_head.setCaseID(caseId);
+                // 将区域编号的cell中的内容当做字符串处理
+                row.getCell(8).setCellType(HSSFCell.CELL_TYPE_STRING);
+                evidence_head.setHead(row.getCell(8).getStringCellValue());
+                evidence_head.setBodyid(evidenceBody.getId());
+                evidence_head.setDocumentid(documentId);
+                System.out.println(evidence_head.toString());
+                evidence_head=evidenceService.save(evidence_head);
+                evidenceBody.addHead(evidence_head);
+            }
+
+
+        }
+    }
 }
