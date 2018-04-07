@@ -12,11 +12,33 @@ public interface LogicService {
 
     int addEvidenceOrFactNode(int caseID, String detail, int type);
 
+    /**
+     * 修改节点的detail信息
+     *
+     * @param id
+     * @param detail
+     */
     void modEvidenceOrFactNode(int id, String detail);
+
+    void addLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID);
+
+    void deleteLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID);
 
     LogicNode getNode(int id);
 
-    LogicNode saveNode(LogicNode node);
+    /**
+     * 保存案件的所有节点，保存前先清空所有节点
+     *
+     * @param caseID
+     * @param logicNodes
+     */
+    void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes);
+
+    LogicNode saveOrUpdateNode(LogicNode node);
 
     void deleteNode(int id);
+
+    String generateXMLFile(int caseID);
+
+    String generateExcelFile(int caseID);
 }

@@ -14,11 +14,13 @@ public interface MOD_JointDao extends JpaRepository<MOD_Joint, MODPK> {
 
     public void deleteAllByCaseID(int cid);
 
-    public void deleteById(int id);
+//    public void deleteById(int id);
 
-    public void deleteAllByFactID(int factID);
+    public void deleteAllByFactIDAndCaseID(int factID,int cid);
 
     public List<MOD_Joint> findAllByCaseID(int cid);
 
-    public List<MOD_Joint> findAllByFactID(int factID);
+    public List<MOD_Joint> findAllByFactIDAndCaseID(int factID,int cid);
+
+    public MOD_Joint findByIdAndCaseID(int id,int cid);
 }

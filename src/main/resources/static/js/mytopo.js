@@ -232,6 +232,15 @@ $(document).ready(function(){
         window.location.href="/model/exportExcel?cid="+cid;
 
     });
+    $('#saveXML-btn').click(function () {
+        saveBodies();
+        saveHeaders();
+        saveJoints();
+        saveArrows();
+        saveFacts();
+        window.location.href="/model/exportXML?cid="+cid;
+
+    });
     $('#revoke-btn').click(function () {
         undo();
     });
@@ -347,7 +356,8 @@ function saveBodies() {
         if(body!=null){
             var node = body['node'];
             var b = {"id":bid,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
-                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],"isDefendant":body['isDefendant']};
+                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
+                "isDefendant":body['isDefendant'],"logicNodeID":body['logicNodeID']};
             bList.push(b);
         }
     }
@@ -406,7 +416,7 @@ function saveJoints() {
     $.ajax({
         type: "post",
         url: "/model/deleteJoints",
-        data: JSON.stringify(joint_delete),
+        data: {"jids":JSON.stringify(joint_delete),"cid":cid},
         contentType: "application/json; charset=utf-8",
         async: false,
         success: function (data) {
@@ -422,7 +432,7 @@ function saveJoints() {
     $.ajax({
         type: "post",
         url: "/model/saveJoints",
-        data: JSON.stringify(jList),
+        data: {"fids":JSON.stringify(jList),"cid":cid},
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
         async: false,
@@ -491,7 +501,8 @@ function saveFacts() {
 
         if(fact!=null){
             var node = fact['node'];
-            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,"type":fact['type']};
+            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
+                "type":fact['type'],"logicNodeID":fact['logicNodeID']};
             fList.push(f);
         }
     }
