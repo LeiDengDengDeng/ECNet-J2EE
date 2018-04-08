@@ -233,11 +233,11 @@ $(document).ready(function(){
 
     });
     $('#saveXML-btn').click(function () {
-        saveBodies();
-        saveHeaders();
-        saveJoints();
-        saveArrows();
-        saveFacts();
+        // saveBodies();
+        // saveHeaders();
+        // saveJoints();
+        // saveArrows();
+        // saveFacts();
         window.location.href="/model/exportXML?cid="+cid;
 
     });
@@ -313,21 +313,23 @@ function saveHeaders() {
         }
     }
 
-    $.ajax({
-        type: "post",
-        url: "/model/deleteHeaders",
-        data: JSON.stringify(header_delete),
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
+    if(header_delete.length>0){
+        $.ajax({
+            type: "post",
+            url: "/model/deleteHeaders",
+            data: JSON.stringify(header_delete),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
 
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("1!");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("1!");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
 
     $.ajax({
         type: "post",
@@ -362,21 +364,23 @@ function saveBodies() {
         }
     }
 
-    $.ajax({
-        type: "post",
-        url: "/model/deleteBodies",
-        data: JSON.stringify(body_delete),
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
+    if(body_delete.length>0){
+        $.ajax({
+            type: "post",
+            url: "/model/deleteBodies",
+            data: JSON.stringify(body_delete),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
 
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("2!");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("2!");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
 
     $.ajax({
         type: "post",
@@ -413,21 +417,23 @@ function saveJoints() {
         }
     }
 
-    $.ajax({
-        type: "post",
-        url: "/model/deleteJoints",
-        data: {"jids":JSON.stringify(joint_delete),"cid":cid},
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
+    if(joint_delete.length>0){
+        $.ajax({
+            type: "post",
+            url: "/model/deleteJoints",
+            data: {"jids":JSON.stringify(joint_delete),"cid":cid},
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
 
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("3!");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("3!");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
 
     $.ajax({
         type: "post",
@@ -507,21 +513,23 @@ function saveFacts() {
         }
     }
 
-    $.ajax({
-        type: "post",
-        url: "/model/deleteFacts",
-        data: JSON.stringify(fact_delete),
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
+    if(fact_delete.length>0){
+        $.ajax({
+            type: "post",
+            url: "/model/deleteFacts",
+            data: JSON.stringify(fact_delete),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
 
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("51!");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("5!");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
 
     $.ajax({
         type: "post",
@@ -2110,9 +2118,9 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
 
     var x = 10 + (body_width/2);
     var y = 10 + header_radius;
-    var headerGap_x = 100;
+    var headerGap_x = 250;
     var headerGap_y = 40;
-    var jointGap = 150;
+    var jointGap = 250;
     var pre_bx = -1;
     var pre_by = -1;
     var pre_hx = -1;
@@ -2294,9 +2302,9 @@ function typeSetting() {
     var nodes = [];
     var x = 10 + (body_width/2);
     var y = 10 + header_radius;
-    var headerGap_x = 120;
+    var headerGap_x = 250;
     var headerGap_y = 40;
-    var jointGap = 150;
+    var jointGap = 250;
     var t = 0;
 
     for(var bid in bodyList){
