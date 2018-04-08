@@ -34,6 +34,8 @@ public class LogicServiceImpl implements LogicService {
     @Value("${download.logicnode.excel}")
     private String downloadExcelPath;
 
+    private String[] types = {"证据", "事实", "法条", "结论"};
+
     @Override
     public List<LogicNode> getAllNodesByCaseID(int caseID) {
         List<LogicNode> logicNodes = logicNodeDao.findByCaseID(caseID);
@@ -44,16 +46,13 @@ public class LogicServiceImpl implements LogicService {
         if (type != 0 && type != 1) {
             return -1;
         }
+        LogicNode node = generateNode(caseID, -1, detail, type);
+        return logicNodeDao.save(node).getId();
+    }
 
-        LogicNodeMaxValue maxValue = getLogicNodeMaxValue(caseID);
-
-        int nodeID = maxValue.getMaxNodeID() + 1;
-        int parentNodeID = -1;
-        String topic = type == 0 ? "证据" + nodeID : "事实" + nodeID;
-        int x = 80;
-        int y = maxValue.getMaxY() + 50;
-
-        LogicNode node = new LogicNode(caseID, nodeID, parentNodeID, topic, detail, type, x, y);
+    @Override
+    public int addNode(int caseID, int parentNodeID, String detail, int type) {
+        LogicNode node = generateNode(caseID, parentNodeID, detail, type);
         return logicNodeDao.save(node).getId();
     }
 
@@ -111,11 +110,6 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public LogicNode saveOrUpdateNode(LogicNode node) {
-        return logicNodeDao.save(node);
-    }
-
-    @Override
     @Transactional
     public void deleteNode(int id) {
         logicNodeDao.deleteById(id);
@@ -138,6 +132,18 @@ public class LogicServiceImpl implements LogicService {
         List<LogicNode> nodes = logicNodeDao.findByCaseID(caseID);
         new LogicExcelGenerator(downloadExcelPath, nodes).generateExcelFile();
         return downloadExcelPath;
+    }
+
+    private LogicNode generateNode(int caseID, int parentNodeID, String detail, int type) {
+        LogicNodeMaxValue maxValue = getLogicNodeMaxValue(caseID);
+
+        int nodeID = maxValue.getMaxNodeID() + 1;
+        String topic = types[type] + nodeID;
+        int x = 80;
+        int y = maxValue.getMaxY() + 50;
+
+        LogicNode node = new LogicNode(caseID, nodeID, parentNodeID, topic, detail, type, x, y);
+        return node;
     }
 
     private LogicNodeMaxValue getLogicNodeMaxValue(int caseID) {
