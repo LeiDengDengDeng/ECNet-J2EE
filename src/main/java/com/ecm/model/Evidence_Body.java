@@ -28,7 +28,7 @@ public class Evidence_Body {
     @Column(name = "trust")
     private int trust=1;//0-不采信 1-采信
 
-    private int logicNodeID; // 关联LogicNode中的id
+    private int logicNodeID = -1; // 关联LogicNode中的id
 
     @Transient
     private List<Evidence_Head> headList=new ArrayList<>();//持有的head

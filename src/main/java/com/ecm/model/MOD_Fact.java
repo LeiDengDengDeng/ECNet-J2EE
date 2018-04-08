@@ -20,7 +20,7 @@ public class MOD_Fact {
     private int y;
     private String type;
 
-    private int logicNodeID; // 关联LogicNode中的id
+    private int logicNodeID = -1; // 关联LogicNode中的id
 
     public int getId() {
         return id;

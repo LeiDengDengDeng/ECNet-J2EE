@@ -12,6 +12,8 @@ public interface LogicService {
 
     int addEvidenceOrFactNode(int caseID, String detail, int type);
 
+    int addNode(int caseID, int parentNodeID, String detail, int type);
+
     /**
      * 修改节点的detail信息
      *
@@ -33,8 +35,6 @@ public interface LogicService {
      * @param logicNodes
      */
     void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes);
-
-    LogicNode saveOrUpdateNode(LogicNode node);
 
     void deleteNode(int id);
 
