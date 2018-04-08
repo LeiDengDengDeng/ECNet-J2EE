@@ -94,4 +94,19 @@ public class Evidence_Head {
     public void setY(int y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "Evidence_Head{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", documentid=" + documentid +
+                ", bodyid=" + bodyid +
+                ", head='" + head + '\'' +
+                ", name='" + name + '\'' +
+                ", keyText='" + keyText + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

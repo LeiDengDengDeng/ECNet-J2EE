@@ -195,10 +195,11 @@ $(document).ready(function () {
     $('#print-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "文书说理逻辑图");
     });
-
     $('#save-btn').click(function () {
         saveData();
     });
+    $('#excel-btn').attr("href", "/logic/generateExcel?caseID=" + cid);
+    $('#xml-btn').attr("href", "/logic/generateXML?caseID=" + cid);
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -532,27 +533,29 @@ function delNodeAndItsChildren(delNodes, id) {
 }
 
 function prepareLawModal(id) {
+    lawsFrequencyBtn(false);
+
     var node = findNodeById(id);
     $("#node-law-id").val(id);
     $("#node-law-topic").val(node.topic);
+    $("#node-law-detail").val(node.detail);
 
     var lawsDiv = $("#laws");
     lawsDiv.empty();
-    // TODO:获得根据事实推荐的法条
-    var laws = [{
-        "name": "中华人民共和国刑法_第六十七条",
-        "content": "犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。"
-    }];
+    // var laws = queryFrequencyLaws(node.detail);
+    var laws = ["中华人民共和国刑法_第六十七条","中华人民共和国刑法_第六十八条"];
 
     prepareLawsDiv(lawsDiv, laws);
 }
 
 function prepareMulLawModal() {
+    lawsFrequencyBtn(true);
+
     var lawsDiv = $("#mul-laws");
     lawsDiv.empty();
     // TODO:获得根据多个事实推荐的法条
     var laws = [{
-        "name": "中华人民共和国刑法_第六十七条",
+        "law": "中华人民共和国刑法_第六十七条",
         "content": "犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。"
     }];
 
@@ -605,13 +608,29 @@ function prepareLawsDiv(lawsDiv, laws) {
         checkbox.setAttribute("id", "checkbox-" + i);
         var a = document.createElement("a");
         a.setAttribute("id", "law-" + i);
-        a.setAttribute("title", laws[i].content);
-        a.text = laws[i].name;
+        a.setAttribute("onclick", "lawClick(" + i + ")");
+        a.text = laws[i];
+        var textarea = document.createElement("textarea");
+        textarea.value = "这里是法条正文内容";
+        textarea.setAttribute("class", "form-control");
+        textarea.setAttribute("style", "display: none;");
+        textarea.setAttribute("id", "textarea-" + i);
+        textarea.setAttribute("disabled", "disabled");
 
         div.append(checkbox);
         div.append(a);
+        div.append(textarea);
         lawsDiv.append(div);
     }
+}
+
+function lawClick(id) {
+    if ($("#textarea-" + id).css('display') == "none") {
+        $("#textarea-" + id).show();
+    } else {
+        $("#textarea-" + id).hide();
+    }
+
 }
 
 function lawAdviceEvent() {
@@ -651,7 +670,7 @@ function lawAdviceEvent() {
 
 function mulLawAdviceEvent() {
     // var factNodes = getSelectedNodes();
-    // foo
+    // for()
 
     $("#mul-law-recommend-modal").modal("hide");
 }
@@ -786,11 +805,11 @@ function nodeClickEvent(id, event) {
         if (node.type == 0 || node.type == 1) {
             $("#panel-del-btn").addClass("disabled");
             $("#panel-save-btn").addClass("disabled");
-            $("#panel-topic-input").attr("readonly","readonly");
-            $("#panel-detail-input").attr("readonly","readonly");
-            $("#panel-type-select").attr("disabled","disabled");
-            $("#panel-leadTo-select").attr("disabled","disabled");
-        }else{
+            $("#panel-topic-input").attr("readonly", "readonly");
+            $("#panel-detail-input").attr("readonly", "readonly");
+            $("#panel-type-select").attr("disabled", "disabled");
+            $("#panel-leadTo-select").attr("disabled", "disabled");
+        } else {
             $("#panel-del-btn").removeClass("disabled");
             $("#panel-save-btn").removeClass("disabled");
             $("#panel-topic-input").removeAttr("readonly");

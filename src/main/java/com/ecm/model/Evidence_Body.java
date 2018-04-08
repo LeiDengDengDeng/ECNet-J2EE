@@ -138,19 +138,19 @@ public class Evidence_Body {
         {
             case "证人证言":
                type= 0;
-
+                break;
             case "被告人供述和辩解":
                 type= 1;
-
+break;
             case "书证":
                 type= 2;
-
+break;
             case "鉴定结论":
                 type= 3;
-
+break;
             case "勘验、检查笔录":
                 type= 4;
-
+break;
             default:
                 type= 5;
 
@@ -220,6 +220,12 @@ public class Evidence_Body {
 
     @Override
     public String toString() {
+
+
+        String headListString="";
+        for(Evidence_Head head:headList){
+            headListString+=head.toString();
+        }
         return "Evidence_Body{" +
                 "id=" + id +
                 ", caseID=" + caseID +
@@ -234,7 +240,7 @@ public class Evidence_Body {
                 ", isDefendant=" + isDefendant +
                 ", trust=" + trust +
                 ", logicNodeID=" + logicNodeID +
-                ", headList=" + headList.toString() +
+                ", headList=" + headListString+
                 '}';
     }
 }

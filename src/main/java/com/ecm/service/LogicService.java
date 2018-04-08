@@ -32,9 +32,13 @@ public interface LogicService {
      * @param caseID
      * @param logicNodes
      */
-    void saveAllNodesInSameCase(int caseID,List<LogicNode> logicNodes);
+    void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes);
 
     LogicNode saveOrUpdateNode(LogicNode node);
 
     void deleteNode(int id);
+
+    String generateXMLFile(int caseID);
+
+    String generateExcelFile(int caseID);
 }
