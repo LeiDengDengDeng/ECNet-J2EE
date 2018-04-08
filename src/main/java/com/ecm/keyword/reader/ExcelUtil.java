@@ -4,7 +4,11 @@ package com.ecm.keyword.reader;
 
 import com.ecm.keyword.manager.TypeCalculator;
 import com.ecm.model.Evidence_Body;
+import com.ecm.model.Evidence_Document;
 import com.ecm.model.Evidence_Head;
+import com.ecm.service.EvidenceService;
+import com.ecm.service.impl.EvidenceServiceImpl;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelUtil {
+    static EvidenceService evidenceService=new EvidenceServiceImpl();
     /**
      * 将excel转为String数组
      *
@@ -144,6 +149,89 @@ public class ExcelUtil {
 
         }
         return evidenceList;
+    }
+
+
+    /**
+     *
+     * @param file_dir
+     * @param type 0-xls 1-xml
+     * @return
+     */
+    public static Evidence_Document saveDocument(String file_dir,int caseId,int type) throws IOException {
+
+        Evidence_Document evidence_document=new Evidence_Document();
+        Workbook book = null;
+        book = getExcelWorkbook(file_dir);
+        Sheet sheet = getSheetByNum(book, 0);
+        int lastRowNum = sheet.getLastRowNum();
+        System.out.println("last number is " + lastRowNum);
+        String text="";
+        int xh=1;
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row.getCell(3).getStringCellValue()!=null&&row.getCell(3).getStringCellValue()!="") {
+                System.out.println("reading line is " + i);
+                text+=xh+"、"+row.getCell(3).getStringCellValue();
+                xh++;
+            }
+        }
+        evidence_document.setType(0);//??????????????无法区分原告被告
+        evidence_document.setText(text);
+        evidence_document.setCaseID(caseId);
+       // evidenceService.saveOrUpdate(evidence_document);
+        return evidence_document;
+    }
+
+//    public  void excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
+//        evidenceService.deleteBodyAll(documentId);
+//        Workbook book = null;
+//        book = getExcelWorkbook(file_dir);
+//        Sheet sheet = getSheetByNum(book, 0);
+//        int lastRowNum = sheet.getLastRowNum();
+//        System.out.println("last number is " + lastRowNum);
+//        String text="";
+//        int xh=1;
+//        Evidence_Body evidenceBody = new Evidence_Body();
+//        for (int i = 2; i <= lastRowNum; i++) {
+//            Row row = null;
+//            row = sheet.getRow(i);
+//            if (row != null) {
+//                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+//                    System.out.println("reading line is " + i);
+//                    text = row.getCell(3).getStringCellValue();
+//                    //System.out.println(evidenceBody.toString());
+//                    evidenceBody = new Evidence_Body();
+//                    evidenceBody.setCaseID(caseId);
+//                    evidenceBody.setBody(text);
+//
+//                    evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
+//                    evidenceBody.setTrustByString(row.getCell(7).getStringCellValue());
+//                    // evidenceBody=evidenceService.save(evidenceBody);
+//                }
+//                Evidence_Head evidence_head = new Evidence_Head();
+//                evidence_head.setCaseID(caseId);
+//                // 将区域编号的cell中的内容当做字符串处理
+//                row.getCell(8).setCellType(HSSFCell.CELL_TYPE_STRING);
+//                evidence_head.setHead(row.getCell(8).getStringCellValue());
+//                evidenceBody.addHead(evidence_head);
+//            }
+//
+//
+//        }
+//
+//
+//
+//    }
+
+
+
+
+
+    public static void main(String[] args) throws IOException {
+        ExcelUtil excelUtil=new ExcelUtil();
+      //  excelUtil.excelToEvidenceList("导入测试.xlsx",41722,68);
     }
 
 }

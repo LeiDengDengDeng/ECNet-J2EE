@@ -553,7 +553,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                 Element jointElement = element.addElement("joints");
                 for(int j = 0;j<joints.size();j++){
                     MOD_Joint joint = joints.get(j);
-                    Element jel = jointElement.addElement("head");
+                    Element jel = jointElement.addElement("joint");
                     jel.addAttribute("id",joint.getId()+"");
                     Element jname = jel.addElement("name");
                     jname.setText(joint.getName());
@@ -563,32 +563,67 @@ public class ModelManageServiceImpl implements ModelManageService {
             }
         }
 
-        List<MOD_Arrow> arrows = arrowDao.findAllByCaseID(cid);
-        if(arrows.size()>=1){
-            Element arrowsElmt = rootElmt.addElement("relations");
-            for(int i = 0;i<arrows.size();i++){
-                MOD_Arrow arrow = arrows.get(i);
-                Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
-                MOD_Joint joint = jointDao.findByIdAndCaseID(arrow.getNodeTo_jid(),cid);
-                Element rel = arrowsElmt.addElement("relation");
-                rel.addAttribute("id",joint.getId()+"");
+        List<MOD_Joint> joints = jointDao.findAllByCaseID(cid);
+        Element arrowsElmt = rootElmt.addElement("relations");
+        for(int i = 0;i<joints.size();i++){
+            MOD_Joint joint = joints.get(i);
+            List<MOD_Arrow> arrows = arrowDao.findAllByCaseIDAndJointID(cid,joint.getId());
 
-                Element aname = rel.addElement("name");
+            Element rel = arrowsElmt.addElement("from");
+            for(int j = 0;j<arrows.size();j++){
+                MOD_Arrow arrow = arrows.get(j);
+                Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
+
+                Element arrowElmt = rel.addElement("arrow");
+                arrowElmt.addAttribute("id",arrow.getId()+"");
+                Element aname = arrowElmt.addElement("name");
                 aname.setText(arrow.getName());
-                Element acontent = rel.addElement("content");
+                Element acontent = arrowElmt.addElement("content");
                 acontent.setText(arrow.getContent());
-                Element afrom = rel.addElement("from");
-                afrom.addAttribute("type","head");
-                afrom.addAttribute("id",arrow.getNodeFrom_hid()+"");
-                afrom.addAttribute("name",head.getName());
-                afrom.setText(head.getHead());
-                Element ato = rel.addElement("to");
-                ato.addAttribute("type","joint");
-                ato.addAttribute("id",arrow.getNodeTo_jid()+"");
-                ato.addAttribute("name",joint.getName());
-                ato.setText(joint.getContent());
+                Element headElmt = arrowElmt.addElement("head");
+                headElmt.addAttribute("id",head.getId()+"");
+                Element hname = headElmt.addElement("name");
+                hname.setText(head.getName());
+                Element hcontent = headElmt.addElement("content");
+                hcontent.setText(head.getHead());
+                Element bodyID = headElmt.addElement("bodyID");
+                bodyID.setText(head.getBodyid()+"");
             }
+
+            Element ato = rel.addElement("to");
+            ato.addAttribute("type","joint");
+            ato.addAttribute("id",joint.getId()+"");
+            Element jname = ato.addElement("name");
+            jname.setText(joint.getName());
+            Element jcontent = ato.addElement("content");
+            jcontent.setText(joint.getContent());
         }
+//        List<MOD_Arrow> arrows = arrowDao.findAllByCaseID(cid);
+//        if(arrows.size()>=1){
+//            Element arrowsElmt = rootElmt.addElement("relations");
+//            for(int i = 0;i<arrows.size();i++){
+//                MOD_Arrow arrow = arrows.get(i);
+//                Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
+//                MOD_Joint joint = jointDao.findByIdAndCaseID(arrow.getNodeTo_jid(),cid);
+//                Element rel = arrowsElmt.addElement("relation");
+//                rel.addAttribute("id",joint.getId()+"");
+//
+//                Element aname = rel.addElement("name");
+//                aname.setText(arrow.getName());
+//                Element acontent = rel.addElement("content");
+//                acontent.setText(arrow.getContent());
+//                Element afrom = rel.addElement("from");
+//                afrom.addAttribute("type","head");
+//                afrom.addAttribute("id",arrow.getNodeFrom_hid()+"");
+//                afrom.addAttribute("name",head.getName());
+//                afrom.setText(head.getHead());
+//                Element ato = rel.addElement("to");
+//                ato.addAttribute("type","joint");
+//                ato.addAttribute("id",arrow.getNodeTo_jid()+"");
+//                ato.addAttribute("name",joint.getName());
+//                ato.setText(joint.getContent());
+//            }
+//        }
 
         FileWriter fw = null;
         try {
