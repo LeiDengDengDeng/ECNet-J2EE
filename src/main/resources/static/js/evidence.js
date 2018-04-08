@@ -4,8 +4,9 @@ $(function(){
     var caseInfo = JSON.parse(caseInfoStr);
     $("#caseNum").text(caseInfo.cNum);
     // $("#caseBrief").text(caseInfo['']);
+    $("#caseBrief").text("受贿罪");
     $("#caseName").text(caseInfo.cname);
-    $("#underTaker").text(caseInfo.undertaker);
+    $("#underTaker").text("林世开");
     $("#caseDate").text(caseInfo.fillingDate);
 
     initEvidences();

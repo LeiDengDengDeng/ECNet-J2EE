@@ -225,6 +225,9 @@ evidenceService.deleteHeadById(id);
 
     public  void excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
         evidenceService.deleteBodyAll(documentId);
+
+
+
         Workbook book = null;
         book = getExcelWorkbook(file_dir);
         Sheet sheet = getSheetByNum(book, 0);
@@ -268,4 +271,9 @@ evidenceService.deleteHeadById(id);
 
         }
     }
+
+
+
+
+
 }

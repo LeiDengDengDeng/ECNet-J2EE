@@ -41,11 +41,7 @@
         /*]]>*/
     </script>
     <style>
-        .breadcrumb {
-            background-color: rgba(255,255,255,0);
-            padding: 0;
-            margin-bottom: 0;
-        }
+
         body{ background:#ffffff}
 
         .head_chain {
@@ -105,16 +101,16 @@
             </div>
             <ol class="breadcrumb" style="font-size: 19px">
                 <li><strong>
-                    <a class="active" href="/upload">质证与采证</a></strong>
+                    <a class="active" href="/upload">质证与采信</a></strong>
                 </li>
                 <li>
                     <a href="/model">证据链建模</a>
                 </li>
                 <li >
-                    <a href="/logic-new">说理与法条推荐</a>
+                    <a href="/logic-new">说理逻辑</a>
                 </li>
                 <li >
-                    <a href="text.html">文书展示</a>
+                    <a href="text.html">说理语段</a>
                 </li>
 
             </ol>
@@ -126,9 +122,15 @@
 
 
     <div class="row" style="background: white;padding-top: 7% ;padding-left: 2%">
+<br>
+        <div class="row" style="font-size: 16px;">
+            <div>案号：<span id="caseNum"></span>, 案由：<span id="caseBrief"></span></div>
+            <div>案件名称：<span id="caseName"></span></div>
+            <div>承办人：<span id="underTaker">XXX</span>，立案日期：<span id="caseDate">XXXX年XX月XX日</span></div>
+        </div>
+        <br>
         <div class="col-md-6 pull-left" > <h4 >原告证据 <a id="list_hide" style="font-size: 12px;" href="#">隐藏<<</a> </h4></div>
         <div class="col-md-5"  > <h4 class="pull-right">被告证据 <a id="graph_hide" style="font-size: 12px;" href="#">隐藏<<</a> </h4></div>
-
         <br>
 
 
@@ -298,6 +300,14 @@
     //hide
     $(function(){
 
+        var caseInfoStr = $.session.get("caseInfo");
+        var caseInfo = JSON.parse(caseInfoStr);
+        $("#caseNum").text(caseInfo.cNum);
+         $("#caseBrief").text("受贿罪");
+        $("#caseName").text(caseInfo.cname);
+        $("#underTaker").text("林世开");
+        $("#caseDate").text(caseInfo.fillingDate);
+
         $.ajax({
             url:"/evidence/getContent",
             type:'GET',
@@ -398,7 +408,7 @@
 
 
 
-        html="<div id='"+id+"' bodyid='"+id+"' class='evibody form-group row'><br><div class='col-md-8'><input type='text' class='form-control myinfo1' value='"+body+"' bodyid='"+id+"' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
+        html="<div id='"+id+"' bodyid='"+id+"' class='evibody form-group row'><br><div class='col-md-8'><input type='text' onmousemove='bigTextarea(this)' onmouseout='normalInpt(this)' class='form-control myinfo1' value='"+body+"' bodyid='"+id+"' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
             " glyphicon-remove btn form-control-feedback\"style=\"pointer-events:auto;padding-left: 1%\" bodyid='"+id+"' onclick='bodyRemove(this)'></a>\n" +
             "\n</div>"
         html+=select;
@@ -545,7 +555,7 @@
                             "</select></div>";
 
 
-                        trustHtml = "<div id='" + id + "' bodyid='" + id + "' class='evibody form-group row'><br><div class='col-md-8'><input type='text' class='form-control myinfo1' value='" + body + "' bodyid='" + id + "' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
+                        trustHtml = "<div id='" + id + "' bodyid='" + id + "' class='evibody form-group row'><br><div class='col-md-8'><input type='text' onmousemove='bigTextarea(this)' onmouseout='normalInpt(this)'  class='form-control myinfo1' value='" + body + "' bodyid='" + id + "' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
                             " glyphicon-remove btn form-control-feedback\"style=\"pointer-events:auto;padding-left: 1%\" bodyid='" + id + "'  onclick='bodyRemove(this)'></a>\n" +
                             "\n</div>"
                         trustHtml += select;
@@ -688,7 +698,7 @@
 
 
 
-                html="<div id='"+id+"' bodyid='"+id+"' class='evibody form-group row'><br><div class='col-md-8'><input type='text' class='form-control myinfo1' value='"+""+"' bodyid='"+id+"' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
+                html="<div id='"+id+"' bodyid='"+id+"' class='evibody form-group row'><br><div class='col-md-8'><input type='text' onmousemove='bigTextarea(this)' onmouseout='normalInpt(this)' class='form-control myinfo1' value='"+""+"' bodyid='"+id+"' onchange='myUpdateBody(this)'><a class=\"glyphicon myRemove\n" +
                     " glyphicon-remove btn form-control-feedback\"style=\"pointer-events:auto;padding-left: 1%\" bodyid='"+id+"'  onclick='bodyRemove(this)'></a>\n" +
                     "\n</div>"
                 html+=select;
@@ -792,12 +802,16 @@
 
 
         function uploadExcel(){
+
+
+            loading(1);
             $('#excelForm').submit(      //ajax方式提交表单
                 {
                     url: '/evidence/importExcel',
                     type: 'post',
                     beforeSubmit: function () {},
                     success: function (data) {
+                        removeLoading('test');
                         console.log(data);
                     }
                 });
@@ -818,6 +832,17 @@
             //         alert("请求失败")
             //     }
             // })
+        }
+
+
+        function bigTextarea(input){
+            var html="<textarea type='text' onmousemove='bigTextarea(this)' onmouseout='normalInpt(this)'  class='form-control myinfo1' value='\" + body + \"' bodyid='\" + id + \"' onchange='myUpdateBody(this)'>";
+
+            console.log("large");
+
+        }
+        function normalInpt(textarea){
+            console.log("small");
         }
 </script>
 
