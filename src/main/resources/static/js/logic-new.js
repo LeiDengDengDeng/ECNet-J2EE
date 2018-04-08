@@ -611,7 +611,7 @@ function prepareLawsDiv(lawsDiv, laws) {
         a.setAttribute("onclick", "lawClick(" + i + ")");
         a.text = laws[i];
         var textarea = document.createElement("textarea");
-        textarea.value = "这里是法条正文内容";
+        textarea.value = "犯罪以后自动投案，如实供述自己的罪行的，是自首。对于自首的犯罪分子，可以从轻或者减轻处罚。其中，犯罪较轻的，可以免除处罚。";
         textarea.setAttribute("class", "form-control");
         textarea.setAttribute("style", "display: none;");
         textarea.setAttribute("id", "textarea-" + i);

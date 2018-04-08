@@ -22,9 +22,9 @@ public interface LogicService {
      */
     void modEvidenceOrFactNode(int id, String detail);
 
-    void addLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID);
+    void addLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID);
 
-    void deleteLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID);
+    void deleteLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID);
 
     LogicNode getNode(int id);
 

@@ -64,7 +64,7 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public void addLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID) {
+    public void addLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID) {
         LogicNode eviNode = getNode(evidenceNodeID);
         if (eviNode.getParentNodeID() == -1) {
             // 证据节点不存在父事实节点，修改该节点的parentNodeID信息
@@ -76,22 +76,22 @@ public class LogicServiceImpl implements LogicService {
             LogicNode copyEviNode = new LogicNode(eviNode.getCaseID(), maxValue.getMaxNodeID() + 1, factNodeID, eviNode.getTopic(), eviNode.getDetail(), eviNode.getType(), 80, maxValue.getMaxY() + 50);
             copyEviNode = logicNodeDao.save(copyEviNode);
 
-            EvidenceFactLink eviFactLink = new EvidenceFactLink(evidenceNodeID, copyEviNode.getId(), factNodeID);
+            EvidenceFactLink eviFactLink = new EvidenceFactLink(caseID, evidenceNodeID, copyEviNode.getId(), factNodeID);
             evidenceFactLinkDao.save(eviFactLink);
         }
     }
 
     @Override
-    public void deleteLinkForEvidenceAndFactNode(int evidenceNodeID, int factNodeID) {
+    public void deleteLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID) {
         LogicNode eviNode = getNode(evidenceNodeID);
         if (eviNode.getParentNodeID() == factNodeID) {
             eviNode.setParentNodeID(-1);
             logicNodeDao.save(eviNode);
         } else {
             // 删除copy节点以及copy节点和事实节点的联系
-            EvidenceFactLink eviFactLink = evidenceFactLinkDao.findByInitEviNodeIDAndFactNodeID(evidenceNodeID, factNodeID);
+            EvidenceFactLink eviFactLink = evidenceFactLinkDao.findByCaseIDAndInitEviNodeIDAndFactNodeID(caseID, evidenceNodeID, factNodeID);
             logicNodeDao.delete(eviFactLink.getCopyEviNodeID());
-            evidenceFactLinkDao.deleteByInitEviNodeIDAndFactNodeID(evidenceNodeID, factNodeID);
+            evidenceFactLinkDao.deleteByCaseIDAndInitEviNodeIDAndFactNodeID(caseID, evidenceNodeID, factNodeID);
         }
     }
 
