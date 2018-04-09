@@ -11,6 +11,8 @@ public interface MOD_FactDao extends JpaRepository<MOD_Fact, MODPK> {
 
     public MOD_Fact save(MOD_Fact fact);
 
+    public void deleteById(int id);
+
     @Query(value = "select f.logicNodeID from MOD_Fact f where f.id= ?1 and f.caseID=?2")
     public int getLogicNodeIDByIDAndCaseID(int id,int cid);
 
@@ -22,5 +24,8 @@ public interface MOD_FactDao extends JpaRepository<MOD_Fact, MODPK> {
 
     public List<MOD_Fact> findAllByCaseID(int caseID);
 
-    public MOD_Fact findByIdAndCaseID(int id,int cid);
+    public MOD_Fact findById(int id);
+
+    @Query(value = "select f.logicNodeID from MOD_Fact f where f.id= ?1")
+    public int getLogicNodeIDByID(int id);
 }

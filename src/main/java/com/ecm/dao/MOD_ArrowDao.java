@@ -13,6 +13,8 @@ public interface MOD_ArrowDao extends JpaRepository<MOD_Arrow, MODPK> {
 
     public void deleteByIdAndCaseID(int id,int cid);
 
+    public void deleteById(int id);
+
     public void deleteAllByCaseID(int cid);
 
     @Query(value = "delete from MOD_Arrow a where a.nodeFrom_hid=?1")

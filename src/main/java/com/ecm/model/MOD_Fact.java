@@ -1,18 +1,16 @@
 package com.ecm.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="MOD_FACT")
-@IdClass(MODPK.class)
+//@IdClass(MODPK.class)
 public class MOD_Fact {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    @Id
+//    @Id
     private int caseID;
     private String name;
     private String content;
