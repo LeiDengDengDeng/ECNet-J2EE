@@ -188,44 +188,44 @@ public class ExcelUtil {
 
     public  void excelToFactList(String file_dir,int caseId,int documentId) throws IOException {
       //  evidenceService.deleteBodyAll(documentId);
-        Workbook book = null;
-        book = getExcelWorkbook(file_dir);
-        Sheet sheet = getSheetByNum(book, 1);
-        int lastRowNum = sheet.getLastRowNum();
-        String text="";
-
-        List<HashMap<String,Object>> list=new ArrayList<>();
-        HashMap<String,Object> hashMap=new HashMap<>();
-        List<HashMap<String,Object>> headlist=new ArrayList<>();
-        for (int i = 2; i <= lastRowNum; i++) {
-            Row row = null;
-            row = sheet.getRow(i);
-            if (row != null) {
-                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
-                    System.out.println("reading line is " + i);
-                  //  text = row.getCell(3).getStringCellValue();
-                    System.out.println(hashMap.toString());
-                    hashMap=new HashMap<>();
-                    hashMap.put("id", row.getCell(1).getNumericCellValue());
-                    hashMap.put("name",row.getCell(2).getStringCellValue());
-                    hashMap.put("text",row.getCell(3).getStringCellValue());
-                    headlist=new ArrayList<>();
-                    hashMap.put("headList",headlist);
-                    list.add(hashMap);
-                }
-                HashMap<String,Object> headMap=new HashMap<>();
-
-                row.getCell(4).setCellType(HSSFCell.CELL_TYPE_STRING);
-                row.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
-                headMap.put("link",row.getCell(4).getStringCellValue());
-                headMap.put("nodeId",row.getCell(5).getNumericCellValue());
-                headMap.put("nodeFromEvi",row.getCell(6).getStringCellValue());
-                headMap.put("keyText",row.getCell(7).getStringCellValue());
-                headlist.add(headMap);
-            }
-
-
-        }
+//        Workbook book = null;
+//        book = getExcelWorkbook(file_dir);
+//        Sheet sheet = getSheetByNum(book, 1);
+//        int lastRowNum = sheet.getLastRowNum();
+//        String text="";
+//
+//        List<HashMap<String,Object>> list=new ArrayList<>();
+//        HashMap<String,Object> hashMap=new HashMap<>();
+//        List<HashMap<String,Object>> headlist=new ArrayList<>();
+//        for (int i = 2; i <= lastRowNum; i++) {
+//            Row row = null;
+//            row = sheet.getRow(i);
+//            if (row != null) {
+//                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+//                    System.out.println("reading line is " + i);
+//                  //  text = row.getCell(3).getStringCellValue();
+//                    System.out.println(hashMap.toString());
+//                    hashMap=new HashMap<>();
+//                    hashMap.put("id", row.getCell(1).getNumericCellValue());
+//                    hashMap.put("name",row.getCell(2).getStringCellValue());
+//                    hashMap.put("text",row.getCell(3).getStringCellValue());
+//                    headlist=new ArrayList<>();
+//                    hashMap.put("headList",headlist);
+//                    list.add(hashMap);
+//                }
+//                HashMap<String,Object> headMap=new HashMap<>();
+//
+//                row.getCell(4).setCellType(HSSFCell.CELL_TYPE_STRING);
+//                row.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
+//                headMap.put("link",row.getCell(4).getStringCellValue());
+//                headMap.put("nodeId",row.getCell(5).getNumericCellValue());
+//                headMap.put("nodeFromEvi",row.getCell(6).getStringCellValue());
+//                headMap.put("keyText",row.getCell(7).getStringCellValue());
+//                headlist.add(headMap);
+//            }
+//
+//
+//        }
 
 
 

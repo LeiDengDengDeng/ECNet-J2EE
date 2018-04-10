@@ -6,6 +6,7 @@ import com.ecm.dao.EvidenceHeadDao;
 import com.ecm.dao.MOD_ArrowDao;
 import com.ecm.keyword.manager.HeadCreator;
 import com.ecm.keyword.manager.KeyWordCalculator;
+import com.ecm.keyword.reader.ExcelUtil;
 import com.ecm.model.Evidence_Body;
 import com.ecm.model.Evidence_Document;
 import com.ecm.model.Evidence_Head;
@@ -13,7 +14,12 @@ import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -199,5 +205,59 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     public int findLogicId(int bodyid) {
         return evidenceBodyDao.findLogicId(bodyid);
+    }
+
+    @Override
+    @Async
+    public void importFactByExcel(String filepath, int caseId, List<Evidence_Body> bodylist) {
+        Workbook book = null;
+        try {
+            book = ExcelUtil.getExcelWorkbook(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = ExcelUtil.getSheetByNum(book, 1);
+        int lastRowNum = sheet.getLastRowNum();
+        String text="";
+        List<HashMap<String,Object>> list=new ArrayList<>();
+        HashMap<String,Object> hashMap=new HashMap<>();
+        List<HashMap<String,Object>> headlist=new ArrayList<>();
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row != null) {
+                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+                    System.out.println("reading line is " + i);
+                    //  text = row.getCell(3).getStringCellValue();
+                    System.out.println(hashMap.toString());
+                    hashMap=new HashMap<>();
+                    hashMap.put("id", row.getCell(1).getNumericCellValue());
+                    hashMap.put("name",row.getCell(2).getStringCellValue());
+                    hashMap.put("text",row.getCell(3).getStringCellValue());
+                    headlist=new ArrayList<>();
+                    hashMap.put("headList",headlist);
+                    list.add(hashMap);
+                }
+                HashMap<String,Object> headMap=new HashMap<>();
+
+                row.getCell(4).setCellType(HSSFCell.CELL_TYPE_STRING);
+                row.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
+                headMap.put("link",row.getCell(4).getStringCellValue());
+                headMap.put("nodeId",row.getCell(5).getNumericCellValue());
+                headMap.put("nodeFromEvi",row.getCell(6).getStringCellValue());
+                headMap.put("keyText",row.getCell(7).getStringCellValue());
+                headlist.add(headMap);
+            }
+
+
+        }
+
+
+    }
+
+    @Override
+    @Async
+    public void importLogicByExcel(String filepath, int caseId, List<Evidence_Body> bodyList) {
+
     }
 }
