@@ -27,7 +27,7 @@ public interface EvidenceService{
     public List<Evidence_Head> findHeadByBody(int bodyid);
     public int findLogicId(int bodyid);
     public void importFactByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
-    public void importLogicByExcel(String filepath,int caseId,List<Evidence_Body> bodyList);
+    public void importLogicByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
 
 
 }

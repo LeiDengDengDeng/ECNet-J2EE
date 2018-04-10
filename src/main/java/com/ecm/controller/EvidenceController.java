@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ecm.keyword.reader.ExcelUtil.getExcelWorkbook;
@@ -138,29 +139,31 @@ public class EvidenceController {
     @RequestMapping(value="/getContent")
     public JSONArray getAllCases(@RequestParam("ajxh") int ajxh){
         JSONArray res=new JSONArray();
-        for(int i=0;i<=1;i++){
-            Evidence_Document evidence_document= evidenceService.findDocuByAjxhAndType(ajxh,i);
-            JSONObject jsonObject = new JSONObject();
+        for(int i=0;i<=1;i++) {
+            Evidence_Document evidence_document = evidenceService.findDocuByAjxhAndType(ajxh, i);
+            if (evidence_document != null) {
+                JSONObject jsonObject = new JSONObject();
 
-            jsonObject.put("id",evidence_document.getId());
-            jsonObject.put("text",evidence_document.getText());
-            jsonObject.put("type",evidence_document.getType());
-            List<Evidence_Body> evidence_bodies=evidenceService.findBodyByDocu(evidence_document.getId());
-            JSONArray bodylist=new JSONArray();
-            for(Evidence_Body evidence_body:evidence_bodies){
-                evidence_body.setHeadList(evidenceService.findHeadByBody(evidence_body.getId()));
-                JSONObject temp = new JSONObject();
-                temp.put("id",evidence_body.getId());
-                temp.put("body",evidence_body.getBody());
-                temp.put("type",evidence_body.getType());
-                temp.put("trust",evidence_body.getTrust());
-                temp.put("headList",evidence_body.getHeadList());
-                bodylist.add(temp);
+                jsonObject.put("id", evidence_document.getId());
+                jsonObject.put("text", evidence_document.getText());
+                jsonObject.put("type", evidence_document.getType());
+                List<Evidence_Body> evidence_bodies = evidenceService.findBodyByDocu(evidence_document.getId());
+                JSONArray bodylist = new JSONArray();
+                for (Evidence_Body evidence_body : evidence_bodies) {
+                    evidence_body.setHeadList(evidenceService.findHeadByBody(evidence_body.getId()));
+                    JSONObject temp = new JSONObject();
+                    temp.put("id", evidence_body.getId());
+                    temp.put("body", evidence_body.getBody());
+                    temp.put("type", evidence_body.getType());
+                    temp.put("trust", evidence_body.getTrust());
+                    temp.put("headList", evidence_body.getHeadList());
+                    bodylist.add(temp);
+                }
+                jsonObject.put("bodylist", bodylist);
+                res.add(jsonObject);
             }
-            jsonObject.put("bodylist",bodylist);
-            res.add(jsonObject);
         }
-        return res;
+            return res;
 
     }
 
@@ -216,17 +219,20 @@ evidenceService.deleteHeadById(id);
         //System.out.println(evidence_document.getText());
         int documentId=evidence_document.getId();
 
-        excelToEvidenceList(filePath+sepa+fileName,41722,documentId);
+        List<Evidence_Body> bodylist=excelToEvidenceList(filePath+sepa+fileName,41722,documentId);
 
+        evidenceService.importFactByExcel(filePath+sepa+fileName,41722,bodylist);
+
+        evidenceService.importLogicByExcel(filePath+sepa+fileName,41722,bodylist);
         response.sendRedirect("/upload");
 
     }
 
 
-    public  void excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
+    public  List<Evidence_Body> excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
         evidenceService.deleteBodyAll(documentId);
 
-
+        List<Evidence_Body> bodylist=new ArrayList<>();
 
         Workbook book = null;
         book = getExcelWorkbook(file_dir);
@@ -254,6 +260,7 @@ evidenceService.deleteHeadById(id);
                     evidenceBody.setDocumentid(documentId);
                     evidenceBody.setLogicNodeID(logicNodeId);
                     evidenceBody=evidenceService.save(evidenceBody);
+                    bodylist.add(evidenceBody);
                     evidenceService.deleteHeadAllByBody(evidenceBody.getId());
                 }
                 Evidence_Head evidence_head = new Evidence_Head();
@@ -270,6 +277,7 @@ evidenceService.deleteHeadById(id);
 
 
         }
+        return  bodylist;
     }
 
 
