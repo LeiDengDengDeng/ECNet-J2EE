@@ -392,7 +392,7 @@ function saveAll(isAsync) {
                     $('body').loading({
                         loadingWidth:240,
                         title:'保存中',
-                        name:'test',
+                        name:'save',
                         discription:'这是一个描述...',
                         direction:'row',
                         type:'origin',
@@ -410,7 +410,7 @@ function saveAll(isAsync) {
                 }
             },
             success: function (data) {
-                removeLoading('test');
+                removeLoading('save');
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("save all");
                 alert(XMLHttpRequest.status);

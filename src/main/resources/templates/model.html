@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{css/loading.css}" />
     <link rel="stylesheet" th:href="@{css/common.css}"/>
     <link rel="stylesheet" th:href="@{css/custom.css}" />
-    <link rel="stylesheet" th:href="@{css/style.css}" />
+
     <script th:src="@{js/ref/jquery-3.2.1.min.js}"></script>
     <script th:src="@{js/ref/jquery-ui.js}"></script>
     <script th:src="@{js/ref/jquerysession.js}"></script>
@@ -42,31 +42,13 @@
     </script>
 
     <style>
-
-        /*body {*/
-            /*color: #444;*/
-            /*background-color: #EEE;*/
-            /*overflow-x: hidden;*/
-            /*padding-top: 50px;*/
-        /*}*/
         body{
             margin: 0;
             padding: 0;
+            line-height: 1.42857143;
             font-family: "Microsoft YaHei", "微软雅黑", "Lantinghei SC", "Open Sans", Arial, "Hiragino Sans GB", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
         }
-        .navbar>.container-fluid .navbar-brand {
-            font-family: TaurusNormal;
-            font-size: 26px;
-            line-height: 26px;
-            color: #777;
-            margin-left: 0 !important;
-        }
-        .breadcrumb a{
-            color: #555;
-            cursor: pointer;
-            text-decoration: none;
-        }
-       ol, li, nav, section{
+        ol, li, nav, section{
             outline: none;
             transition: all 0.30s ease-in-out;
             -webkit-transition: all 0.30s ease-in-out;
@@ -74,14 +56,34 @@
             -o-transition: all 0.30s ease-in-out;
             -ms-transition: all 0.30s ease-in-out;
         }
+        .navbar>.container-fluid .navbar-brand {
+            font-family: TaurusNormal;
+            font-size: 26px;
+            line-height: 26px;
+            color: #777;
+            margin-left: 0;
+        }
+        .breadcrumb a{
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
         .breadcrumb a:hover {
             color: #3399CC;
             text-decoration: none;
         }
-        .breadcrumb li {
-            font-size: 19px;
+        /*.breadcrumb li {*/
+            /*font-size: 19px;*/
+        /*}*/
+        strong {
+            font-weight: bold;
         }
-
+        .container-fluid{
+            padding-right: 0;
+            padding-left: 0;
+            margin-right: 0;
+            margin-left: 0;
+        }
     </style>
 
 </head>
@@ -93,7 +95,7 @@
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                    <a class="navbar-brand" href="manage.html">法官工作空间</a> </div>
+                    <a class="navbar-brand" href="/manage" style="left: 0;">法官工作空间</a> </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
@@ -108,12 +110,12 @@
                     </form>
                 </div>
             </div>
-            <ol class="breadcrumb" style="font-size: 19px;margin: 0;">
+            <ol class="breadcrumb" style="font-size: 19px;">
                 <li>
                     <a href="/upload">质证与采信</a>
                 </li>
                 <li><strong>
-                    <a class="active" href="/model">证据链建模</a></strong>
+                    <a class="active" href="/#">证据链建模</a></strong>
                 </li>
                 <li >
                     <a href="/logic-new">说理逻辑</a>
@@ -613,7 +615,7 @@
 
     function notify(tip) {
         var $this = $("body");
-        return $this.each(function(tip){
+        return $this.each(function(){
             if($(".cpt-loading-mask[data-name='loading']").length > 0){
                 // console.error('loading mask cant has same date-name('+opt.name+'), you cant set "date-name" prop when you create it');
                 return
@@ -648,10 +650,10 @@
             }).appendTo(cpt_loading_mask);
 
             //loading标题
-            var loading_title = $('<p style="display: inline-block;margin-left: 15px"></p>').html(tip).appendTo(div_loading);
+            var loading_title = $('<p style="display: inline-block;margin-left: 15px" id="load_info"></p>').html(tip).appendTo(div_loading);
 
             //loading转动的小圆球
-            var loading = $('<div class="loading origin" style="width: 15px;height: 15px;margin-top: 5px;margin-left: 20px;"></div>').appendTo(div_loading);
+            var loading = $('<div class="loading origin" style="width: 15px;height: 15px;margin-top: 5px;margin-left: 20px;" id="rotate_circle"></div>').appendTo(div_loading);
 
             var loadingOrigin = $('<div class="div-loadingOrigin"><span></span></div><div class="div-loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div>').appendTo(loading);
             loadingOrigin.children().css({
@@ -659,7 +661,7 @@
                 "margin-left":smallLoadingMargin,
                 "width":3,
                 "height":3,
-                "background":'#fefefe',
+                "background":'#fefefe'
             });
 
             //关闭事件冒泡  和默认的事件
@@ -676,12 +678,13 @@
     }
 
     function removeNotify(tip){
-        $(".cpt-loading-mask").css({
+        var cpt = $(".cpt-loading-mask[data-name='loading']");
+        cpt.css({
             'background':'#2ecc71'
         });
-        $('.loading .origin').html("<span><i class='fa fa-check'></i></span>");
+        $('#rotate_circle').html("<span><i class='fa fa-check'></i></span>");
         $('#load_info').html(tip);
-        $(".cpt-loading-mask").animate({
+        cpt.animate({
             bottom: "-44px",
             opacity:0
         }, 900, "", function() {
