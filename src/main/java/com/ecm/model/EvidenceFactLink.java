@@ -6,17 +6,18 @@ import javax.persistence.*;
  * Created by deng on 2018/4/3.
  */
 @Entity
-@Table(name="evidence_fact_link")
+@Table(name = "evidence_fact_link")
 public class EvidenceFactLink {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private int caseID;
     private int initEviNodeID; // 原始证据节点id
     private int copyEviNodeID; // 复制的证据节点id
     private int factNodeID; // 证据节点对应的事实节点id
 
-    public EvidenceFactLink(int initEviNodeID, int copyEviNodeID, int factNodeID) {
+    public EvidenceFactLink(int caseID, int initEviNodeID, int copyEviNodeID, int factNodeID) {
         this.initEviNodeID = initEviNodeID;
         this.copyEviNodeID = copyEviNodeID;
         this.factNodeID = factNodeID;
@@ -28,6 +29,14 @@ public class EvidenceFactLink {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCaseID() {
+        return caseID;
+    }
+
+    public void setCaseID(int caseID) {
+        this.caseID = caseID;
     }
 
     public int getInitEviNodeID() {

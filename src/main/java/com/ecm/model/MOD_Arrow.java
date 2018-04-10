@@ -4,12 +4,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="MOD_ARROW")
-@IdClass(MODPK.class)
+//@IdClass(MODPK.class)
 public class MOD_Arrow {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    @Id
+//    @Id
     private int caseID;
     @Column(name = "headerId")
     private int nodeFrom_hid;

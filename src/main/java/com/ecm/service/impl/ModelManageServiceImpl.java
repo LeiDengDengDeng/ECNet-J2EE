@@ -18,6 +18,7 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     private MOD_ArrowDao arrowDao;
     @Autowired
     private MOD_FactDao factDao;
+    @Autowired
+    private LogicNodeDao logicNodeDao;
 
     @Override
     public JSONObject getEvidences(int cid) {
@@ -93,12 +96,23 @@ public class ModelManageServiceImpl implements ModelManageService {
         return res;
     }
 
+//    @Async
     @Override
-    public void saveHeader(Evidence_Head header) {
-        evidenceHeadDao.save(header);
+    public Evidence_Head saveHeader(Evidence_Head header) {
+        return evidenceHeadDao.save(header);
     }
 
     @Override
+    @Async
+    public void saveHeaders(List<Evidence_Head> headers) {
+        for(int i = 0;i<headers.size();i++){
+//            System.out.println("head"+i);
+            evidenceHeadDao.save(headers.get(i));
+        }
+    }
+
+    @Override
+//    @Async
     @Transactional
     public void deleteHeaderById(int id) {
         evidenceHeadDao.deleteById(id);
@@ -111,8 +125,24 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveBody(Evidence_Body body) {
-        evidenceBodyDao.save(body);
+//    @Async
+    public Evidence_Body saveBody(Evidence_Body body) {
+        return evidenceBodyDao.save(body);
+    }
+
+    @Override
+    @Async
+    public void saveBodies(List<Evidence_Body> bodies) {
+        for(int i = 0;i<bodies.size();i++){
+//            System.out.println("body"+i);
+            Evidence_Body body = bodies.get(i);
+            if(body.getLogicNodeID()>=0){
+                LogicNode node = logicNodeDao.findById(body.getLogicNodeID());
+                node.setDetail(body.getBody());
+                logicNodeDao.save(node);
+            }
+            evidenceBodyDao.save(body);
+        }
     }
 
     @Override
@@ -121,6 +151,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+//    @Async
     @Transactional
     public void deleteBodyById(int id) {
         evidenceBodyDao.deleteById(id);
@@ -133,30 +164,68 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveJoint(MOD_Joint joint) {
-        jointDao.save(joint);
+//    @Async
+    public MOD_Joint saveJoint(MOD_Joint joint) {
+        return jointDao.save(joint);
+    }
+
+    @Override
+    @Async
+    public void saveJoints(List<MOD_Joint> joints) {
+        for(int i = 0;i<joints.size();i++){
+//            System.out.println("joint"+i);
+            jointDao.save(joints.get(i));
+        }
     }
 
     @Override
     @Transactional
-    public void deleteJointById(int id,int cid) {
-        jointDao.deleteByIdAndCaseID(id,cid);
+//    @Async
+    public void deleteJointById(int id) {
+        jointDao.deleteById(id);
     }
 
     @Override
-    public void saveFact(MOD_Fact fact) {
-        factDao.save(fact);
+//    @Async
+    public MOD_Fact saveFact(MOD_Fact fact) {
+        return factDao.save(fact);
     }
 
     @Override
-    public int getLogicNodeIDofFact(int fid,int cid) {
-        return factDao.getLogicNodeIDByIDAndCaseID(fid,cid);
+    @Async
+    public void saveFacts(List<MOD_Fact> facts) {
+        for(int i = 0;i<facts.size();i++){
+//            System.out.println("fact"+i);
+            MOD_Fact fact = facts.get(i);
+            if(fact.getLogicNodeID()>=0){
+                LogicNode node = logicNodeDao.findById(fact.getLogicNodeID());
+                node.setDetail(fact.getContent());
+                logicNodeDao.save(node);
+            }
+            factDao.save(fact);
+        }
+    }
+
+//    @Override
+//    public int getLogicNodeIDofFact(int fid,int cid) {
+//        return factDao.getLogicNodeIDByIDAndCaseID(fid,cid);
+//    }
+
+    @Override
+    public int getLogicNodeIDofFact(int fid) {
+        return factDao.getLogicNodeIDByID(fid);
+    }
+
+    @Override
+    public MOD_Fact getFactByID(int id) {
+        return factDao.findById(id);
     }
 
     @Override
     @Transactional
-    public void deleteFactById(int id,int cid) {
-        factDao.deleteByIdAndCaseID(id,cid);
+//    @Async
+    public void deleteFactById(int id) {
+        factDao.deleteById(id);
     }
 
     @Override
@@ -166,8 +235,18 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void saveArrow(MOD_Arrow arrow) {
-        arrowDao.save(arrow);
+//    @Async
+    public MOD_Arrow saveArrow(MOD_Arrow arrow) {
+        return arrowDao.save(arrow);
+    }
+
+    @Override
+//    @Async
+    public void saveArrows(List<MOD_Arrow> arrows) {
+        for(int i = 0;i<arrows.size();i++){
+//            System.out.println("arrow"+i);
+            arrowDao.save(arrows.get(i));
+        }
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EvidenceFactLinkDao extends JpaRepository<EvidenceFactLink, Integer> {
     EvidenceFactLink save(EvidenceFactLink evidenceFactLink);
 
-    EvidenceFactLink findByInitEviNodeIDAndFactNodeID(int initEviNodeID, int factNodeID);
+    EvidenceFactLink findByCaseIDAndInitEviNodeIDAndFactNodeID(int caseID, int initEviNodeID, int factNodeID);
 
-    void deleteByInitEviNodeIDAndFactNodeID(int initEviNodeID, int factNodeID);
+    void deleteByCaseIDAndInitEviNodeIDAndFactNodeID(int caseID, int initEviNodeID, int factNodeID);
 }

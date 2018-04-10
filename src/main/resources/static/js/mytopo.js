@@ -213,22 +213,23 @@ $(document).ready(function(){
 
 
     $('#save-btn').click(function () {
-        saveBodies();
-        saveHeaders();
-        saveJoints();
-        saveArrows();
-        saveFacts();
-        alert('保存成功！')
+        // saveBodies();
+        // saveHeaders();
+        // saveJoints();
+        // saveArrows();
+        // saveFacts();
+        // alert('保存成功！')
+        saveAll(false);
     });
     $('#saveImg-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        saveBodies();
-        saveHeaders();
-        saveJoints();
-        saveArrows();
-        saveFacts();
+        // saveBodies();
+        // saveHeaders();
+        // saveJoints();
+        // saveArrows();
+        // saveFacts();
         window.location.href="/model/exportExcel?cid="+cid;
 
     });
@@ -248,7 +249,178 @@ $(document).ready(function(){
         typeSetting();
     });
 
+    window.setInterval(saveAll,180000);
 });
+
+//存储所有
+function saveAll(isAsync) {
+    if(isAsync==null){
+        isAsync = true;
+    }
+    var hList = [];
+    for(var hid in headerList){
+        var node = headerList[hid];
+
+        if(node!=null){
+            var documentID = -1;
+            var bodyID = -1;
+
+            if(node.inLinks!=null&&node.inLinks.length>0){
+                bodyID = node.inLinks[0].nodeA.id;
+                documentID = bodyList[bodyID]['documentID'];
+            }
+
+            var h = {"id":hid,"caseID":cid,"documentid":documentID,"bodyid":bodyID,
+                "name":node.text,"head":node.content,"x":node.x,"y":node.y};
+            hList.push(h);
+        }
+    }
+
+    var bList = [];
+    for(var bid in bodyList){
+        var body = bodyList[bid];
+
+        if(body!=null){
+            var node = body['node'];
+            var b = {"id":bid,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
+                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
+                "isDefendant":body['isDefendant'],"logicNodeID":body['logicNodeID']};
+            bList.push(b);
+        }
+    }
+
+    var jList = [];
+    for(var jid in jointList){
+        var joint = jointList[jid];
+
+        if(joint!=null){
+            var node = joint['node'];
+            var factID = -1;
+            if(node.outLinks!=null&&node.outLinks.length>0){
+                factID = node.outLinks[0].nodeZ.id;
+            }
+            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
+            jList.push(j);
+        }
+    }
+
+    var fList = [];
+    for(var fid in factList){
+        var fact = factList[fid];
+
+        if(fact!=null){
+            var node = fact['node'];
+            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
+                "type":fact['type'],"logicNodeID":fact['logicNodeID']};
+            fList.push(f);
+        }
+    }
+
+    var aList = [];
+    for(var aid in arrowList){
+        var node = arrowList[aid];
+
+        if(node!=null){
+            var a = {"id":aid,"caseID":cid,"nodeFrom_hid":node.nodeA.id,"nodeTo_jid":node.nodeZ.id,
+                "name":node.text,"content":node.content};
+            aList.push(a);
+        }
+    }
+
+    var logicL = {};
+    for(var bid in bodyList) {
+        var body = bodyList[bid];
+        var fids = [];
+
+        if (body != null) {
+            var outL = body['node'].outLinks;
+            if(outL!=null&&outL.length>0){
+                for(var i = 0;i<outL.length;i++){
+                    var ho = outL[i].nodeZ.outLinks;
+                    if(ho!=null&&ho.length>0){
+                        var jo = ho[0].nodeZ.outLinks;
+                        if(jo!=null&&jo.length>0){
+                            var fid = jo[0].nodeZ.id;
+                            var tmp = $.inArray(fid,fids);
+                            if(tmp<0&&fid>=0){
+                                fids.push(fid);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        logicL[bid] = fids;
+    }
+
+    var dList = {'caseID':cid,'headers':hList,'bodies':bList,'joints':jList,'facts':fList,'arrows':aList,'links':logicL};
+
+    if(isAsync==true){
+        $.ajax({
+            type: "post",
+            url: "/model/saveAll",
+            data: JSON.stringify(dList),
+            // dataType:"json",
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            beforeSend: function(data){
+                //这里判断，如果没有加载数据，会显示loading
+                if(data.readyState == 0){
+                    notify("正在保存更改");
+                }
+            },
+            success: function (data) {
+                removeNotify("保存成功");
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("save all");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }else{
+        $.ajax({
+            type: "post",
+            url: "/model/saveAll",
+            data: JSON.stringify(dList),
+            // dataType:"json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            beforeSend: function(data){
+                //这里判断，如果没有加载数据，会显示loading
+                if(data.readyState == 0){
+                    $('body').loading({
+                        loadingWidth:240,
+                        title:'保存中',
+                        name:'test',
+                        discription:'这是一个描述...',
+                        direction:'row',
+                        type:'origin',
+                        originBg:'#71EA71',
+                        originDivWidth:30,
+                        originDivHeight:30,
+                        originWidth:4,
+                        originHeight:4,
+                        smallLoading:false,
+                        titleColor:'#388E7A',
+                        loadingBg:'#312923',
+                        loadingMaskBg:'rgba(22,22,22,0.2)',
+                        mustRelative: true
+                    });
+                }
+            },
+            success: function (data) {
+                removeLoading('test');
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("save all");
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
+
+}
 
 //存储Excel
 function saveExcel() {
@@ -542,6 +714,267 @@ function saveFacts() {
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("5*");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//存储单个链头
+function saveHead(node) {
+    var documentID = -1;
+    var bodyID = -1;
+
+    if(node.inLinks!=null&&node.inLinks.length>0){
+        bodyID = node.inLinks[0].nodeA.id;
+        documentID = bodyList[bodyID]['documentID'];
+    }
+
+    var h = {"id":node.id,"caseID":cid,"documentid":documentID,"bodyid":bodyID,
+        "name":node.text,"head":node.content,'keyText':node.keyText,"x":node.x,"y":node.y};
+
+    $.ajax({
+        type: "post",
+        url: "/model/saveHead",
+        data: JSON.stringify(h),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链头");
+        //     }
+        // },
+        success: function (data) {
+            headerList[node.id] = null;
+            node.id = data;
+            headerList[node.id] = node;
+            headerIndex = data+1;
+            // removeLoading("链头保存成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save head");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//删除单个链头
+function deleteHeadData(id) {
+
+    $.ajax({
+        type: "post",
+        url: "/model/deleteHead",
+        data: {"id":id},
+        // dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在删除链头");
+        //     }
+        // },
+        success: function (data) {
+            // removeLoading("链头删除成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save head");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//存储单个链体
+function saveBody(node) {
+
+    var body = bodyList[node.id];
+    var bd = {"id":node.id,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
+        "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
+        "isDefendant":body['isDefendant'],"logicNodeID":body['logicNodeID']};
+
+    $.ajax({
+        type: "post",
+        url: "/model/saveBody",
+        data: JSON.stringify(bd),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链体");
+        //     }
+        // },
+        success: function (data) {
+            bodyList[node.id] = null;
+            node.id = data;
+            bodyList[node.id] = {'node':node,"documentid":bd['documentID'], "type":bd['type'],
+                "committer":bd['committer'],"reason":bd['reason'],"conclusion":bd['trust'],
+                "isDefendant":bd['isDefendant'],"logicNodeID":bd['logicNodeID']};
+            bodyIndex = data+1;
+            // removeLoading("链体保存成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save body");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//删除单个链体
+function deleteBodyData(id) {
+
+    $.ajax({
+        type: "post",
+        url: "/model/deleteBody",
+        data: {"id":id},
+        // dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在删除链头");
+        //     }
+        // },
+        success: function (data) {
+            // removeLoading("链头删除成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save head");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//存储单个连接点
+function saveJoint(node) {
+
+    var joint = jointList[node.id];
+    console.log(node.id);
+    var factID = -1;
+    if(node.outLinks!=null&&node.outLinks.length>0){
+        factID = node.outLinks[0].nodeZ.id;
+    }
+    var j = {"id":node.id,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
+
+    $.ajax({
+        type: "post",
+        url: "/model/saveJoint",
+        data: JSON.stringify(j),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存连接点");
+        //     }
+        // },
+        success: function (data) {
+            console.log("jointID:"+data);
+            jointList[node.id] = null;
+            node.id = data;
+            jointList[node.id] = {'node':node, "type":j['type']};
+            jointIndex = data+1;
+            // removeLoading("链体保存成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save joint");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//删除单个连接点
+function deleteJointData(id) {
+
+    $.ajax({
+        type: "post",
+        url: "/model/deleteJoint",
+        data: {"id":id},
+        // dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在删除连接点");
+        //     }
+        // },
+        success: function (data) {
+            // removeLoading("连接点删除成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("delete Joint");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//存储单个事实点
+function saveFact(node) {
+    var fact = factList[node.id];
+    var f = {"id":node.id,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
+        "type":fact['type'],"logicNodeID":fact['logicNodeID']};
+
+    $.ajax({
+        type: "post",
+        url: "/model/saveFact",
+        data: JSON.stringify(f),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存事实节点");
+        //     }
+        // },
+        success: function (data) {
+            factList[node.id] = null;
+            node.id = data;
+            factList[node.id] = {'node':node, "type":f['type']};
+            factIndex = data+1;
+            // removeLoading("事实节点保存成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("save fact");
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+
+//删除单个事实点
+function deleteFactData(id) {
+
+    $.ajax({
+        type: "post",
+        url: "/model/deleteFact",
+        data: {"id":id},
+        // dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在删除事实节点");
+        //     }
+        // },
+        success: function (data) {
+            // removeLoading("事实节点删除成功");
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("delete fact");
             alert(XMLHttpRequest.status);
             alert(XMLHttpRequest.readyState);
             alert(textStatus);
@@ -1719,7 +2152,7 @@ function deleteArrow(arrow) {
 }
 
 //绘制链头，返回链头节点
-function drawHeader(isNew,x,y,id,name,content,keyText){
+function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
 
     if(id==null)
         id = headerIndex++;
@@ -1754,6 +2187,9 @@ function drawHeader(isNew,x,y,id,name,content,keyText){
     //添加操作至operationList
     if(isNew==true){
         operationList.push({'type':'add','nodes':[circleNode]});
+    }
+    if(!isinit){
+        saveHead(circleNode);
     }
 
     circleNode.click(function () {
@@ -1800,6 +2236,7 @@ function deleteHeader(headerID) {
             deleteArrow(outl[i]);
         }
     }
+    deleteHeadData(headerID);
     scene.remove(header);
     headerList[headerID] = null;
     $('#head-panel').attr('hidden', 'hidden');
@@ -1813,7 +2250,7 @@ function deleteHeader(headerID) {
 }
 
 //绘制链体，返回链体节点
-function drawBody(isNew,x,y,id,name,content,detail){
+function drawBody(isNew,x,y,id,name,content,detail,isinit){
 
     if(id==null)
         id = bodyIndex++;
@@ -1832,11 +2269,17 @@ function drawBody(isNew,x,y,id,name,content,detail){
     var isDefendant = null;
     var conclusion = null;
     var logicNodeID = null;
+    var type = 5;
+    var committer = "";
+    var reason = "";
     if(detail!=null){
         documentID = detail.documentID;
         isDefendant = detail.isDefendant;
         conclusion = detail.conclusion;
         logicNodeID = detail.logicNodeID;
+        type = detail.type;
+        committer = detail.committer;
+        reason = detail.reason;
     }
     if(documentID==null)
         documentID = -1;
@@ -1860,12 +2303,15 @@ function drawBody(isNew,x,y,id,name,content,detail){
     node.textPosition = 'Bottom_Center'; // 文本位置
     node.node_type = 'body';
 
-    bodyList[node.id] = {'node':node,'type':detail.type,'committer':detail.committer,'reason':detail.reason,
+    bodyList[node.id] = {'node':node,'type':type,'committer':committer,'reason':reason,
         'conclusion':conclusion, 'documentID':documentID,'isDefendant':isDefendant,'logicNodeID':logicNodeID};
     scene.add(node);
     //添加操作至operationList
     if(isNew==true)
         operationList.push({'type':'add','nodes':[node]});
+    if(!isinit){
+        saveBody(node);
+    }
 
     node.click(function () {
         $('#head-panel').attr('hidden', 'hidden');
@@ -1910,6 +2356,7 @@ function drawBody(isNew,x,y,id,name,content,detail){
 //删除链体
 function deleteBody(bodyID) {
     body_delete.push(bodyID);
+    deleteBodyData(bodyID);
     scene.remove(bodyList[bodyID]['node']);
     bodyList[bodyID] = null;
 
@@ -1924,7 +2371,7 @@ function deleteBody(bodyID) {
 }
 
 //绘制连接点，返回连接点节点
-function drawJoint(isNew,x,y,id,name,content,type){
+function drawJoint(isNew,x,y,id,name,content,type,isinit){
 
     if(id==null)
         id = jointIndex++;
@@ -1955,6 +2402,8 @@ function drawJoint(isNew,x,y,id,name,content,type){
     //添加操作至operationList
     if(isNew)
         operationList.push({'type':'add','nodes':[node]});
+    if(!isinit)
+        saveJoint(node);
 
     node.click(function () {
         $('#head-panel').attr('hidden', 'hidden');
@@ -2001,13 +2450,14 @@ function deleteJoint(jointID) {
     //     deleteLink(joint.outLinks[0]);
     // }
 
+    deleteJointData(jointID);
     scene.remove(joint);
     jointList[jointID] = null;
     $('#joint-panel').attr('hidden', 'hidden');
 }
 
 //绘制事实，返回事实节点
-function drawFact(isNew,x,y,id,name,content,type,logicNodeID) {
+function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
     if(id==null)
         id = factIndex++;
 
@@ -2040,6 +2490,8 @@ function drawFact(isNew,x,y,id,name,content,type,logicNodeID) {
     //添加操作至operationList
     if(isNew)
         operationList.push({'type':'add','nodes':[node]});
+    if(!isinit)
+        saveFact(node);
 
     node.click(function () {
         $('#head-panel').attr('hidden', 'hidden');
@@ -2076,6 +2528,7 @@ function deleteFact(factID) {
     fact_delete.push(factID);
     var fact = factList[factID]['node'];
 
+    deleteFactData(factID);
     scene.remove(fact);
     factList[factID] = null;
     $('#fact-panel').attr('hidden', 'hidden');
@@ -2154,7 +2607,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_by = b_y;
 
-        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['content'],body);
+        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['content'],body,true);
 
         var headers = trusts[i]['headers'];
         for(var j = 0;j<headers.length;j++){
@@ -2181,7 +2634,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
             }
             pre_hy = h_y;
 
-            var h = drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText']);
+            var h = drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText'],true);
             addLink(b,h);
 
             if(headerIndex<header['id']){
@@ -2218,7 +2671,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_hy = h_y;
 
-        drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText']);
+        drawHeader(false,h_x,h_y,header['id'],header['name'],header['head'],header['keyText'],true);
 
         if(headerIndex<header['id']){
             headerIndex = header['id']+1;
@@ -2251,7 +2704,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_fy = f_y;
 
-        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type'],fact['logicNodeID']);
+        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type'],fact['logicNodeID'],true);
         if(factIndex<fact['id']){
             factIndex = fact['id']+1;
         }
@@ -2282,7 +2735,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_jy = j_y;
 
-        var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],joint['type']);
+        var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],joint['type'],true);
         if(joint['factID']>=0)
             addLink(jnode,factList[joint['factID']]['node']);
         if(jointIndex<joint['id']){
