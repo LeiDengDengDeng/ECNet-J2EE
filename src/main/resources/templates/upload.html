@@ -14,7 +14,6 @@
     <link rel="stylesheet" th:href="@{css/loading.css}"/>
 
 
-
     <!--<link rel="stylesheet" th:href="@{css/login.css}"/>-->
     <!--<link rel="apple-touch-icon-precomposed" th:href="@{img/icon.png}">-->
     <!--<link rel="shortcut icon" th:href="@{img/favicon.ico}">-->
@@ -91,7 +90,7 @@
                     </ul>
                     <form id="excelForm" action="/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
                         <div class="input-group">
-                            <input type="text" name="ajxh" class="hidden form-control" value="41722">
+                            <input type="text" name="ajxh" id="importCaseId" class="hidden form-control" value="41722">
                             <input type="file" name="file" class="form-control">
                             <span class="input-group-btn">
                             <button class="btn btn-default" onclick="uploadExcel()">提交</button>
@@ -282,23 +281,25 @@
 
 <script>
 
-    var username = $.session.get('username');
-    $('#userLabel').text(username);
-    console.log($.session.get('cid'));
-    var document_id=new Array();
-    var cid=$.session.get('cid');
-
-    $('#exist_click').click(function () {
-        if(confirm('是否确认退出？'))
-        {
-            $.session.remove('username');
-            window.location.href = '/login';
-        }
-    });
-
 
     //hide
     $(function(){
+
+
+        var username = $.session.get('username');
+        $('#userLabel').text(username);
+        console.log($.session.get('cid'));
+        var document_id=new Array();
+        var cid=$.session.get('cid');
+
+
+        $('#exist_click').click(function () {
+            if(confirm('是否确认退出？'))
+            {
+                $.session.remove('username');
+                window.location.href = '/login';
+            }
+        });
 
         var caseInfoStr = $.session.get("caseInfo");
         var caseInfo = JSON.parse(caseInfoStr);
@@ -307,6 +308,7 @@
         $("#caseName").text(caseInfo.cname);
         $("#underTaker").text("林世开");
         $("#caseDate").text(caseInfo.fillingDate);
+        $("#importCaseId").val(cid);
 
         $.ajax({
             url:"/evidence/getContent",
@@ -386,7 +388,7 @@
     function createHeadHtml(bodyid,headList,num){
         var html="<div class='headList text-left' bodyid='"+bodyid+"'>";
         for(var j=0;j<headList.length;j++){
-            html+="<span headid='"+headList[j].id+"' class='head_chain'><label contenteditable onblur='updateHead(this)' orginal='"+headList[j].head+"' style='min-width: 25px;'>"+headList[j].head+"</label><span headid='"+headList[j].id+"' class='glyphicon glyphicon-remove  headRemove' onclick='deleteHead(this)'></span></span>";
+            html+="<span headid='"+headList[j].id+"' class='head_chain'><label contenteditable onblur='updateHead(this)' orginal='"+headList[j].head+"' style='font:inherit;min-width: 25px;'>"+headList[j].head+"</label><span headid='"+headList[j].id+"' class='glyphicon glyphicon-remove  headRemove' onclick='deleteHead(this)'></span></span>";
         }
 
         html+="<span documentid='"+document_id[num]+"' bodyid='"+bodyid+"' class='glyphicon glyphicon-plus headRemove addHead' onclick='addHead(this)'></span>"
@@ -633,7 +635,7 @@
              success:function(data) {
                  console.log(data);
                  var id=data.id;
-                 var  html="<span headid='"+id+"' class='head_chain'><label contenteditable onblur='updateHead(this)' orginal='' style='min-width: 25px;'></label><span headid='"+id+"' class='glyphicon glyphicon-remove  headRemove' onclick='deleteHead(this)'></span></span>";
+                 var  html="<span headid='"+id+"' class='head_chain'><label contenteditable onblur='updateHead(this)' orginal='' style='font:inherit;min-width: 25px;'></label><span headid='"+id+"' class='glyphicon glyphicon-remove  headRemove' onclick='deleteHead(this)'></span></span>";
                  $(span).before(html);
 
              }

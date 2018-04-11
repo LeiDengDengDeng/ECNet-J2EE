@@ -7,6 +7,7 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -17,6 +18,7 @@ import java.util.Properties;
 import java.util.Set;
 
 @SpringBootApplication
+@EnableAsync
 //@MapperScan("com.ecm.dao")
 public class EcNetApplication extends SpringBootServletInitializer implements EmbeddedServletContainerCustomizer {
 

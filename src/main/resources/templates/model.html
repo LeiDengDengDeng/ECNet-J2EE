@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{css/bootstrap.css}"/>
     <link rel="stylesheet" th:href="@{css/font-awesome.css}"/>
     <link rel="stylesheet" th:href="@{css/index.css}"/>
+    <link rel="stylesheet" th:href="@{css/loading.css}" />
     <link rel="stylesheet" th:href="@{css/common.css}"/>
     <link rel="stylesheet" th:href="@{css/custom.css}" />
 
@@ -15,6 +16,7 @@
     <script th:src="@{js/ref/jquerysession.js}"></script>
     <script th:src="@{js/ref/bootstrap.js}"></script>
     <script th:src="@{js/ref/jtopo-0.4.8-min.js}"></script>
+    <script th:src="@{js/loading.js}"></script>
     <script th:src="@{js/mytopo.js}"></script>
     <script th:src="@{js/evidence.js}"></script>
 
@@ -40,10 +42,47 @@
     </script>
 
     <style>
-        .breadcrumb {
-            background-color: rgba(255,255,255,0);
+        body{
+            margin: 0;
             padding: 0;
-            margin-bottom: 0;
+            line-height: 1.42857143;
+            font-family: "Microsoft YaHei", "微软雅黑", "Lantinghei SC", "Open Sans", Arial, "Hiragino Sans GB", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+        }
+        ol, li, nav, section{
+            outline: none;
+            transition: all 0.30s ease-in-out;
+            -webkit-transition: all 0.30s ease-in-out;
+            -moz-transition: all 0.30s ease-in-out;
+            -o-transition: all 0.30s ease-in-out;
+            -ms-transition: all 0.30s ease-in-out;
+        }
+        .navbar>.container-fluid .navbar-brand {
+            font-family: TaurusNormal;
+            font-size: 26px;
+            line-height: 26px;
+            color: #777;
+            margin-left: 0;
+        }
+        .breadcrumb a{
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            color: #3399CC;
+            text-decoration: none;
+        }
+        /*.breadcrumb li {*/
+            /*font-size: 19px;*/
+        /*}*/
+        strong {
+            font-weight: bold;
+        }
+        .container-fluid{
+            padding-right: 0;
+            padding-left: 0;
+            margin-right: 0;
+            margin-left: 0;
         }
     </style>
 
@@ -56,7 +95,7 @@
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                    <a class="navbar-brand" href="manage.html">法官工作空间</a> </div>
+                    <a class="navbar-brand" href="/manage" style="left: 0;">法官工作空间</a> </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
@@ -71,12 +110,12 @@
                     </form>
                 </div>
             </div>
-            <ol class="breadcrumb" style="font-size: 19px">
+            <ol class="breadcrumb" style="font-size: 19px;">
                 <li>
-                    <a class="active" href="/upload">质证与采信</a>
+                    <a href="/upload">质证与采信</a>
                 </li>
                 <li><strong>
-                    <a href="/model">证据链建模</a></strong>
+                    <a class="active" href="/#">证据链建模</a></strong>
                 </li>
                 <li >
                     <a href="/logic-new">说理逻辑</a>
@@ -573,6 +612,85 @@
                 }
             });
     });
+
+    function notify(tip) {
+        var $this = $("body");
+        return $this.each(function(){
+            if($(".cpt-loading-mask[data-name='loading']").length > 0){
+                // console.error('loading mask cant has same date-name('+opt.name+'), you cant set "date-name" prop when you create it');
+                return
+            }
+
+            var smallLoadingMargin = '-6px';
+
+            //悬浮层
+            var cpt_loading_mask = $('<div class="cpt-loading-mask animated row" data-name="loading"></div>').css({
+                // 'z-index':999,
+                'position':'fixed',
+                'bottom':'-44px',
+                'left':0,
+                'top':'auto',
+                'width':'100%',
+                'height':'44px',
+                'background':'#3498db',
+                'color':'#FFF',
+                'line-height':'44px',
+                'vertical-align':'middle',
+                'font-size':'16px',
+                'transition':'background .2s linear',
+                '-webkit-transition':'background .2s linear',
+                'opacity':0
+            });
+
+            //中间的显示层
+            var div_loading = $('<div class="div-loading" style="left: 80px;top: 20px"></div>').css({
+                'background':'transparent',
+                'height':44,
+                'padding':5
+            }).appendTo(cpt_loading_mask);
+
+            //loading标题
+            var loading_title = $('<p style="display: inline-block;margin-left: 15px" id="load_info"></p>').html(tip).appendTo(div_loading);
+
+            //loading转动的小圆球
+            var loading = $('<div class="loading origin" style="width: 15px;height: 15px;margin-top: 5px;margin-left: 20px;" id="rotate_circle"></div>').appendTo(div_loading);
+
+            var loadingOrigin = $('<div class="div-loadingOrigin"><span></span></div><div class="div-loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div><div class="div_loadingOrigin"><span></span></div>').appendTo(loading);
+            loadingOrigin.children().css({
+                "margin-top":smallLoadingMargin,
+                "margin-left":smallLoadingMargin,
+                "width":3,
+                "height":3,
+                "background":'#fefefe'
+            });
+
+            //关闭事件冒泡  和默认的事件
+            cpt_loading_mask.on('touchstart touchend touchmove click',function(e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            cpt_loading_mask.appendTo(this);
+            cpt_loading_mask.animate({
+                bottom: 0,
+                opacity:1
+            }, 1000);
+        });
+    }
+
+    function removeNotify(tip){
+        var cpt = $(".cpt-loading-mask[data-name='loading']");
+        cpt.css({
+            'background':'#2ecc71'
+        });
+        $('#rotate_circle').html("<span><i class='fa fa-check'></i></span>");
+        $('#load_info').html(tip);
+        cpt.animate({
+            bottom: "-44px",
+            opacity:0
+        }, 900, "", function() {
+            $(this).remove()
+        });
+    }
     /*]]>*/
 </script>
 </html>

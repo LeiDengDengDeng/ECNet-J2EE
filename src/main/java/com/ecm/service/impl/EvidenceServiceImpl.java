@@ -6,14 +6,19 @@ import com.ecm.dao.EvidenceHeadDao;
 import com.ecm.dao.MOD_ArrowDao;
 import com.ecm.keyword.manager.HeadCreator;
 import com.ecm.keyword.manager.KeyWordCalculator;
-import com.ecm.model.Evidence_Body;
-import com.ecm.model.Evidence_Document;
-import com.ecm.model.Evidence_Head;
+import com.ecm.keyword.reader.ExcelUtil;
+import com.ecm.model.*;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
+import com.ecm.service.ModelManageService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +41,9 @@ public class EvidenceServiceImpl implements EvidenceService {
     public LogicService logicService;
     @Autowired
     public MOD_ArrowDao arrowDao;
+
+    @Autowired
+    public ModelManageService modelManageService;
 
     @Override
     public Evidence_Document saveOrUpdate(Evidence_Document evidence_document) {
@@ -75,8 +83,8 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Transactional
     @Override
     public void deleteBodyById(int id) {
-         evidenceBodyDao.deleteById(id);
-         return;
+        evidenceBodyDao.deleteById(id);
+        return;
     }
     @Transactional
     @Override
@@ -85,7 +93,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 
         for (Integer i:bodyIdList
-             ) {
+                ) {
 
             logicService.deleteNode(evidenceBodyDao.findLogicId(i));
         }
@@ -199,5 +207,240 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     public int findLogicId(int bodyid) {
         return evidenceBodyDao.findLogicId(bodyid);
+    }
+
+    @Override
+    @Async
+    public void importFactByExcel(String filepath, int caseId, List<Evidence_Body> bodylist) {
+        Workbook book = null;
+        try {
+            book = ExcelUtil.getExcelWorkbook(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = ExcelUtil.getSheetByNum(book, 1);
+        int lastRowNum = sheet.getLastRowNum();
+        String text="";
+        List<HashMap<String,Object>> list=new ArrayList<>();
+        HashMap<String,Object> hashMap=new HashMap<>();
+        List<HashMap<String,Object>> headlist=new ArrayList<>();
+
+        MOD_Fact mod_fact=new MOD_Fact();
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row != null) {
+                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+                    System.out.println("reading line is " + i);
+                    System.out.println(hashMap.toString());
+                    hashMap=new HashMap<>();
+                    hashMap.put("id", row.getCell(1).getNumericCellValue());
+                    hashMap.put("name",row.getCell(2).getStringCellValue());
+                    hashMap.put("text",row.getCell(3).getStringCellValue());
+                    headlist=new ArrayList<>();
+                    hashMap.put("headList",headlist);
+                    list.add(hashMap);
+
+
+                    mod_fact=new MOD_Fact();
+                    mod_fact.setCaseID(caseId);
+                    mod_fact.setId((int)row.getCell(1).getNumericCellValue());
+                    mod_fact.setContent(row.getCell(3).getStringCellValue());
+                    mod_fact.setName(row.getCell(2).getStringCellValue());
+                    mod_fact=modelManageService.saveFact(mod_fact);
+
+                }
+
+                HashMap<String,Object> headMap=new HashMap<>();
+
+
+
+                row.getCell(4).setCellType(HSSFCell.CELL_TYPE_STRING);
+                row.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
+                headMap.put("link",row.getCell(4).getStringCellValue());
+                headMap.put("nodeId",row.getCell(5).getNumericCellValue());
+                headMap.put("nodeFromEvi",row.getCell(6).getStringCellValue());
+                headMap.put("keyText",row.getCell(7).getStringCellValue());
+
+
+                MOD_Joint mod_joint=new MOD_Joint();
+                mod_joint.setCaseID(caseId);
+                mod_joint.setContent(row.getCell(4).getStringCellValue());
+                mod_joint.setFactID(mod_fact.getId());
+                mod_joint=modelManageService.saveJoint(mod_joint);
+                MOD_Arrow mod_arrow=new MOD_Arrow();
+                mod_arrow.setCaseID(caseId);
+                mod_arrow.setNodeTo_jid(mod_joint.getId());
+                mod_arrow.setNodeFrom_hid(getHeadIdByEvi(bodylist.get((int)row.getCell(5).getNumericCellValue()-1),row.getCell(6).getStringCellValue()));
+                mod_arrow=modelManageService.saveArrow(mod_arrow);
+                headlist.add(headMap);
+            }
+
+
+        }
+
+    }
+
+    @Override
+    @Async
+    public void importLogicByExcel(String filepath, int caseId,List<Evidence_Body> bodyList) {
+
+        Workbook book = null;
+        try {
+            book = ExcelUtil.getExcelWorkbook(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet =ExcelUtil.getSheetByNum(book, 2);
+        int lastRowNum = sheet.getLastRowNum();
+        String text="";
+
+        List<HashMap<String,Object>> list=new ArrayList<>();
+        HashMap<String,Object> hashMap=new HashMap<>();
+        List<HashMap<String,Object>> headlist=new ArrayList<>();
+        List<HashMap<String,Object>> factList=new ArrayList<>();
+        int resultId=-1;
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row != null) {
+                if (row.getCell(4).getStringCellValue() != null && row.getCell(4).getStringCellValue() != "") {
+                    System.out.println("reading line is " + i);
+                    text = row.getCell(4).getStringCellValue();
+                    text=text.substring(4);
+
+                    System.out.println(hashMap.toString());
+                    hashMap=new HashMap<>();
+                    hashMap.put("result",text);//idList是string数组
+
+                    resultId=logicService.addNode(caseId,-1,text,3);//结论
+                    List<String> lawList= saveLawList(row.getCell(3).getStringCellValue(),resultId,caseId);
+                    hashMap.put("law",lawList);
+                    factList=new ArrayList<>();
+                    hashMap.put("factList",factList);
+                    list.add(hashMap);
+                    }
+                HashMap<String,Object> factMap=new HashMap<>();
+                int id=(int)row.getCell(2).getStringCellValue().charAt(2)-'0';
+                factMap.put("id",id);
+                factMap.put("fact",row.getCell(2).getStringCellValue().substring(4));
+
+                String detail=row.getCell(2).getStringCellValue().substring(4);
+                int factId=logicService.addNode(caseId,resultId,detail,1);
+
+                List<Integer> eviList= saveEviList(row.getCell(1).getStringCellValue(),factId,caseId,bodyList);
+                factMap.put("evi",eviList);
+                factList.add(factMap);
+
+            }
+
+
+        }
+    //    System.out.println(list.toString());
+
+
+
+    }
+
+
+
+
+
+    public int getHeadIdByEvi(Evidence_Body body,String head){
+        System.out.println("head:"+head);
+        System.out.println("body:"+body.getId()+body.getBody());
+        List<Evidence_Head> headList=body.getHeadList();
+        for(Evidence_Head headtemp:headList){
+            System.out.println(headtemp.getHead()+":headtemp");
+            if(headtemp.getHead().equals(head)){
+                return headtemp.getId();
+            }
+        }
+
+        return -1;
+    }
+
+
+
+
+
+
+    private List<Integer> saveEviList(String stringCellValue, int factId, int caseId,List<Evidence_Body> bodyList) {
+
+
+        List<Integer> list=new ArrayList<>();
+
+        stringCellValue=stringCellValue.substring(2);
+        // System.out.println(stringCellValue);
+        String[] strs=stringCellValue.split("、");
+        for(String str:strs){
+            list.add(Integer.valueOf(str));
+            // System.out.println(str);
+            int i=Integer.valueOf(str);
+            logicService.addNode(caseId,factId,bodyList.get(i-1).getBody(),0);
+        }
+        return list;
+    }
+
+    /**
+     * 为了解决书名号中的顿号问题我也是煞费苦心
+     * @param stringCellValue
+     * @return
+     */
+    private List<String> saveLawList(String stringCellValue,int resultId,int caseId) {
+
+//        String[] strs=stringCellValue.split("\\(\\?<=《\\)\\[^》]\\+\\(\\?=》\\)");
+        List<String> result=new ArrayList<>();
+        String lawName="";
+//        lawName=lawName.substring(0,lawName.indexOf('》')+1);
+//
+//        for(String str:strs){
+//            if(!str.contains("《")){
+//                result.add(lawName+str);
+//                System.out.println(lawName+str);
+//            }else{
+//                result.add(str);
+//                System.out.println(str);
+//                lawName=str;
+//                lawName=lawName.substring(0,lawName.indexOf('》')+1);
+//
+//            }
+//        }
+
+        int begin=0;
+        int end=0;
+        String law="";
+        for(int i=0;i<stringCellValue.length();i++){
+            if(stringCellValue.charAt(i)=='《'){
+                begin=i;
+                int j=i;
+                while(stringCellValue.charAt(j)!='》'){
+                    j++;
+                }
+                end=j;
+                lawName=stringCellValue.substring(begin,end+1);
+                stringCellValue=stringCellValue.substring(end+1);
+                // System.out.println("String"+stringCellValue);
+                i=0;
+            }
+            if(stringCellValue.charAt(i)=='、'){
+                law=lawName+stringCellValue.substring(0,i);
+                stringCellValue=stringCellValue.substring(i+1);
+
+                i=-1;
+                //System.out.println(law);
+
+                result.add(law);
+                logicService.addNode(caseId,resultId,law,2);
+            }
+
+
+        }
+
+        result.add(lawName+stringCellValue);
+        logicService.addNode(caseId,resultId,lawName+stringCellValue,2);
+
+        return  result;
+
     }
 }

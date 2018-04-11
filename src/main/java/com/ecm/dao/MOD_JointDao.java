@@ -10,6 +10,8 @@ public interface MOD_JointDao extends JpaRepository<MOD_Joint, MODPK> {
 
     public MOD_Joint save(MOD_Joint joint);
 
+    public void deleteById(int id);
+
     public void deleteByIdAndCaseID(int id,int cid);
 
     public void deleteAllByCaseID(int cid);

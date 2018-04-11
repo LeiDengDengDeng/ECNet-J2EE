@@ -10,13 +10,17 @@ public interface ModelManageService {
 
     public JSONObject getEvidences(int cid);
 
-    public void saveHeader(Evidence_Head header);
+    public Evidence_Head saveHeader(Evidence_Head header);
+
+    public void saveHeaders(List<Evidence_Head> headers);
 
     public void deleteHeaderById(int id);
 
     public void deleteHeadersByCid(int cid);
 
-    public void saveBody(Evidence_Body body);
+    public Evidence_Body saveBody(Evidence_Body body);
+
+    public void saveBodies(List<Evidence_Body> bodies);
 
     public int getLogicNodeIDofBody(int bid);
 
@@ -24,19 +28,29 @@ public interface ModelManageService {
 
     public void deleteBodiesByCid(int cid);
 
-    public void saveJoint(MOD_Joint joint);
+    public MOD_Joint saveJoint(MOD_Joint joint);
 
-    public void deleteJointById(int id,int cid);
+    public void saveJoints(List<MOD_Joint> joints);
 
-    public void saveFact(MOD_Fact fact);
+    public void deleteJointById(int id);
 
-    public int getLogicNodeIDofFact(int fid,int cid);
+    public MOD_Fact saveFact(MOD_Fact fact);
 
-    public void deleteFactById(int id,int cid);
+    public void saveFacts(List<MOD_Fact> facts);
+
+//    public int getLogicNodeIDofFact(int fid,int cid);
+
+    public int getLogicNodeIDofFact(int fid);
+
+    public MOD_Fact getFactByID(int id);
+
+    public void deleteFactById(int id);
 
     public void deleteJointsByCid(int cid);
 
-    public void saveArrow(MOD_Arrow arrow);
+    public MOD_Arrow saveArrow(MOD_Arrow arrow);
+
+    public void saveArrows(List<MOD_Arrow> arrows);
 
     public void deleteArrowsByCid(int cid);
 
