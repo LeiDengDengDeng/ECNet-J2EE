@@ -51,8 +51,8 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public int addNode(int caseID, int parentNodeID, String detail, int type) {
-        LogicNode node = generateNode(caseID, parentNodeID, detail, type);
+    public int addNode(int caseID, int parentID, String detail, int type) {
+        LogicNode node = generateNode(caseID, logicNodeDao.findById(parentID).getNodeID(), detail, type);
         return logicNodeDao.save(node).getId();
     }
 
