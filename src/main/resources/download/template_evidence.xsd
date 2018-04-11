@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.runoob.com" xmlns="http://www.runoob.com" elementFormDefault="qualified">
+	<xs:attribute name="id" type="xs:integer"/>
+	<xs:complexType mixed="true" name="head">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:integer"/>
+    </xs:complexType>
+
+	<xs:complexType mixed="true" name="joint">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:integer"/>
+	</xs:complexType>
+
+	<xs:complexType mixed="true" name="arrow">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+			<xs:element name="head" type="head"/>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:integer"/>
+	</xs:complexType>
+
+	<xs:complexType mixed="true" name="evidence">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="committer" type="xs:string"/>
+			<xs:element name="reason" type="xs:string"/>
+			<xs:element name="trust" type="xs:string"/>
+			<xs:element name="heads">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:element name="head" type="head"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:integer"/>
+	</xs:complexType>
+
+	<xs:complexType mixed="true" name="fact">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="joints">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:element name="joint" type="joint"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+        <xs:attribute name="id" type="xs:integer"/>
+	</xs:complexType>
+
+
+	<xs:element name="ecm">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element name="evidences">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<xs:element name="evidence" type="evidence"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="facts">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<xs:element name="fact" type="fact"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="relations">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<xs:element name="relation">
+								<xs:complexType mixed="true">
+									<xs:sequence>
+										<xs:element name="arrows">
+											<xs:complexType mixed="true">
+												<xs:sequence>
+													<xs:element name="arrow" type="arrow"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="joint" type="joint"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -249,7 +249,7 @@ $(document).ready(function(){
         typeSetting();
     });
 
-    window.setInterval(saveAll,180000);
+    // window.setInterval(saveAll,180000);
 });
 
 //存储所有

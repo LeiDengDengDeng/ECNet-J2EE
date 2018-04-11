@@ -745,6 +745,7 @@ public class ModelManageServiceImpl implements ModelManageService {
         try {
             JAXBContext ctx = JAXBContext.newInstance("com.ecm.model.xsd");
             ObjectFactory of = new ObjectFactory();
+            Ecm ecm = of.createEcm();
 
             List<Evidence_Body> bodies = evidenceBodyDao.findAllByCaseID(cid);
             Ecm.Evidences evidences = of.createEcmEvidences();
@@ -752,6 +753,11 @@ public class ModelManageServiceImpl implements ModelManageService {
                 Evidence_Body body = bodies.get(i);
                 Evidence e = of.createEvidence();
                 e.setId(new BigInteger(body.getId()+""));
+                e.getContent().add(of.createEvidenceName(body.getName()));
+                e.getContent().add(of.createEvidenceContent(body.getBody()));
+                e.getContent().add(of.createEvidenceType(body.getTypeToString()));
+                e.getContent().add(of.createEvidenceCommitter(body.getCommitter()));
+                e.getContent().add(of.createEvidenceReason(body.getReason()));
                 e.getContent().add(of.createEvidenceTrust(body.getTrustToString()));
 
                 Evidence.Heads headsXml = of.createEvidenceHeads();
@@ -765,12 +771,9 @@ public class ModelManageServiceImpl implements ModelManageService {
                     headsXml.getContent().add(of.createEvidenceHeadsHead(h));
                 }
                 e.getContent().add(of.createEvidenceHeads(headsXml));
-                e.getContent().add(of.createEvidenceCommitter(body.getCommitter()));
-                e.getContent().add(of.createEvidenceName(body.getName()));
-                e.getContent().add(of.createEvidenceContent(body.getBody()));
-                e.getContent().add(of.createEvidenceReason(body.getReason()));
-                e.getContent().add(of.createEvidenceType(body.getTypeToString()));
+                evidences.getContent().add(of.createEcmEvidencesEvidence(e));
             }
+            ecm.getContent().add(of.createEcmEvidences(evidences));
         } catch (JAXBException e) {
             e.printStackTrace();
         }
