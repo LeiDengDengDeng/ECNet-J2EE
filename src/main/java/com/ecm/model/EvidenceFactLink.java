@@ -13,15 +13,15 @@ public class EvidenceFactLink {
     private int id;
 
     private int caseID;
-    private int initEviNodeID; // 原始证据节点id
-    private int copyEviNodeID; // 复制的证据节点id
-    private int factNodeID; // 证据节点对应的事实节点id
+    private int initEviID; // 原始证据节点id
+    private int copyEviID; // 复制的证据节点id
+    private int factID; // 证据节点对应的事实节点id
 
-    public EvidenceFactLink(int caseID, int initEviNodeID, int copyEviNodeID, int factNodeID) {
+    public EvidenceFactLink(int caseID, int initEviID, int copyEviID, int factID) {
         this.caseID = caseID;
-        this.initEviNodeID = initEviNodeID;
-        this.copyEviNodeID = copyEviNodeID;
-        this.factNodeID = factNodeID;
+        this.initEviID = initEviID;
+        this.copyEviID = copyEviID;
+        this.factID = factID;
     }
 
     public int getId() {
@@ -40,27 +40,27 @@ public class EvidenceFactLink {
         this.caseID = caseID;
     }
 
-    public int getInitEviNodeID() {
-        return initEviNodeID;
+    public int getInitEviID() {
+        return initEviID;
     }
 
-    public void setInitEviNodeID(int initEviNodeID) {
-        this.initEviNodeID = initEviNodeID;
+    public void setInitEviID(int initEviID) {
+        this.initEviID = initEviID;
     }
 
-    public int getCopyEviNodeID() {
-        return copyEviNodeID;
+    public int getCopyEviID() {
+        return copyEviID;
     }
 
-    public void setCopyEviNodeID(int copyEviNodeID) {
-        this.copyEviNodeID = copyEviNodeID;
+    public void setCopyEviID(int copyEviID) {
+        this.copyEviID = copyEviID;
     }
 
-    public int getFactNodeID() {
-        return factNodeID;
+    public int getFactID() {
+        return factID;
     }
 
-    public void setFactNodeID(int factNodeID) {
-        this.factNodeID = factNodeID;
+    public void setFactID(int factID) {
+        this.factID = factID;
     }
 }

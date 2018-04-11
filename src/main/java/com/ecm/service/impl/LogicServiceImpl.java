@@ -89,9 +89,9 @@ public class LogicServiceImpl implements LogicService {
             logicNodeDao.save(eviNode);
         } else {
             // 删除copy节点以及copy节点和事实节点的联系
-            EvidenceFactLink eviFactLink = evidenceFactLinkDao.findByCaseIDAndInitEviNodeIDAndFactNodeID(caseID, evidenceID, factID);
-            logicNodeDao.delete(eviFactLink.getCopyEviNodeID());
-            evidenceFactLinkDao.deleteByCaseIDAndInitEviNodeIDAndFactNodeID(caseID, evidenceID, factID);
+            EvidenceFactLink eviFactLink = evidenceFactLinkDao.findByCaseIDAndInitEviIDAndFactID(caseID, evidenceID, factID);
+            logicNodeDao.delete(eviFactLink.getCopyEviID());
+            evidenceFactLinkDao.deleteByCaseIDAndInitEviIDAndFactID(caseID, evidenceID, factID);
         }
     }
 
