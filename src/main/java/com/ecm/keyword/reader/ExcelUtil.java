@@ -158,39 +158,39 @@ public class ExcelUtil {
     }
 
 
-    /**
-     *
-     * @param file_dir
-     * @param type 0-xls 1-xml
-     * @return
-     */
-    public static Evidence_Document saveDocument(String file_dir,int caseId,int type) throws IOException {
-
-        Evidence_Document evidence_document=new Evidence_Document();
-        Workbook book = null;
-        book = getExcelWorkbook(file_dir);
-        Sheet sheet = getSheetByNum(book, 0);
-        int lastRowNum = sheet.getLastRowNum();
-        System.out.println("last number is " + lastRowNum);
-        String text="";
-        int xh=1;
-        for (int i = 2; i <= lastRowNum; i++) {
-            Row row = null;
-            row = sheet.getRow(i);
-            if (row.getCell(3).getStringCellValue()!=null&&row.getCell(3).getStringCellValue()!="") {
-                System.out.println("reading line is " + i);
-                text+=xh+"、"+row.getCell(3).getStringCellValue();
-                xh++;
-            }
-        }
-        evidence_document.setType(0);//??????????????无法区分原告被告
-        evidence_document.setText(text);
-        evidence_document.setCaseID(caseId);
-       // evidenceService.saveOrUpdate(evidence_document);
-        return evidence_document;
-    }
-
-
+//    /**
+//     *
+//     * @param file_dir
+//     * @param type 0-xls 1-xml
+//     * @return
+//     */
+//    public static Evidence_Document saveDocument(String file_dir,int caseId,int type) throws IOException {
+//
+//        Evidence_Document evidence_document=new Evidence_Document();
+//        Workbook book = null;
+//        book = getExcelWorkbook(file_dir);
+//        Sheet sheet = getSheetByNum(book, 0);
+//        int lastRowNum = sheet.getLastRowNum();
+//        System.out.println("last number is " + lastRowNum);
+//        String text="";
+//        int xh=1;
+//        for (int i = 2; i <= lastRowNum; i++) {
+//            Row row = null;
+//            row = sheet.getRow(i);
+//            if (row.getCell(3).getStringCellValue()!=null&&row.getCell(3).getStringCellValue()!="") {
+//                System.out.println("reading line is " + i);
+//                text+=xh+"、"+row.getCell(3).getStringCellValue();
+//                xh++;
+//            }
+//        }
+//        evidence_document.setType(0);//??????????????无法区分原告被告
+//        evidence_document.setText(text);
+//        evidence_document.setCaseID(caseId);
+//       // evidenceService.saveOrUpdate(evidence_document);
+//        return evidence_document;
+//    }
+//
+//
 
 
 

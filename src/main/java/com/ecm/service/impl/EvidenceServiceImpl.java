@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.ecm.keyword.reader.ExcelUtil.getExcelWorkbook;
+import static com.ecm.keyword.reader.ExcelUtil.getSheetByNum;
+
 @Service
 public class EvidenceServiceImpl implements EvidenceService {
 
@@ -47,6 +50,10 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     public Evidence_Document saveOrUpdate(Evidence_Document evidence_document) {
+        int id=findIdByAjxhAndType(evidence_document.getCaseID(),evidence_document.getType());
+        if(id!=-1){
+            evidence_document.setId(id);
+        }
         return evidenceDocuDao.save(evidence_document);
     }
 
@@ -99,6 +106,16 @@ public class EvidenceServiceImpl implements EvidenceService {
         }
         evidenceBodyDao.deleteAllByDocumentid(document_id);
     }
+
+    @Transactional
+    @Override
+    public void deleteBodyAllByCaseId(int caseId) {
+
+
+        evidenceBodyDao.deleteAllByCaseID(caseId);
+
+    }
+
     @Transactional
     @Override
     public void updateBodyById(String body, int id) {
@@ -209,9 +226,126 @@ public class EvidenceServiceImpl implements EvidenceService {
         return evidenceBodyDao.findLogicId(bodyid);
     }
 
+
+    @Override
+    public List<Evidence_Document> importDocumentByExcel(String filepath, int caseId) {
+        List<Evidence_Document> list=new ArrayList<>();
+        Evidence_Document evidence_document1=new Evidence_Document();
+        Evidence_Document evidence_document2=new Evidence_Document();
+        Workbook book = null;
+        try {
+            book = ExcelUtil.getExcelWorkbook(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = ExcelUtil.getSheetByNum(book, 0);
+        int lastRowNum = sheet.getLastRowNum();
+        System.out.println("last number is " + lastRowNum);
+        String text1="";
+        String text2="";
+        int xh=1;
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row.getCell(3).getStringCellValue()!=null&&row.getCell(3).getStringCellValue()!="") {
+               // System.out.println("reading line is " + i);
+                if(row.getCell(5).getStringCellValue().contains("被告")){
+                    text2+=xh+"、"+row.getCell(3).getStringCellValue();
+                }else{
+                    text1+=xh+"、"+row.getCell(3).getStringCellValue();
+                }
+                xh++;
+            }
+        }
+        evidence_document1.setType(0);//??????????????无法区分原告被告
+        evidence_document1.setText(text1);
+        evidence_document1.setCaseID(caseId);
+        saveOrUpdate(evidence_document1);
+        evidence_document2.setType(1);//??????????????无法区分原告被告
+        evidence_document2.setText(text2);
+        evidence_document2.setCaseID(caseId);
+        saveOrUpdate(evidence_document2);
+
+        list.add(evidence_document1);
+        list.add(evidence_document2);
+        return list;
+    }
+
+
+
+    @Override
+    public List<Evidence_Body> importEviByExcel(String filepath, int caseId,List<Evidence_Document> doculist) {
+        deleteBodyAllByCaseId(caseId);
+
+        List<Evidence_Body> bodylist=new ArrayList<>();
+
+        Workbook book = null;
+        try {
+            book = getExcelWorkbook(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = getSheetByNum(book, 0);
+        int lastRowNum = sheet.getLastRowNum();
+        System.out.println("last number is " + lastRowNum);
+        String text = "";
+        int xh = 1;
+        Evidence_Body evidenceBody = new Evidence_Body();
+        for (int i = 2; i <= lastRowNum; i++) {
+            Row row = null;
+            row = sheet.getRow(i);
+            if (row != null) {
+                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+                    System.out.println("reading line is " + i);
+                    text = row.getCell(3).getStringCellValue();
+                    //System.out.println(evidenceBody.toString());
+                    evidenceBody = new Evidence_Body();
+
+                    int logicNodeId=logicService.addEvidenceOrFactNode(caseId,text,0);
+                    evidenceBody.setCaseID(caseId);
+                    evidenceBody.setBody(text);
+                    evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
+                    evidenceBody.setTrustByString(row.getCell(7).getStringCellValue());
+                    evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(),doculist));
+                    evidenceBody.setLogicNodeID(logicNodeId);
+                    evidenceBody=save(evidenceBody);
+                    bodylist.add(evidenceBody);
+                    deleteHeadAllByBody(evidenceBody.getId());
+                }
+                Evidence_Head evidence_head = new Evidence_Head();
+                evidence_head.setCaseID(caseId);
+                // 将区域编号的cell中的内容当做字符串处理
+                row.getCell(8).setCellType(HSSFCell.CELL_TYPE_STRING);
+                evidence_head.setHead(row.getCell(8).getStringCellValue());
+                evidence_head.setBodyid(evidenceBody.getId());
+                evidence_head.setDocumentid(evidenceBody.getDocumentid());
+                System.out.println(evidence_head.toString());
+                evidence_head=save(evidence_head);
+                evidenceBody.addHead(evidence_head);
+            }
+
+
+        }
+        return  bodylist;
+
+
+
+
+
+    }
+
+    private int getDocuIdByDocuList(String stringCellValue,List<Evidence_Document> list) {
+        if(stringCellValue.contains("原告")){
+            return list.get(0).getId();
+        }else{
+            return list.get(1).getId();
+        }
+    }
+
     @Override
     @Async
     public void importFactByExcel(String filepath, int caseId, List<Evidence_Body> bodylist) {
+
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -285,6 +419,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Async
     public void importLogicByExcel(String filepath, int caseId,List<Evidence_Body> bodyList) {
 
+
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -344,14 +479,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 
 
-
-
-    public int getHeadIdByEvi(Evidence_Body body,String head){
-        System.out.println("head:"+head);
-        System.out.println("body:"+body.getId()+body.getBody());
+    private int getHeadIdByEvi(Evidence_Body body,String head){
         List<Evidence_Head> headList=body.getHeadList();
         for(Evidence_Head headtemp:headList){
-            System.out.println(headtemp.getHead()+":headtemp");
             if(headtemp.getHead().equals(head)){
                 return headtemp.getId();
             }
@@ -359,11 +489,6 @@ public class EvidenceServiceImpl implements EvidenceService {
 
         return -1;
     }
-
-
-
-
-
 
     private List<Integer> saveEviList(String stringCellValue, int factId, int caseId,List<Evidence_Body> bodyList) {
 

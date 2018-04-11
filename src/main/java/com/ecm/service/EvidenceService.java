@@ -8,26 +8,29 @@ import java.util.List;
 
 public interface EvidenceService{
 
-    public Evidence_Document saveOrUpdate(Evidence_Document evidence_document);
+    Evidence_Document saveOrUpdate(Evidence_Document evidence_document);
 
-    public int findIdByAjxhAndType(int ajxh, int type);
-    public Evidence_Document findDocuByAjxhAndType(int ajxh, int type);
-    public List<Evidence_Body> findBodyByDocu(int documentid);
-    public Evidence_Body save(Evidence_Body evidence_body);
-    public Evidence_Head save(Evidence_Head evidence_head);
-    public void deleteBodyById(int id);
-    public void deleteBodyAll(int document_id);
-    public void updateBodyById(String body, int id);
-    public void updateTypeById(int type, int id);
-    public void updateTrustById(int trust, int id);
-    public List<Evidence_Body> createHead(int documentid) ;
-    public void updateHeadById(String head, int id);
-    public void deleteHeadById(int id);
-    public void deleteHeadAllByBody(int body_id);
-    public List<Evidence_Head> findHeadByBody(int bodyid);
-    public int findLogicId(int bodyid);
-    public void importFactByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
-    public void importLogicByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
+    int findIdByAjxhAndType(int ajxh, int type);
+    Evidence_Document findDocuByAjxhAndType(int ajxh, int type);
+    List<Evidence_Body> findBodyByDocu(int documentid);
+    Evidence_Body save(Evidence_Body evidence_body);
+    Evidence_Head save(Evidence_Head evidence_head);
+    void deleteBodyById(int id);
+    void deleteBodyAll(int document_id);
+    void deleteBodyAllByCaseId(int caseId);
+    void updateBodyById(String body, int id);
+    void updateTypeById(int type, int id);
+    void updateTrustById(int trust, int id);
+    List<Evidence_Body> createHead(int documentid) ;
+    void updateHeadById(String head, int id);
+    void deleteHeadById(int id);
+    void deleteHeadAllByBody(int body_id);
+    List<Evidence_Head> findHeadByBody(int bodyid);
+    int findLogicId(int bodyid);
+    List<Evidence_Document> importDocumentByExcel(String filepath,int caseId);
+    List<Evidence_Body> importEviByExcel(String filepath,int caseId,List<Evidence_Document> documentList);
+    void importFactByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
+    void importLogicByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
 
 
 }

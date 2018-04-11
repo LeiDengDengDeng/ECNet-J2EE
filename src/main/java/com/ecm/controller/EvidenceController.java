@@ -52,11 +52,6 @@ public class EvidenceController {
       evidence_document.setText(text);
       evidence_document.setType(type);
 
-      int id=evidenceService.findIdByAjxhAndType(ajxh,type);
-      if(id!=-1){
-
-          evidence_document.setId(id);
-      }
       evidence_document=evidenceService.saveOrUpdate(evidence_document);
 
       evidenceService.deleteBodyAll(evidence_document.getId());
@@ -176,7 +171,7 @@ public class EvidenceController {
 
     @PostMapping(value = "/deleteHead")
     public void deleteHead(@RequestParam("id") int id){
-evidenceService.deleteHeadById(id);
+            evidenceService.deleteHeadById(id);
     }
 
     @PostMapping(value = "/addHead")
@@ -210,78 +205,21 @@ evidenceService.deleteHeadById(id);
             // TODO: handle exception
         }
 
-       Evidence_Document evidence_document=ExcelUtil.saveDocument(filePath+sepa+fileName,41722,0);
-        int id=evidenceService.findIdByAjxhAndType(41722,0);
-        if(id!=-1){
-            evidence_document.setId(id);
+        if(fileName.contains("xml")){
+
+
+
         }
-        evidence_document=evidenceService.saveOrUpdate(evidence_document);
-        //System.out.println(evidence_document.getText());
-        int documentId=evidence_document.getId();
+        if(fileName.contains("xls")){
 
-        List<Evidence_Body> bodylist=excelToEvidenceList(filePath+sepa+fileName,41722,documentId);
-
-        evidenceService.importFactByExcel(filePath+sepa+fileName,41722,bodylist);
-
-        evidenceService.importLogicByExcel(filePath+sepa+fileName,41722,bodylist);
+            List<Evidence_Document> documentList=evidenceService.importDocumentByExcel(filePath+sepa+fileName,ajxh);
+            List<Evidence_Body> bodylist=evidenceService.importEviByExcel(filePath+sepa+fileName,ajxh,documentList);
+            evidenceService.importFactByExcel(filePath+sepa+fileName,ajxh,bodylist);
+            evidenceService.importLogicByExcel(filePath+sepa+fileName,ajxh,bodylist);
+        }
         response.sendRedirect("/upload");
 
     }
-
-
-    public  List<Evidence_Body> excelToEvidenceList(String file_dir,int caseId,int documentId) throws IOException {
-        evidenceService.deleteBodyAll(documentId);
-
-        List<Evidence_Body> bodylist=new ArrayList<>();
-
-        Workbook book = null;
-        book = getExcelWorkbook(file_dir);
-        Sheet sheet = getSheetByNum(book, 0);
-        int lastRowNum = sheet.getLastRowNum();
-        System.out.println("last number is " + lastRowNum);
-        String text = "";
-        int xh = 1;
-        Evidence_Body evidenceBody = new Evidence_Body();
-        for (int i = 2; i <= lastRowNum; i++) {
-            Row row = null;
-            row = sheet.getRow(i);
-            if (row != null) {
-                if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
-                    System.out.println("reading line is " + i);
-                    text = row.getCell(3).getStringCellValue();
-                    //System.out.println(evidenceBody.toString());
-                    evidenceBody = new Evidence_Body();
-
-                    int logicNodeId=logicService.addEvidenceOrFactNode(caseId,text,0);
-                    evidenceBody.setCaseID(caseId);
-                    evidenceBody.setBody(text);
-                    evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
-                    evidenceBody.setTrustByString(row.getCell(7).getStringCellValue());
-                    evidenceBody.setDocumentid(documentId);
-                    evidenceBody.setLogicNodeID(logicNodeId);
-                    evidenceBody=evidenceService.save(evidenceBody);
-                    bodylist.add(evidenceBody);
-                    evidenceService.deleteHeadAllByBody(evidenceBody.getId());
-                }
-                Evidence_Head evidence_head = new Evidence_Head();
-                evidence_head.setCaseID(caseId);
-                // 将区域编号的cell中的内容当做字符串处理
-                row.getCell(8).setCellType(HSSFCell.CELL_TYPE_STRING);
-                evidence_head.setHead(row.getCell(8).getStringCellValue());
-                evidence_head.setBodyid(evidenceBody.getId());
-                evidence_head.setDocumentid(documentId);
-                System.out.println(evidence_head.toString());
-                evidence_head=evidenceService.save(evidence_head);
-                evidenceBody.addHead(evidence_head);
-            }
-
-
-        }
-        return  bodylist;
-    }
-
-
-
 
 
 }

@@ -1,18 +1,4 @@
-
-$(function(){
-    var caseInfoStr = $.session.get("caseInfo");
-    var caseInfo = JSON.parse(caseInfoStr);
-    $("#caseNum").text(caseInfo.cNum);
-    // $("#caseBrief").text(caseInfo['']);
-    $("#caseBrief").text("受贿罪");
-    $("#caseName").text(caseInfo.cname);
-    $("#underTaker").text("林世开");
-    $("#caseDate").text(caseInfo.fillingDate);
-
-    initEvidences();
-});
-
-
+var document_id=new Array();
 //hide
 $(function(){
 
@@ -20,10 +6,7 @@ $(function(){
     var username = $.session.get('username');
     $('#userLabel').text(username);
     console.log($.session.get('cid'));
-    var document_id=new Array();
     var cid=$.session.get('cid');
-
-
     $('#exist_click').click(function () {
         if(confirm('是否确认退出？'))
         {
@@ -37,7 +20,7 @@ $(function(){
     $("#caseNum").text(caseInfo.cNum);
     $("#caseBrief").text("受贿罪");
     $("#caseName").text(caseInfo.cname);
-    $("#underTaker").text("林世开");
+    $("#underTaker").text(username);
     $("#caseDate").text(caseInfo.fillingDate);
     $("#importCaseId").val(cid);
 
@@ -237,8 +220,6 @@ function loading(num) {
         removeLoading('test');
     },120000);
 }
-
-
 
 var trustHtml="";
 var temp=new Array(true,true,true,true,true,true,true,true,true,true);
