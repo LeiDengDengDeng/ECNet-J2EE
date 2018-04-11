@@ -22,9 +22,9 @@ public interface LogicService {
      */
     void modEvidenceOrFactNode(int id, String detail);
 
-    void addLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID);
+    void addLinkForEvidenceAndFactNode(int caseID, int evidenceID, int factID);
 
-    void deleteLinkForEvidenceAndFactNode(int caseID, int evidenceNodeID, int factNodeID);
+    void deleteLinkForEvidenceAndFactNode(int caseID, int evidenceID, int factID);
 
     LogicNode getNode(int id);
 
@@ -37,6 +37,8 @@ public interface LogicService {
     void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes);
 
     void deleteNode(int id);
+
+    void deleteAllNodesByCaseID(int caseID);
 
     String generateXMLFile(int caseID);
 
