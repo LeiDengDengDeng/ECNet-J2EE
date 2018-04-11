@@ -18,6 +18,7 @@ public class EvidenceFactLink {
     private int factNodeID; // 证据节点对应的事实节点id
 
     public EvidenceFactLink(int caseID, int initEviNodeID, int copyEviNodeID, int factNodeID) {
+        this.caseID = caseID;
         this.initEviNodeID = initEviNodeID;
         this.copyEviNodeID = copyEviNodeID;
         this.factNodeID = factNodeID;

@@ -54,9 +54,11 @@ public interface ModelManageService {
 
     public void deleteArrowsByCid(int cid);
 
+    public void deleteAll(int cid);
+
     public void writeToExcel(int cid,String filePath);
 
     public void writeToXML(int cid,String filePath);
 
-    public void writeToXMLSchema(int cid,String filePath);
+    public void writeToXMLBySchema(int cid,String filePath);
 }

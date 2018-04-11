@@ -2,6 +2,10 @@ package com.ecm.service.impl;
 
 import com.ecm.dao.*;
 import com.ecm.model.*;
+import com.ecm.model.xsd.Ecm;
+import com.ecm.model.xsd.Evidence;
+import com.ecm.model.xsd.Head;
+import com.ecm.model.xsd.ObjectFactory;
 import com.ecm.service.ModelManageService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -13,19 +17,24 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +81,7 @@ public class ModelManageServiceImpl implements ModelManageService {
 //                jo.put("x",body.getX());
 //                jo.put("y",body.getY());
 
-                List<Evidence_Head> headers = evidenceHeadDao.findAllByCaseIDAndBodyid(cid,bid);
+                List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
                 jo.put("headers",headers);
                 trusts.add(jo);
             }else{
@@ -253,6 +262,16 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Transactional
     public void deleteArrowsByCid(int cid) {
         arrowDao.deleteAllByCaseID(cid);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll(int cid) {
+        evidenceBodyDao.deleteAllByCaseID(cid);
+        evidenceHeadDao.deleteAllByCaseID(cid);
+        arrowDao.deleteAllByCaseID(cid);
+        jointDao.deleteAllByCaseID(cid);
+        factDao.deleteAllByCaseID(cid);
     }
 
     @Override
@@ -643,39 +662,41 @@ public class ModelManageServiceImpl implements ModelManageService {
         }
 
         List<MOD_Joint> joints = jointDao.findAllByCaseID(cid);
-        Element arrowsElmt = rootElmt.addElement("relations");
+        Element relationsElmt = rootElmt.addElement("relations");
         for(int i = 0;i<joints.size();i++){
             MOD_Joint joint = joints.get(i);
             List<MOD_Arrow> arrows = arrowDao.findAllByCaseIDAndJointID(cid,joint.getId());
 
-            Element rel = arrowsElmt.addElement("from");
-            for(int j = 0;j<arrows.size();j++){
-                MOD_Arrow arrow = arrows.get(j);
-                Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
+            if(arrows.size()>0){
+                Element arrowsElmt = relationsElmt.addElement("relation");
+                Element rel = arrowsElmt.addElement("arrows");
+                for(int j = 0;j<arrows.size();j++){
+                    MOD_Arrow arrow = arrows.get(j);
+                    Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
 
-                Element arrowElmt = rel.addElement("arrow");
-                arrowElmt.addAttribute("id",arrow.getId()+"");
-                Element aname = arrowElmt.addElement("name");
-                aname.setText(arrow.getName());
-                Element acontent = arrowElmt.addElement("content");
-                acontent.setText(arrow.getContent());
-                Element headElmt = arrowElmt.addElement("head");
-                headElmt.addAttribute("id",head.getId()+"");
-                Element hname = headElmt.addElement("name");
-                hname.setText(head.getName());
-                Element hcontent = headElmt.addElement("content");
-                hcontent.setText(head.getHead());
-                Element bodyID = headElmt.addElement("bodyID");
-                bodyID.setText(head.getBodyid()+"");
+                    Element arrowElmt = rel.addElement("arrow");
+                    arrowElmt.addAttribute("id",arrow.getId()+"");
+                    Element aname = arrowElmt.addElement("name");
+                    aname.setText(arrow.getName());
+                    Element acontent = arrowElmt.addElement("content");
+                    acontent.setText(arrow.getContent());
+                    Element headElmt = arrowElmt.addElement("head");
+                    headElmt.addAttribute("id",head.getId()+"");
+                    Element hname = headElmt.addElement("name");
+                    hname.setText(head.getName());
+                    Element hcontent = headElmt.addElement("content");
+                    hcontent.setText(head.getHead());
+                    Element bodyID = headElmt.addElement("bodyID");
+                    bodyID.setText(head.getBodyid()+"");
+                }
+
+                Element ato = arrowsElmt.addElement("joint");
+                ato.addAttribute("id",joint.getId()+"");
+                Element jname = ato.addElement("name");
+                jname.setText(joint.getName());
+                Element jcontent = ato.addElement("content");
+                jcontent.setText(joint.getContent());
             }
-
-            Element ato = rel.addElement("to");
-            ato.addAttribute("type","joint");
-            ato.addAttribute("id",joint.getId()+"");
-            Element jname = ato.addElement("name");
-            jname.setText(joint.getName());
-            Element jcontent = ato.addElement("content");
-            jcontent.setText(joint.getContent());
         }
 //        List<MOD_Arrow> arrows = arrowDao.findAllByCaseID(cid);
 //        if(arrows.size()>=1){
@@ -720,8 +741,42 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    public void writeToXMLSchema(int cid, String filePath) {
+    public void writeToXMLBySchema(int cid, String filePath) {
+        try {
+            JAXBContext ctx = JAXBContext.newInstance("com.ecm.model.xsd");
+            ObjectFactory of = new ObjectFactory();
+            Ecm ecm = of.createEcm();
 
+            List<Evidence_Body> bodies = evidenceBodyDao.findAllByCaseID(cid);
+            Ecm.Evidences evidences = of.createEcmEvidences();
+            for(int i = 0;i<bodies.size();i++){
+                Evidence_Body body = bodies.get(i);
+                Evidence e = of.createEvidence();
+                e.setId(new BigInteger(body.getId()+""));
+                e.getContent().add(of.createEvidenceName(body.getName()));
+                e.getContent().add(of.createEvidenceContent(body.getBody()));
+                e.getContent().add(of.createEvidenceType(body.getTypeToString()));
+                e.getContent().add(of.createEvidenceCommitter(body.getCommitter()));
+                e.getContent().add(of.createEvidenceReason(body.getReason()));
+                e.getContent().add(of.createEvidenceTrust(body.getTrustToString()));
+
+                Evidence.Heads headsXml = of.createEvidenceHeads();
+                List<Evidence_Head> heads = evidenceHeadDao.findAllByBodyid(body.getId());
+                for(int j = 0;j<heads.size();j++){
+                    Evidence_Head head = heads.get(j);
+                    Head h = of.createHead();
+                    h.setId(new BigInteger(head.getId()+""));
+                    h.getContent().add(of.createHeadName(head.getName()));
+                    h.getContent().add(of.createHeadContent(head.getHead()));
+                    headsXml.getContent().add(of.createEvidenceHeadsHead(h));
+                }
+                e.getContent().add(of.createEvidenceHeads(headsXml));
+                evidences.getContent().add(of.createEcmEvidencesEvidence(e));
+            }
+            ecm.getContent().add(of.createEcmEvidences(evidences));
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setRegionStyle(HSSFSheet sheet, CellRangeAddress region, HSSFCellStyle cs) {
