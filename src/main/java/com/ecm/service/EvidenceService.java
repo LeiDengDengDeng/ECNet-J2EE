@@ -24,7 +24,9 @@ public interface EvidenceService{
     List<Evidence_Body> createHead(int documentid) ;
     void updateHeadById(String head, int id);
     void deleteHeadById(int id);
+    void deleteHeadAllByCaseId(int caseId);
     void deleteHeadAllByBody(int body_id);
+
     List<Evidence_Head> findHeadByBody(int bodyid);
     int findLogicId(int bodyid);
     List<Evidence_Document> importDocumentByExcel(String filepath,int caseId);

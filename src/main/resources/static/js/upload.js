@@ -1,12 +1,16 @@
 var document_id=new Array();
+var username = $.session.get('username');
+var cid=$.session.get('cid');
+var caseInfoStr = $.session.get("caseInfo");
+var caseInfo = JSON.parse(caseInfoStr);
 //hide
 $(function(){
 
 
-    var username = $.session.get('username');
+
     $('#userLabel').text(username);
     console.log($.session.get('cid'));
-    var cid=$.session.get('cid');
+
     $('#exist_click').click(function () {
         if(confirm('是否确认退出？'))
         {
@@ -15,8 +19,7 @@ $(function(){
         }
     });
 
-    var caseInfoStr = $.session.get("caseInfo");
-    var caseInfo = JSON.parse(caseInfoStr);
+
     $("#caseNum").text(caseInfo.cNum);
     $("#caseBrief").text("受贿罪");
     $("#caseName").text(caseInfo.cname);
