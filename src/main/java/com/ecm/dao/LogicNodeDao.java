@@ -13,6 +13,8 @@ import java.util.List;
 public interface LogicNodeDao extends JpaRepository<LogicNode, Integer> {
     LogicNode findById(int id);
 
+    LogicNode findByCaseIDAndNodeID(int caseID, int nodeID);
+
     List<LogicNode> findByCaseID(int caseID);
 
     LogicNode save(LogicNode logicNode);

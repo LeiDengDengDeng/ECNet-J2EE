@@ -52,11 +52,11 @@ public class LogicServiceImpl implements LogicService {
 
     @Override
     public int addNode(int caseID, int parentID, String detail, int type) {
-     //   int parentID = -1nt parentID = -1;
+        //   int parentID = -1nt parentID = -1;
 
-      if(logicNodeDao.findById(parentID)!=null){
-        parentID = logicNodeDao.findById(parentID).getNodeID();
-      }
+        if (logicNodeDao.findById(parentID) != null) {
+            parentID = logicNodeDao.findById(parentID).getNodeID();
+        }
         LogicNode node = generateNode(caseID, parentID, detail, type);
         return logicNodeDao.save(node).getId();
     }
@@ -75,6 +75,9 @@ public class LogicServiceImpl implements LogicService {
             // 证据节点不存在父事实节点，修改该节点的parentNodeID信息
             eviNode.setParentNodeID(logicNodeDao.findById(factID).getNodeID());
             logicNodeDao.save(eviNode);
+
+            EvidenceFactLink eviFactLink = new EvidenceFactLink(caseID, evidenceID, evidenceID, factID);
+            evidenceFactLinkDao.save(eviFactLink);
         } else {
             // 证据节点存在父事实节点，需要copy新的证据节点，并将新的证据节点的parentNodeID设置为factNodeID
             LogicNodeMaxValue maxValue = getLogicNodeMaxValue(eviNode.getCaseID());
@@ -87,17 +90,23 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public void deleteLinkForEvidenceAndFactNode(int caseID, int evidenceID, int factID) {
-        LogicNode eviNode = getNode(evidenceID);
-        if (eviNode.getParentNodeID() == factID) {
-            eviNode.setParentNodeID(-1);
-            logicNodeDao.save(eviNode);
-        } else {
-            // 删除copy节点以及copy节点和事实节点的联系
-            EvidenceFactLink eviFactLink = evidenceFactLinkDao.findByCaseIDAndInitEviIDAndFactID(caseID, evidenceID, factID);
-            logicNodeDao.delete(eviFactLink.getCopyEviID());
-            evidenceFactLinkDao.deleteByCaseIDAndInitEviIDAndFactID(caseID, evidenceID, factID);
+    @Transactional
+    public void deleteAllLinksBetweenEvidenceAndFactNode(int caseID) {
+        List<EvidenceFactLink> links = evidenceFactLinkDao.findByCaseID(caseID);
+
+        for (EvidenceFactLink link : links) {
+            if (link.getInitEviID() == link.getCopyEviID()) {
+                // 保留原节点，但是修改掉父ID
+                LogicNode eviNode = logicNodeDao.findById(link.getCopyEviID());
+                eviNode.setParentNodeID(-1);
+                logicNodeDao.save(eviNode);
+            } else {
+                // 直接删除复制的证据节点
+                logicNodeDao.delete(link.getCopyEviID());
+            }
         }
+
+        evidenceFactLinkDao.deleteByCaseID(caseID);
     }
 
     @Override
@@ -108,9 +117,19 @@ public class LogicServiceImpl implements LogicService {
     @Override
     @Transactional
     public void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes) {
-        logicNodeDao.deleteByCaseID(caseID);
         for (LogicNode node : logicNodes) {
-            logicNodeDao.save(node);
+            LogicNode originNode = logicNodeDao.findByCaseIDAndNodeID(node.getCaseID(), node.getNodeID());
+            if (originNode == null) {
+                logicNodeDao.save(node);
+            } else {
+                originNode.setDetail(node.getDetail());
+                originNode.setTopic(node.getTopic());
+                originNode.setParentNodeID(node.getParentNodeID());
+                originNode.setType(node.getType());
+                originNode.setX(node.getX());
+                originNode.setY(node.getY());
+                logicNodeDao.save(originNode);
+            }
         }
     }
 

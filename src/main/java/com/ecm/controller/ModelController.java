@@ -133,6 +133,7 @@ public class ModelController {
 //    @RequestMapping(value="/saveInLogic")
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
 //        System.out.println("&&&&&&&&&&&");
+        logicService.deleteAllLinksBetweenEvidenceAndFactNode(cid);
         for(int bid : list.keySet()){
 //            System.out.println("%%"+bid);
             int eid = modelManageService.getLogicNodeIDofBody(bid);
@@ -261,8 +262,8 @@ public class ModelController {
             throws IOException {
         String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\download\\证据链.xml";
         int cid = Integer.parseInt(request.getParameter("cid"));
-        modelManageService.writeToXML(cid,filePath);
-
+//        modelManageService.writeToXML(cid,filePath);
+        modelManageService.writeToXMLBySchema(cid,filePath);
         return exportFile(filePath);
     }
 

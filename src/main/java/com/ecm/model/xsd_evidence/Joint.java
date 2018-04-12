@@ -2,11 +2,11 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.10 时间 11:51:57 PM CST
+// 生成时间: 2018.04.12 时间 05:28:50 PM CST
 //
 
 
-package com.ecm.model.xsd;
+package com.ecm.model.xsd_evidence;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -23,12 +23,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>head complex type的 Java 类。
+ * <p>joint complex type的 Java 类。
  *
  * <p>以下模式片段指定包含在此类中的预期内容。
  *
  * <pre>
- * &lt;complexType name="head">
+ * &lt;complexType name="joint">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -36,6 +36,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="content" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="x" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="y" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -44,19 +46,23 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "head", propOrder = {
+@XmlType(name = "joint", propOrder = {
         "content"
 })
-public class Head {
+public class Joint {
 
     @XmlElementRefs({
-            @XmlElementRef(name = "name", namespace = "http://www.runoob.com", type = JAXBElement.class),
-            @XmlElementRef(name = "content", namespace = "http://www.runoob.com", type = JAXBElement.class)
+            @XmlElementRef(name = "name", type = JAXBElement.class),
+            @XmlElementRef(name = "content", type = JAXBElement.class)
     })
     @XmlMixed
     protected List<Serializable> content;
     @XmlAttribute(name = "id")
     protected BigInteger id;
+    @XmlAttribute(name = "x")
+    protected BigInteger x;
+    @XmlAttribute(name = "y")
+    protected BigInteger y;
 
     /**
      * Gets the value of the content property.
@@ -111,6 +117,54 @@ public class Head {
      */
     public void setId(BigInteger value) {
         this.id = value;
+    }
+
+    /**
+     * 获取x属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getX() {
+        return x;
+    }
+
+    /**
+     * 设置x属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setX(BigInteger value) {
+        this.x = value;
+    }
+
+    /**
+     * 获取y属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getY() {
+        return y;
+    }
+
+    /**
+     * 设置y属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setY(BigInteger value) {
+        this.y = value;
     }
 
 }
