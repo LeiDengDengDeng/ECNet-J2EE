@@ -17,6 +17,9 @@ public class EvidenceFactLink {
     private int copyEviID; // 复制的证据节点id
     private int factID; // 证据节点对应的事实节点id
 
+    public EvidenceFactLink() {
+    }
+
     public EvidenceFactLink(int caseID, int initEviID, int copyEviID, int factID) {
         this.caseID = caseID;
         this.initEviID = initEviID;
