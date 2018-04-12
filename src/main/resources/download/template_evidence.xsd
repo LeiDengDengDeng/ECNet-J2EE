@@ -1,13 +1,14 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.runoob.com" xmlns="http://www.runoob.com" elementFormDefault="qualified">
-	<xs:attribute name="id" type="xs:integer"/>
 	<xs:complexType mixed="true" name="head">
 		<xs:sequence>
 			<xs:element name="name" type="xs:string"/>
 			<xs:element name="content" type="xs:string"/>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="x" type="xs:integer"/>
+		<xs:attribute name="y" type="xs:integer"/>
     </xs:complexType>
 
 	<xs:complexType mixed="true" name="joint">
@@ -16,13 +17,26 @@
 			<xs:element name="content" type="xs:string"/>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="x" type="xs:integer"/>
+		<xs:attribute name="y" type="xs:integer"/>
 	</xs:complexType>
 
 	<xs:complexType mixed="true" name="arrow">
 		<xs:sequence>
 			<xs:element name="name" type="xs:string"/>
 			<xs:element name="content" type="xs:string"/>
-			<xs:element name="head" type="head"/>
+			<xs:element name="head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="content" type="xs:string"/>
+						<xs:element name="bodyID" type="xs:integer"/>
+					</xs:sequence>
+					<xs:attribute name="id" type="xs:integer"/>
+					<xs:attribute name="x" type="xs:integer"/>
+					<xs:attribute name="y" type="xs:integer"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
 	</xs:complexType>
@@ -35,15 +49,17 @@
 			<xs:element name="committer" type="xs:string"/>
 			<xs:element name="reason" type="xs:string"/>
 			<xs:element name="trust" type="xs:string"/>
-			<xs:element name="heads">
+			<xs:element name="heads" minOccurs="0">
 				<xs:complexType mixed="true">
 					<xs:sequence>
-						<xs:element name="head" type="head"/>
+						<xs:element name="head" type="head" minOccurs="0"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="x" type="xs:integer"/>
+		<xs:attribute name="y" type="xs:integer"/>
 	</xs:complexType>
 
 	<xs:complexType mixed="true" name="fact">
@@ -51,15 +67,17 @@
 			<xs:element name="name" type="xs:string"/>
 			<xs:element name="content" type="xs:string"/>
 			<xs:element name="type" type="xs:string"/>
-			<xs:element name="joints">
+			<xs:element name="joints" minOccurs="0">
 				<xs:complexType mixed="true">
 					<xs:sequence>
-						<xs:element name="joint" type="joint"/>
+						<xs:element name="joint" type="joint" minOccurs="0"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="x" type="xs:integer"/>
+		<xs:attribute name="y" type="xs:integer"/>
 	</xs:complexType>
 
 
@@ -69,7 +87,7 @@
 				<xs:element name="evidences">
 					<xs:complexType mixed="true">
 						<xs:sequence>
-							<xs:element name="evidence" type="evidence"/>
+							<xs:element name="evidence" type="evidence" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -77,7 +95,7 @@
 				<xs:element name="facts">
 					<xs:complexType mixed="true">
 						<xs:sequence>
-							<xs:element name="fact" type="fact"/>
+							<xs:element name="fact" type="fact" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -85,17 +103,17 @@
 				<xs:element name="relations">
 					<xs:complexType mixed="true">
 						<xs:sequence>
-							<xs:element name="relation">
+							<xs:element name="relation" minOccurs="0">
 								<xs:complexType mixed="true">
 									<xs:sequence>
-										<xs:element name="arrows">
+										<xs:element name="arrows" minOccurs="0">
 											<xs:complexType mixed="true">
 												<xs:sequence>
-													<xs:element name="arrow" type="arrow"/>
+													<xs:element name="arrow" type="arrow" minOccurs="0"/>
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="joint" type="joint"/>
+										<xs:element name="joint" type="joint" minOccurs="0"/>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
