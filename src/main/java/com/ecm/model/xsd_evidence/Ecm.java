@@ -2,11 +2,11 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.10 时间 11:51:57 PM CST
+// 生成时间: 2018.04.12 时间 05:28:50 PM CST
 //
 
 
-package com.ecm.model.xsd;
+package com.ecm.model.xsd_evidence;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="evidence" type="{http://www.runoob.com}evidence"/>
+ *                   &lt;element name="evidence" type="{http://www.runoob.com}evidence" minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="fact" type="{http://www.runoob.com}fact"/>
+ *                   &lt;element name="fact" type="{http://www.runoob.com}fact" minOccurs="0"/>
  *                 &lt;/sequence>
  *               &lt;/restriction>
  *             &lt;/complexContent>
@@ -58,23 +58,23 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="relation">
+ *                   &lt;element name="relation" minOccurs="0">
  *                     &lt;complexType>
  *                       &lt;complexContent>
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                           &lt;sequence>
- *                             &lt;element name="arrows">
+ *                             &lt;element name="arrows" minOccurs="0">
  *                               &lt;complexType>
  *                                 &lt;complexContent>
  *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                                     &lt;sequence>
- *                                       &lt;element name="arrow" type="{http://www.runoob.com}arrow"/>
+ *                                       &lt;element name="arrow" type="{http://www.runoob.com}arrow" minOccurs="0"/>
  *                                     &lt;/sequence>
  *                                   &lt;/restriction>
  *                                 &lt;/complexContent>
  *                               &lt;/complexType>
  *                             &lt;/element>
- *                             &lt;element name="joint" type="{http://www.runoob.com}joint"/>
+ *                             &lt;element name="joint" type="{http://www.runoob.com}joint" minOccurs="0"/>
  *                           &lt;/sequence>
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
@@ -101,9 +101,9 @@ import javax.xml.bind.annotation.XmlType;
 public class Ecm {
 
     @XmlElementRefs({
-            @XmlElementRef(name = "relations", namespace = "http://www.runoob.com", type = JAXBElement.class),
-            @XmlElementRef(name = "evidences", namespace = "http://www.runoob.com", type = JAXBElement.class),
-            @XmlElementRef(name = "facts", namespace = "http://www.runoob.com", type = JAXBElement.class)
+            @XmlElementRef(name = "facts", type = JAXBElement.class),
+            @XmlElementRef(name = "evidences", type = JAXBElement.class),
+            @XmlElementRef(name = "relations", type = JAXBElement.class)
     })
     @XmlMixed
     protected List<Serializable> content;
@@ -126,10 +126,10 @@ public class Ecm {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link Ecm.Relations }{@code >}
-     * {@link JAXBElement }{@code <}{@link Ecm.Evidences }{@code >}
      * {@link JAXBElement }{@code <}{@link Ecm.Facts }{@code >}
+     * {@link JAXBElement }{@code <}{@link Ecm.Relations }{@code >}
      * {@link String }
+     * {@link JAXBElement }{@code <}{@link Ecm.Evidences }{@code >}
      *
      *
      */
@@ -151,7 +151,7 @@ public class Ecm {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="evidence" type="{http://www.runoob.com}evidence"/>
+     *         &lt;element name="evidence" type="{http://www.runoob.com}evidence" minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -166,7 +166,7 @@ public class Ecm {
     })
     public static class Evidences {
 
-        @XmlElementRef(name = "evidence", namespace = "http://www.runoob.com", type = JAXBElement.class)
+        @XmlElementRef(name = "evidence", type = JAXBElement.class, required = false)
         @XmlMixed
         protected List<Serializable> content;
 
@@ -213,7 +213,7 @@ public class Ecm {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="fact" type="{http://www.runoob.com}fact"/>
+     *         &lt;element name="fact" type="{http://www.runoob.com}fact" minOccurs="0"/>
      *       &lt;/sequence>
      *     &lt;/restriction>
      *   &lt;/complexContent>
@@ -228,7 +228,7 @@ public class Ecm {
     })
     public static class Facts {
 
-        @XmlElementRef(name = "fact", namespace = "http://www.runoob.com", type = JAXBElement.class)
+        @XmlElementRef(name = "fact", type = JAXBElement.class, required = false)
         @XmlMixed
         protected List<Serializable> content;
 
@@ -250,8 +250,8 @@ public class Ecm {
          *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link String }
          * {@link JAXBElement }{@code <}{@link Fact }{@code >}
+         * {@link String }
          *
          *
          */
@@ -275,23 +275,23 @@ public class Ecm {
      *   &lt;complexContent>
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *       &lt;sequence>
-     *         &lt;element name="relation">
+     *         &lt;element name="relation" minOccurs="0">
      *           &lt;complexType>
      *             &lt;complexContent>
      *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *                 &lt;sequence>
-     *                   &lt;element name="arrows">
+     *                   &lt;element name="arrows" minOccurs="0">
      *                     &lt;complexType>
      *                       &lt;complexContent>
      *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
      *                           &lt;sequence>
-     *                             &lt;element name="arrow" type="{http://www.runoob.com}arrow"/>
+     *                             &lt;element name="arrow" type="{http://www.runoob.com}arrow" minOccurs="0"/>
      *                           &lt;/sequence>
      *                         &lt;/restriction>
      *                       &lt;/complexContent>
      *                     &lt;/complexType>
      *                   &lt;/element>
-     *                   &lt;element name="joint" type="{http://www.runoob.com}joint"/>
+     *                   &lt;element name="joint" type="{http://www.runoob.com}joint" minOccurs="0"/>
      *                 &lt;/sequence>
      *               &lt;/restriction>
      *             &lt;/complexContent>
@@ -311,7 +311,7 @@ public class Ecm {
     })
     public static class Relations {
 
-        @XmlElementRef(name = "relation", namespace = "http://www.runoob.com", type = JAXBElement.class)
+        @XmlElementRef(name = "relation", type = JAXBElement.class, required = false)
         @XmlMixed
         protected List<Serializable> content;
 
@@ -333,8 +333,8 @@ public class Ecm {
          *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link String }
          * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation }{@code >}
+         * {@link String }
          *
          *
          */
@@ -356,18 +356,18 @@ public class Ecm {
          *   &lt;complexContent>
          *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
          *       &lt;sequence>
-         *         &lt;element name="arrows">
+         *         &lt;element name="arrows" minOccurs="0">
          *           &lt;complexType>
          *             &lt;complexContent>
          *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
          *                 &lt;sequence>
-         *                   &lt;element name="arrow" type="{http://www.runoob.com}arrow"/>
+         *                   &lt;element name="arrow" type="{http://www.runoob.com}arrow" minOccurs="0"/>
          *                 &lt;/sequence>
          *               &lt;/restriction>
          *             &lt;/complexContent>
          *           &lt;/complexType>
          *         &lt;/element>
-         *         &lt;element name="joint" type="{http://www.runoob.com}joint"/>
+         *         &lt;element name="joint" type="{http://www.runoob.com}joint" minOccurs="0"/>
          *       &lt;/sequence>
          *     &lt;/restriction>
          *   &lt;/complexContent>
@@ -383,8 +383,8 @@ public class Ecm {
         public static class Relation {
 
             @XmlElementRefs({
-                    @XmlElementRef(name = "arrows", namespace = "http://www.runoob.com", type = JAXBElement.class),
-                    @XmlElementRef(name = "joint", namespace = "http://www.runoob.com", type = JAXBElement.class)
+                    @XmlElementRef(name = "joint", type = JAXBElement.class, required = false),
+                    @XmlElementRef(name = "arrows", type = JAXBElement.class, required = false)
             })
             @XmlMixed
             protected List<Serializable> content;
@@ -407,9 +407,9 @@ public class Ecm {
              *
              * <p>
              * Objects of the following type(s) are allowed in the list
+             * {@link JAXBElement }{@code <}{@link Joint }{@code >}
              * {@link String }
              * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Arrows }{@code >}
-             * {@link JAXBElement }{@code <}{@link Joint }{@code >}
              *
              *
              */
@@ -431,7 +431,7 @@ public class Ecm {
              *   &lt;complexContent>
              *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
              *       &lt;sequence>
-             *         &lt;element name="arrow" type="{http://www.runoob.com}arrow"/>
+             *         &lt;element name="arrow" type="{http://www.runoob.com}arrow" minOccurs="0"/>
              *       &lt;/sequence>
              *     &lt;/restriction>
              *   &lt;/complexContent>
@@ -446,7 +446,7 @@ public class Ecm {
             })
             public static class Arrows {
 
-                @XmlElementRef(name = "arrow", namespace = "http://www.runoob.com", type = JAXBElement.class)
+                @XmlElementRef(name = "arrow", type = JAXBElement.class, required = false)
                 @XmlMixed
                 protected List<Serializable> content;
 

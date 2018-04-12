@@ -2,10 +2,7 @@ package com.ecm.service.impl;
 
 import com.ecm.dao.*;
 import com.ecm.model.*;
-import com.ecm.model.xsd.Ecm;
-import com.ecm.model.xsd.Evidence;
-import com.ecm.model.xsd.Head;
-import com.ecm.model.xsd.ObjectFactory;
+import com.ecm.model.xsd_evidence.*;
 import com.ecm.service.ModelManageService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,11 +14,9 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -30,10 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.xml.bind.Marshaller;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
@@ -743,7 +736,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Override
     public void writeToXMLBySchema(int cid, String filePath) {
         try {
-            JAXBContext ctx = JAXBContext.newInstance("com.ecm.model.xsd");
+            JAXBContext ctx = JAXBContext.newInstance("com.ecm.model.xsd_evidence");
             ObjectFactory of = new ObjectFactory();
             Ecm ecm = of.createEcm();
 
@@ -753,6 +746,8 @@ public class ModelManageServiceImpl implements ModelManageService {
                 Evidence_Body body = bodies.get(i);
                 Evidence e = of.createEvidence();
                 e.setId(new BigInteger(body.getId()+""));
+                e.setX(new BigInteger(body.getX()+""));
+                e.setY(new BigInteger(body.getY()+""));
                 e.getContent().add(of.createEvidenceName(body.getName()));
                 e.getContent().add(of.createEvidenceContent(body.getBody()));
                 e.getContent().add(of.createEvidenceType(body.getTypeToString()));
@@ -766,6 +761,8 @@ public class ModelManageServiceImpl implements ModelManageService {
                     Evidence_Head head = heads.get(j);
                     Head h = of.createHead();
                     h.setId(new BigInteger(head.getId()+""));
+                    h.setX(new BigInteger(head.getX()+""));
+                    h.setY(new BigInteger(head.getY()+""));
                     h.getContent().add(of.createHeadName(head.getName()));
                     h.getContent().add(of.createHeadContent(head.getHead()));
                     headsXml.getContent().add(of.createEvidenceHeadsHead(h));
@@ -774,7 +771,91 @@ public class ModelManageServiceImpl implements ModelManageService {
                 evidences.getContent().add(of.createEcmEvidencesEvidence(e));
             }
             ecm.getContent().add(of.createEcmEvidences(evidences));
+
+            Ecm.Facts factsXml = of.createEcmFacts();
+            List<MOD_Fact> facts = factDao.findAllByCaseID(cid);
+            for(int i = 0;i<facts.size();i++){
+                MOD_Fact fact = facts.get(i);
+                Fact f = of.createFact();
+                f.setId(new BigInteger(fact.getId()+""));
+                f.setX(new BigInteger(fact.getX()+""));
+                f.setY(new BigInteger(fact.getY()+""));
+                f.getContent().add(of.createFactName(fact.getName()));
+                f.getContent().add(of.createFactContent(fact.getContent()));
+                f.getContent().add(of.createFactType(fact.getType()));
+
+                List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fact.getId(),cid);
+                Fact.Joints fjs = of.createFactJoints();
+                for(int j = 0;j<joints.size();j++){
+                    MOD_Joint joint = joints.get(j);
+                    Joint jx = of.createJoint();
+                    jx.setId(new BigInteger(joint.getId()+""));
+                    jx.setX(new BigInteger(joint.getX()+""));
+                    jx.setY(new BigInteger(joint.getY()+""));
+                    jx.getContent().add(of.createJointName(joint.getName()));
+                    jx.getContent().add(of.createJointContent(joint.getContent()));
+                    fjs.getContent().add(of.createFactJointsJoint(jx));
+                }
+                f.getContent().add(of.createFactJoints(fjs));
+                factsXml.getContent().add(of.createEcmFactsFact(f));
+            }
+            ecm.getContent().add(of.createEcmFacts(factsXml));
+
+            Ecm.Relations relations = of.createEcmRelations();
+            List<MOD_Joint> joints = jointDao.findAllByCaseID(cid);
+            for(int i = 0;i<joints.size();i++){
+                MOD_Joint joint = joints.get(i);
+                List<MOD_Arrow> arrows = arrowDao.findAllByCaseIDAndJointID(cid,joint.getId());
+
+                if(arrows.size()>0){
+                    Ecm.Relations.Relation relation = of.createEcmRelationsRelation();
+                    Ecm.Relations.Relation.Arrows arrowsXml = of.createEcmRelationsRelationArrows();
+
+                    for(int j = 0;j<arrows.size();j++){
+                        MOD_Arrow arrow = arrows.get(j);
+                        Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
+                        Arrow arrowXml = of.createArrow();
+                        arrowXml.setId(new BigInteger(arrow.getId()+""));
+                        arrowXml.getContent().add(of.createArrowName(arrow.getName()));
+                        arrowXml.getContent().add(of.createArrowContent(arrow.getContent()));
+                        Arrow.Head hXml = of.createArrowHead();
+                        hXml.setId(new BigInteger(head.getId()+""));
+                        hXml.setX(new BigInteger(head.getX()+""));
+                        hXml.setY(new BigInteger(head.getY()+""));
+                        hXml.setName(head.getName());
+                        hXml.setContent(head.getHead());
+                        hXml.setBodyID(new BigInteger(head.getBodyid()+""));
+                        arrowXml.getContent().add(of.createArrowHead(hXml));
+                        arrowsXml.getContent().add(of.createEcmRelationsRelationArrowsArrow(arrowXml));
+                    }
+                    relation.getContent().add(of.createEcmRelationsRelationArrows(arrowsXml));
+
+                    Joint jXml = of.createJoint();
+                    jXml.setId(new BigInteger(joint.getId()+""));
+                    jXml.setX(new BigInteger(joint.getX()+""));
+                    jXml.setY(new BigInteger(joint.getY()+""));
+                    jXml.getContent().add(of.createJointName(joint.getName()));
+                    jXml.getContent().add(of.createJointContent(joint.getContent()));
+                    relation.getContent().add(of.createEcmRelationsRelationJoint(jXml));
+                    relations.getContent().add(of.createEcmRelationsRelation(relation));
+                }
+            }
+            ecm.getContent().add(of.createEcmRelations(relations));
+
+            File file = new File(filePath);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            Marshaller marshaller = ctx.createMarshaller();
+
+            // 设置XML文件的编码格式
+//            marshaller.setProperty("jaxb.encoding", EPGConfig.getInstance()
+//                    .getXmlEncode());
+
+            // 将XML文件格式化输出
+            marshaller.setProperty("jaxb.formatted.output", true);
+            marshaller.marshal(ecm, fileOutputStream);
         } catch (JAXBException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
