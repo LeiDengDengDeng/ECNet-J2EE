@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface MOD_ArrowDao extends JpaRepository<MOD_Arrow, MODPK> {
+public interface MOD_ArrowDao extends JpaRepository<MOD_Arrow, Integer> {
 
     public MOD_Arrow save(MOD_Arrow arrow);
 

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MOD_JointDao extends JpaRepository<MOD_Joint, MODPK> {
+public interface MOD_JointDao extends JpaRepository<MOD_Joint, Integer> {
 
     public MOD_Joint save(MOD_Joint joint);
 

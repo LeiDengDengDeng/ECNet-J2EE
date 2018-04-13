@@ -180,8 +180,15 @@
                         <!--<input id="file-choose-btn" type="file">-->
                         <!--</section>-->
 
+                        <div>
+                            <label for="factSelector">事实列表</label>
+                            <!--<input class="form-control" id="body-evidenceType"/>-->
+                            <select class="form-control" id="factSelector" title="选中可定位图中位置" style="display:inline-block;width: 50%;">
+                            </select>
+                        </div>
+
                         <!--图元面板-->
-                        <section class="graph-primitive-wrapper col-md-6" style="margin-top: 0;">
+                        <section class="graph-primitive-wrapper col-md-6" style="margin-top: 30px;">
                             <div id='draggableDiv' class="ui-widget-content" style="z-index: 1000;position: absolute;">
                             </div>
 
@@ -243,7 +250,7 @@
 
                         <!--证据链集图-->
                         <!--startprint-->
-                        <div class="graph-wrapper col-md-9 show-bar" style="margin-top: 20px;">
+                        <div class="graph-wrapper col-md-9 show-bar" style="margin-top: 20px;" id="canvasDiv">
                             <canvas id="canvas" width="10000" height="10000"></canvas>
                         </div>
                         <!--endprint-->

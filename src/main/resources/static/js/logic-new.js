@@ -23,12 +23,7 @@ var isDragged = false;
 var mouseX;
 var mouseY;
 
-//用于记录鼠标拖拽框选、复制粘贴的变量
-var copyNodeArr = Array.of();//保存要被复制的节点数组
-var mouseClickX;//鼠标上一次点击的位置X坐标（不论左键还是右键点击）
-var mouseClickY;//鼠标上一次点击的位置Y坐标（不论左键还是右键点击）
-var copyAreaLeft;//框选区域的最左边X坐标
-var copyAreaTop;//框选区域的最上边Y坐标
+var dotNum = 0;
 
 $(document).ready(function () {
     canvas = document.getElementById('canvas');
@@ -51,9 +46,6 @@ $(document).ready(function () {
     });
 
     stage.addEventListener("mouseup", function (event) {
-        mouseClickX = event.pageX - $("#canvas").offset().left;
-        mouseClickY = event.pageY - $("#canvas").offset().top;
-
         if (!isNodeRightClick && event.button == 2) {
             $("#element-id").hide();
             $("#element-name").hide();
@@ -74,120 +66,12 @@ $(document).ready(function () {
             }).show();
         } else if (event.button == 0) {
             $("#stageMenu").hide();
-
-            $("#endPosX").text(mouseClickX);
-            $("#endPosY").text(mouseClickY);
-            $("#myAction").text("鼠标左键松开");
-
-            //注：只考虑肉眼能看见的选中框，非常小的区域画出来会是一个小点，不予考虑
-            if (Math.abs(startPosX - endPosX) > 0.05 && Math.abs(startPosY - endPosY) > 0.05) {
-                //删除之前画的选中框
-                if (selectedRangeNode != undefined) {
-                    scene.remove(selectedRangeNode);
-                }
-
-                //在场景上添加一个近似透明、不覆盖其他节点的节点，作为选中框
-                selectedRangeNode = new JTopo.Node("");
-                selectedRangeNode.setBound(startPosX, startPosY, Math.abs(endPosX - startPosX), Math.abs(endPosY - startPosY));
-                selectedRangeNode.borderColor = '222,222,222';
-                selectedRangeNode.fillColor = '255, 255, 255';
-                selectedRangeNode.borderWidth = 1;
-                selectedRangeNode.borderRadius = 1;
-                selectedRangeNode.alpha = 0.2;
-                selectedRangeNode.zIndex = 11;  // 是否覆盖其他，这里设置为可选的最小值，不覆盖其他
-                scene.add(selectedRangeNode);
-
-                var areaLeftPos = endPosX > startPosX ? startPosX : endPosX;
-                var areaRightPos = endPosX > startPosX ? endPosX : startPosX;
-                var areaTopPos = endPosY > startPosY ? startPosY : endPosY;
-                var areaBottomPos = endPosY > startPosY ? endPosY : startPosY;
-                console.log("left:" + areaLeftPos + ",right:" + areaRightPos + ",top:" + areaTopPos + ",bottom:" + areaBottomPos);
-                var nodeList = scene.getDisplayedNodes();
-                var length = nodeList.length;
-                for (var i = 0; i < length; i++) {
-                    var tempNode = nodeList[i];
-                    var thisLeftPos = tempNode.x;
-                    var thisRightPos = tempNode.x + tempNode.width;
-                    var thisTopPos = tempNode.y;
-                    var thisBottomPos = tempNode.y + tempNode.height;
-                    console.log("left:" + thisLeftPos + ",right:" + thisRightPos + ",top:" + thisTopPos + ",bottom:" + thisBottomPos);
-                    if (( (thisLeftPos >= areaLeftPos) || (thisRightPos <= areaRightPos) ) &&
-                        ( (thisTopPos >= areaTopPos) || (thisBottomPos <= areaBottomPos) ) &&
-                        ( tempNode != selectedRangeNode)) {
-                        //只要和被选中区域有交叉，这个节点就算是在选中区域内，改为被选中状态
-                        tempNode.selected = true;
-                        tempNode.borderColor = "(0,0,0)";
-                    }
-                }
-            }
         }
 
         if (!isDragged) {
             deleteScene();
         }
         isDragged = false;
-    });
-
-    window.addEventListener("mousedown", function (event) {
-        mouseClickX = event.pageX - $("#canvas").offset().left;
-        mouseClickY = event.pageY - $("#canvas").offset().top;
-
-        if (event.button == 0) {
-            $("#startPosX").text(mouseClickX);
-            $("#startPosY").text(mouseClickY);
-            $("#myAction").text("鼠标左键按下");
-        }
-    });
-
-    window.addEventListener("keydown", function (event) {
-        if (event.ctrlKey && event.keyCode === 67) {
-            $("#myAction").text('你按下了CTRL+C');
-
-            //将框选区域的左边界定为场景对象的右边界，框选区域的上边界定为场景对象的下边界
-            copyAreaLeft = stage.width;
-            copyAreaTop = stage.height;
-            //console.log(copyAreaLeft+", "+copyAreaTop);
-
-            //循环查找当前场景中的所有显示节点，若被选中，则加入待复制的节点数组中
-            var nodeList = scene.getDisplayedNodes();
-            var nodeListLen = nodeList.length;
-            for (var i = 0; i < nodeListLen; i++) {
-                if (nodeList[i].selected) {
-                    copyNodeArr.push(nodeList[i]);
-                    copyAreaLeft = nodeList[i].x < copyAreaLeft ? nodeList[i].x : copyAreaLeft;//将框选区域的左边界定为所有选中节点的最小左边界值
-                    copyAreaTop = nodeList[i].y < copyAreaTop ? nodeList[i].y : copyAreaTop;//将框选区域的上边界定为所有选中节点的最小上边界值
-                }
-            }
-            console.log("现在selectedArr里面有" + copyNodeArr.length + "个节点将被复制");
-        }
-        if (event.ctrlKey && event.keyCode === 86) {
-            saveScene();
-
-            $("#myAction").text('你按下了CTRL+V');
-
-            //获取当前的鼠标位置，以当前鼠标位置作为起始位置进行粘贴
-            //console.log("上一次鼠标点击位置:"+mouseClickX+","+mouseClickY);
-
-            //逐一粘贴每个节点
-            console.log("现在selectedArr里面有" + copyNodeArr.length + "个节点将被粘贴");
-            for (var i = 0; i < copyNodeArr.length; i++) {
-                //注：这里类似于对象赋值，不能用等于号直接让新节点等于老节点
-                console.log("粘贴位置：" + (copyNodeArr[i].x - copyAreaLeft + mouseClickX) + "," + (copyNodeArr[i].y - copyAreaTop + mouseClickY));
-                drawNode((copyNodeArr[i].x - copyAreaLeft + mouseClickX), (copyNodeArr[i].y - copyAreaTop + mouseClickY), null, copyNodeArr[i].text, borderColors.indexOf(copyNodeArr[i].borderColor), copyNodeArr[i].detail, copyNodeArr[i].parentId);
-            }
-            //清空被选中的节点列表
-            copyNodeArr = [];
-        }
-    });
-
-    window.addEventListener("keyup", function (event) {
-        if (event.ctrlKey && event.keyCode === 67) { //复制已经选中的节点或者连线
-            $("#myAction").text('你松开了CTRL+C');
-        }
-        else if (event.ctrlKey && event.keyCode === 86) {//粘贴上次复制的节点或者连线
-            $("#myAction").text('你松开了CTRL+V');
-        }
-
     });
 
     bindMenuClickEvent();
@@ -200,6 +84,12 @@ $(document).ready(function () {
     });
     $('#excel-btn').attr("href", "/logic/generateExcel?caseID=" + cid);
     $('#xml-btn').attr("href", "/logic/generateXML?caseID=" + cid);
+
+    // 每五秒自动保存
+    // setInterval("saveData()",5000);
+
+    loadLogicNodes();
+    prepareConclusionSelect();
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -218,7 +108,7 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
     // 根据内容长度决定node宽度
     node.setSize(topicLength, 24);
     // 设置树的方向
-    node.layout = {type: 'tree', direction: 'left', width: 70, height: 230};
+    node.layout = {type: 'tree', direction: 'left', width: 80, height: 280};
 
     node.addEventListener('mouseup', function (event) {
         nodeClickEvent(node.id, event);
@@ -270,7 +160,6 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
         }
         drawLink(parentNode, node);
     }
-
     return node.id;
 }
 
@@ -339,7 +228,7 @@ function prepareAddModal(id) {
 
     $("#node-add-modal #node-add-topic-input").val("");
     $("#node-add-modal #node-add-detail-input").val("");
-    $("#node-add-modal #node-add-type-select").val("证据");
+    $("#node-add-modal #node-add-type-select").val("法条");
     $("#node-add-modal #node-add-leadTo-select").empty();
 
     prepareSelect($("#node-add-modal #node-add-leadTo-select"), id, null);
@@ -372,6 +261,8 @@ function addBtnEvent() {
 //         $alert.append(hint);
 //         $alert.show();
 //     }
+
+    prepareConclusionSelect();
 }
 
 function prepareEditModal(id) {
@@ -436,6 +327,8 @@ function editBtnEvent() {
     //     $alert.append(hint);
     //     $alert.show();
     // }
+
+    prepareConclusionSelect();
 }
 
 function prepareDelModal(id) {
@@ -456,6 +349,8 @@ function delNodeBtnEvent() {
     delNode(id);
 
     $('#node-del-modal').modal('hide');
+
+    prepareConclusionSelect();
 }
 
 function delNode(id) {
@@ -514,6 +409,8 @@ function delNodeAndItsChildrenBtnEvent() {
     }
 
     $('#node-del-modal').modal('hide');
+
+    prepareConclusionSelect();
 }
 
 function delNodeAndItsChildren(delNodes, id) {
@@ -540,11 +437,10 @@ function prepareLawModal(id) {
     $("#node-law-topic").val(node.topic);
     $("#node-law-detail").val(node.detail);
 
+    // queryFrequencyLaws(node.detail);
     var lawsDiv = $("#laws");
     lawsDiv.empty();
-    // var laws = queryFrequencyLaws(node.detail);
-    var laws = ["中华人民共和国刑法_第六十七条","中华人民共和国刑法_第六十八条"];
-
+    var laws = ["中华人民共和国刑法_第六十七条", "中华人民共和国刑法_第六十八条"];
     prepareLawsDiv(lawsDiv, laws);
 }
 
@@ -595,6 +491,8 @@ function lawsMindBtn(isMultiple) {
         $("#frequencyBtn").removeClass("active");
         $("#lawSumBtn").removeClass("active");
         $("#mindBtn").addClass("active");
+
+        queryMindLaws(findNodeById($("#node-law-id").val()).detail);
     }
 }
 
@@ -666,6 +564,8 @@ function lawAdviceEvent() {
     }
 
     $("#law-recommend-modal").modal("hide");
+
+    prepareConclusionSelect();
 }
 
 function mulLawAdviceEvent() {
@@ -1110,6 +1010,28 @@ function isLawRepeated(parentId, lawTopic, lawDetail) {
     return false;
 }
 
+function prepareConclusionSelect() {
+    $("#conclusion-select").empty();
+    $("#conclusion-select").append($("<option>").val(0).text("无"));
+    for (var m = 0, len1 = forest.length; m < len1; m++) {
+        var tree = forest[m];
+        for (var n = 0, len2 = tree.length; n < len2; n++) {
+            if (tree[n].type == 3) {
+                $("#conclusion-select").append($("<option>").val(tree[n].id).text(tree[n].topic));
+            }
+        }
+    }
+}
+
+function conclusionSelectChangeEvent() {
+    var selectVal = $("#conclusion-select").val();
+    if (selectVal == 0) {
+        $("#canvas-div").scrollTop(0);
+    } else {
+        $("#canvas-div").scrollTop(findNodeById($("#conclusion-select").val()).node.y - 50);
+    }
+}
+
 /**
  * 加载从数据库中读取获得的节点信息至画布上
  * @param data
@@ -1149,4 +1071,14 @@ function saveData() {
     }
 
     saveLogicNodes(JSON.stringify(nodes));
+}
+
+function loadingDots() {
+    if (dotNum >= 3) {
+        $('#id_loading_dots').text('');
+        dotNum = 0;
+    } else {
+        dotNum++;
+        $('#id_loading_dots').text($('#id_loading_dots').text() + ' ●');
+    }
 }
