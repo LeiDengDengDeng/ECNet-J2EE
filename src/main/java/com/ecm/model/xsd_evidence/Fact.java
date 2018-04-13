@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.12 时间 05:28:50 PM CST
+// 生成时间: 2018.04.13 时间 11:28:21 AM CST
 //
 
 
@@ -50,6 +50,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="x" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="y" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="logicNodeId" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -65,9 +66,9 @@ public class Fact {
 
     @XmlElementRefs({
             @XmlElementRef(name = "content", type = JAXBElement.class),
+            @XmlElementRef(name = "name", type = JAXBElement.class),
             @XmlElementRef(name = "type", type = JAXBElement.class),
-            @XmlElementRef(name = "joints", type = JAXBElement.class),
-            @XmlElementRef(name = "name", type = JAXBElement.class)
+            @XmlElementRef(name = "joints", type = JAXBElement.class)
     })
     @XmlMixed
     protected List<Serializable> content;
@@ -77,6 +78,8 @@ public class Fact {
     protected BigInteger x;
     @XmlAttribute(name = "y")
     protected BigInteger y;
+    @XmlAttribute(name = "logicNodeId")
+    protected BigInteger logicNodeId;
 
     /**
      * Gets the value of the content property.
@@ -98,8 +101,8 @@ public class Fact {
      * Objects of the following type(s) are allowed in the list
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link Fact.Joints }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
+     * {@link JAXBElement }{@code <}{@link Fact.Joints }{@code >}
      * {@link String }
      *
      *
@@ -183,6 +186,30 @@ public class Fact {
         this.y = value;
     }
 
+    /**
+     * 获取logicNodeId属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getLogicNodeId() {
+        return logicNodeId;
+    }
+
+    /**
+     * 设置logicNodeId属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setLogicNodeId(BigInteger value) {
+        this.logicNodeId = value;
+    }
+
 
     /**
      * <p>anonymous complex type的 Java 类。
@@ -231,8 +258,8 @@ public class Fact {
          *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link String }
          * {@link JAXBElement }{@code <}{@link Joint }{@code >}
+         * {@link String }
          *
          *
          */

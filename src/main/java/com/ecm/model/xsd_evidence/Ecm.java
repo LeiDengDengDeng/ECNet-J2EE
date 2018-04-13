@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.12 时间 05:28:50 PM CST
+// 生成时间: 2018.04.13 时间 11:28:21 AM CST
 //
 
 
@@ -101,8 +101,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Ecm {
 
     @XmlElementRefs({
-            @XmlElementRef(name = "facts", type = JAXBElement.class),
             @XmlElementRef(name = "evidences", type = JAXBElement.class),
+            @XmlElementRef(name = "facts", type = JAXBElement.class),
             @XmlElementRef(name = "relations", type = JAXBElement.class)
     })
     @XmlMixed
@@ -126,10 +126,10 @@ public class Ecm {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link Ecm.Facts }{@code >}
      * {@link JAXBElement }{@code <}{@link Ecm.Relations }{@code >}
-     * {@link String }
      * {@link JAXBElement }{@code <}{@link Ecm.Evidences }{@code >}
+     * {@link JAXBElement }{@code <}{@link Ecm.Facts }{@code >}
+     * {@link String }
      *
      *
      */
@@ -407,9 +407,9 @@ public class Ecm {
              *
              * <p>
              * Objects of the following type(s) are allowed in the list
+             * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Arrows }{@code >}
              * {@link JAXBElement }{@code <}{@link Joint }{@code >}
              * {@link String }
-             * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Arrows }{@code >}
              *
              *
              */

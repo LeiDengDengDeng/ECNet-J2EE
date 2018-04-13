@@ -251,13 +251,18 @@ $(document).ready(function(){
 
     $("#factSelector").change(function () {
         var fid=$("#factSelector").val();
-        var x = factList[fid]['node'].x;
-        var y = factList[fid]['node'].y;
-        var div_width = $("#canvasDiv").width;
-        var div_height = $("#canvasDiv").height;
-        $("#canvasDiv").scrollLeft(x+((div_width-factList[fid]['node'].width)/2));
-        $("#canvasDiv").scrollTop(y+((div_height-factList[fid]['node'].height)/2));
-        factList[fid]['node'].selected = 1;
+        if(fid>=0){
+            var x = factList[fid]['node'].x;
+            var y = factList[fid]['node'].y;
+            var div_width = $("#canvasDiv").width();
+            var div_height = $("#canvasDiv").height();
+            console.log("dw:"+div_width+";dh:"+div_height);
+            var leftOffset = x-(div_width/2)+body_width;
+            var topOffset = y-(div_height/2)+body_height;
+            $("#canvasDiv").scrollLeft(leftOffset);
+            $("#canvasDiv").scrollTop(topOffset);
+            factList[fid]['node'].selected = 1;
+        }
     });
 
     window.setInterval(saveAll,180000);
@@ -274,7 +279,6 @@ function updateFactListofGraph() {
             $('#factSelector').append("<option value='"+fid+"'>"+node.text+"</option>");
         }
     }
-   
 }
 
 //存储所有
@@ -2120,6 +2124,7 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
     //         }
     //     }
 
+    if(nodeFrom!=null)
     if(nodeFrom.outLinks==null||nodeFrom.outLinks.length==0){
 
         if(name==null)

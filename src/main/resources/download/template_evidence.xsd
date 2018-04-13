@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.runoob.com" xmlns="http://www.runoob.com">
 
 	<xs:complexType mixed="true" name="head">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
+			<xs:element name="name" type="xs:string" nillable="true"/>
+			<xs:element name="content" type="xs:string" nillable="true"/>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
 		<xs:attribute name="x" type="xs:integer"/>
@@ -13,8 +13,8 @@
 
 	<xs:complexType mixed="true" name="joint">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
+			<xs:element name="name" type="xs:string" nillable="true"/>
+			<xs:element name="content" type="xs:string" nillable="true"/>
 		</xs:sequence>
         <xs:attribute name="id" type="xs:integer"/>
 		<xs:attribute name="x" type="xs:integer"/>
@@ -23,13 +23,13 @@
 
 	<xs:complexType mixed="true" name="arrow">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
+			<xs:element name="name" type="xs:string" nillable="true"/>
+			<xs:element name="content" type="xs:string" nillable="true"/>
 			<xs:element name="head">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="name" type="xs:string"/>
-						<xs:element name="content" type="xs:string"/>
+						<xs:element name="name" type="xs:string" nillable="true"/>
+						<xs:element name="content" type="xs:string" nillable="true"/>
 						<xs:element name="bodyID" type="xs:integer"/>
 					</xs:sequence>
 					<xs:attribute name="id" type="xs:integer"/>
@@ -43,11 +43,11 @@
 
 	<xs:complexType mixed="true" name="evidence">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
+			<xs:element name="name" type="xs:string" nillable="true"/>
+			<xs:element name="content" type="xs:string" nillable="true"/>
 			<xs:element name="type" type="xs:string"/>
-			<xs:element name="committer" type="xs:string"/>
-			<xs:element name="reason" type="xs:string"/>
+			<xs:element name="committer" type="xs:string" nillable="true"/>
+			<xs:element name="reason" type="xs:string" nillable="true"/>
 			<xs:element name="trust" type="xs:string"/>
 			<xs:element name="heads" minOccurs="0">
 				<xs:complexType mixed="true">
@@ -60,13 +60,17 @@
         <xs:attribute name="id" type="xs:integer"/>
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
+		<xs:attribute name="documentId" type="xs:integer"/>
+		<xs:attribute name="type" type="xs:integer"/>
+		<xs:attribute name="trust" type="xs:integer"/>
+		<xs:attribute name="logicNodeId" type="xs:integer"/>
 	</xs:complexType>
 
 	<xs:complexType mixed="true" name="fact">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
-			<xs:element name="type" type="xs:string"/>
+			<xs:element name="name" type="xs:string" nillable="true"/>
+			<xs:element name="content" type="xs:string" nillable="true"/>
+			<xs:element name="type" type="xs:string" nillable="true"/>
 			<xs:element name="joints" minOccurs="0">
 				<xs:complexType mixed="true">
 					<xs:sequence>
@@ -78,6 +82,7 @@
         <xs:attribute name="id" type="xs:integer"/>
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
+		<xs:attribute name="logicNodeId" type="xs:integer"/>
 	</xs:complexType>
 
 

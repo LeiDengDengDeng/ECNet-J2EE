@@ -748,11 +748,15 @@ public class ModelManageServiceImpl implements ModelManageService {
                 e.setId(new BigInteger(body.getId()+""));
                 e.setX(new BigInteger(body.getX()+""));
                 e.setY(new BigInteger(body.getY()+""));
-                e.getContent().add(of.createEvidenceName(body.getName()));
-                e.getContent().add(of.createEvidenceContent(body.getBody()));
+                e.setDocumentId(new BigInteger(body.getDocumentid()+""));
+                e.setType(new BigInteger(body.getType()+""));
+                e.setTrust(new BigInteger(body.getTrust()+""));
+                e.setLogicNodeId(new BigInteger(body.getLogicNodeID()+""));
+                e.getContent().add(of.createEvidenceName(transNull(body.getName())));
+                e.getContent().add(of.createEvidenceContent(transNull(body.getBody())));
                 e.getContent().add(of.createEvidenceType(body.getTypeToString()));
-                e.getContent().add(of.createEvidenceCommitter(body.getCommitter()));
-                e.getContent().add(of.createEvidenceReason(body.getReason()));
+                e.getContent().add(of.createEvidenceCommitter(transNull(body.getCommitter())));
+                e.getContent().add(of.createEvidenceReason(transNull(body.getReason())));
                 e.getContent().add(of.createEvidenceTrust(body.getTrustToString()));
 
                 Evidence.Heads headsXml = of.createEvidenceHeads();
@@ -763,8 +767,8 @@ public class ModelManageServiceImpl implements ModelManageService {
                     h.setId(new BigInteger(head.getId()+""));
                     h.setX(new BigInteger(head.getX()+""));
                     h.setY(new BigInteger(head.getY()+""));
-                    h.getContent().add(of.createHeadName(head.getName()));
-                    h.getContent().add(of.createHeadContent(head.getHead()));
+                    h.getContent().add(of.createHeadName(transNull(head.getName())));
+                    h.getContent().add(of.createHeadContent(transNull(head.getHead())));
                     headsXml.getContent().add(of.createEvidenceHeadsHead(h));
                 }
                 e.getContent().add(of.createEvidenceHeads(headsXml));
@@ -780,9 +784,10 @@ public class ModelManageServiceImpl implements ModelManageService {
                 f.setId(new BigInteger(fact.getId()+""));
                 f.setX(new BigInteger(fact.getX()+""));
                 f.setY(new BigInteger(fact.getY()+""));
-                f.getContent().add(of.createFactName(fact.getName()));
-                f.getContent().add(of.createFactContent(fact.getContent()));
-                f.getContent().add(of.createFactType(fact.getType()));
+                f.setLogicNodeId(new BigInteger(fact.getLogicNodeID()+""));
+                f.getContent().add(of.createFactName(transNull(fact.getName())));
+                f.getContent().add(of.createFactContent(transNull(fact.getContent())));
+                f.getContent().add(of.createFactType(transNull(fact.getType())));
 
                 List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fact.getId(),cid);
                 Fact.Joints fjs = of.createFactJoints();
@@ -792,8 +797,8 @@ public class ModelManageServiceImpl implements ModelManageService {
                     jx.setId(new BigInteger(joint.getId()+""));
                     jx.setX(new BigInteger(joint.getX()+""));
                     jx.setY(new BigInteger(joint.getY()+""));
-                    jx.getContent().add(of.createJointName(joint.getName()));
-                    jx.getContent().add(of.createJointContent(joint.getContent()));
+                    jx.getContent().add(of.createJointName(transNull(joint.getName())));
+                    jx.getContent().add(of.createJointContent(transNull(joint.getContent())));
                     fjs.getContent().add(of.createFactJointsJoint(jx));
                 }
                 f.getContent().add(of.createFactJoints(fjs));
@@ -816,15 +821,29 @@ public class ModelManageServiceImpl implements ModelManageService {
                         Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
                         Arrow arrowXml = of.createArrow();
                         arrowXml.setId(new BigInteger(arrow.getId()+""));
-                        arrowXml.getContent().add(of.createArrowName(arrow.getName()));
-                        arrowXml.getContent().add(of.createArrowContent(arrow.getContent()));
+                        arrowXml.getContent().add(of.createArrowName(transNull(arrow.getName())));
+                        arrowXml.getContent().add(of.createArrowContent(transNull(arrow.getContent())));
                         Arrow.Head hXml = of.createArrowHead();
-                        hXml.setId(new BigInteger(head.getId()+""));
-                        hXml.setX(new BigInteger(head.getX()+""));
-                        hXml.setY(new BigInteger(head.getY()+""));
-                        hXml.setName(head.getName());
-                        hXml.setContent(head.getHead());
-                        hXml.setBodyID(new BigInteger(head.getBodyid()+""));
+                        int hid = -1;
+                        int hx = -1;
+                        int hy = -1;
+                        String hname = "";
+                        String hcontent = "";
+                        int bodyId = -1;
+                        if(head!=null){
+                            hid = head.getId();
+                            hx = head.getX();
+                            hy = head.getY();
+                            hname = head.getName();
+                            hcontent = head.getHead();
+                            bodyId = head.getBodyid();
+                        }
+                        hXml.setId(new BigInteger(hid+""));
+                        hXml.setX(new BigInteger(hx+""));
+                        hXml.setY(new BigInteger(hy+""));
+                        hXml.setName(transNull(hname));
+                        hXml.setContent(transNull(hcontent));
+                        hXml.setBodyID(new BigInteger(bodyId+""));
                         arrowXml.getContent().add(of.createArrowHead(hXml));
                         arrowsXml.getContent().add(of.createEcmRelationsRelationArrowsArrow(arrowXml));
                     }
@@ -834,8 +853,8 @@ public class ModelManageServiceImpl implements ModelManageService {
                     jXml.setId(new BigInteger(joint.getId()+""));
                     jXml.setX(new BigInteger(joint.getX()+""));
                     jXml.setY(new BigInteger(joint.getY()+""));
-                    jXml.getContent().add(of.createJointName(joint.getName()));
-                    jXml.getContent().add(of.createJointContent(joint.getContent()));
+                    jXml.getContent().add(of.createJointName(transNull(joint.getName())));
+                    jXml.getContent().add(of.createJointContent(transNull(joint.getContent())));
                     relation.getContent().add(of.createEcmRelationsRelationJoint(jXml));
                     relations.getContent().add(of.createEcmRelationsRelation(relation));
                 }
@@ -845,18 +864,23 @@ public class ModelManageServiceImpl implements ModelManageService {
             File file = new File(filePath);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             Marshaller marshaller = ctx.createMarshaller();
-
-            // 设置XML文件的编码格式
-//            marshaller.setProperty("jaxb.encoding", EPGConfig.getInstance()
-//                    .getXmlEncode());
-
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// //编码格式
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, false);// 是否省略xm头声明信息
             // 将XML文件格式化输出
-            marshaller.setProperty("jaxb.formatted.output", true);
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(ecm, fileOutputStream);
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String transNull(String str){
+        if(str!=null){
+            return str;
+        }else{
+            return "";
         }
     }
 
