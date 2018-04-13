@@ -249,8 +249,33 @@ $(document).ready(function(){
         typeSetting();
     });
 
+    $("#factSelector").change(function () {
+        var fid=$("#factSelector").val();
+        var x = factList[fid]['node'].x;
+        var y = factList[fid]['node'].y;
+        var div_width = $("#canvasDiv").width;
+        var div_height = $("#canvasDiv").height;
+        $("#canvasDiv").scrollLeft(x+((div_width-factList[fid]['node'].width)/2));
+        $("#canvasDiv").scrollTop(y+((div_height-factList[fid]['node'].height)/2));
+        factList[fid]['node'].selected = 1;
+    });
+
     window.setInterval(saveAll,180000);
 });
+
+function updateFactListofGraph() {
+    $("#factSelector").html("<option value='-1'>请选择</option>");
+
+    for(var fid in factList){
+        var fact = factList[fid];
+
+        if(fact!=null){
+            var node = fact['node'];
+            $('#factSelector').append("<option value='"+fid+"'>"+node.text+"</option>");
+        }
+    }
+   
+}
 
 //存储所有
 function saveAll(isAsync) {
@@ -945,6 +970,7 @@ function saveFact(node) {
             node.id = data;
             factList[node.id] = {'node':node, "type":f['type']};
             factIndex = data+1;
+            // updateFactListofGraph();
             // removeLoading("事实节点保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("save fact");
@@ -2273,7 +2299,7 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
     var committer = "";
     var reason = "";
     if(detail!=null){
-        documentID = detail.documentID;
+        documentID = detail.documentid;
         isDefendant = detail.isDefendant;
         conclusion = detail.conclusion;
         logicNodeID = detail.logicNodeID;
@@ -2490,8 +2516,9 @@ function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
     //添加操作至operationList
     if(isNew)
         operationList.push({'type':'add','nodes':[node]});
-    if(!isinit)
+    if(!isinit){
         saveFact(node);
+    }
 
     node.click(function () {
         $('#head-panel').attr('hidden', 'hidden');
@@ -2532,6 +2559,7 @@ function deleteFact(factID) {
     scene.remove(fact);
     factList[factID] = null;
     $('#fact-panel').attr('hidden', 'hidden');
+    // updateFactListofGraph();
 }
 
 //点击图元左侧列表相应证据高亮
@@ -2748,6 +2776,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         addArrow(headerList[arrow['nodeFrom_hid']],jointList[arrow['nodeTo_jid']]['node'],arrow['id'],arrow['name'],arrow['content']);
     }
 
+    updateFactListofGraph();
 }
 
 //排版

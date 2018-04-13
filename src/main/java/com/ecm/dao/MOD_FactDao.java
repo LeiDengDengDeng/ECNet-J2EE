@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface MOD_FactDao extends JpaRepository<MOD_Fact, MODPK> {
+public interface MOD_FactDao extends JpaRepository<MOD_Fact, Integer> {
 
     public MOD_Fact save(MOD_Fact fact);
 
