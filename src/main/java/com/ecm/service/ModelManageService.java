@@ -46,6 +46,8 @@ public interface ModelManageService {
 
     public void deleteFactById(int id);
 
+    public void deleteFactByCid(int cid);
+
     public void deleteJointsByCid(int cid);
 
     public MOD_Arrow saveArrow(MOD_Arrow arrow);

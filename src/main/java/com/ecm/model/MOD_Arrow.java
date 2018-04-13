@@ -66,4 +66,16 @@ public class MOD_Arrow {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "MOD_Arrow{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", nodeFrom_hid=" + nodeFrom_hid +
+                ", nodeTo_jid=" + nodeTo_jid +
+                ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

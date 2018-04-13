@@ -139,6 +139,7 @@ public class LogicServiceImpl implements LogicService {
         logicNodeDao.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void deleteAllNodesByCaseID(int caseID) {
         logicNodeDao.deleteByCaseID(caseID);
