@@ -41,6 +41,8 @@ public interface LogicService {
 
     LogicNode getNode(int id);
 
+    void saveNode(LogicNode logicNode);
+
     /**
      * 保存案件的所有节点，保存前先清空所有节点
      *

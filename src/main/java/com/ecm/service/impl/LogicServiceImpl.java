@@ -115,6 +115,11 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
+    public void saveNode(LogicNode logicNode) {
+        logicNodeDao.save(logicNode);
+    }
+
+    @Override
     @Transactional
     public void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes) {
         for (LogicNode node : logicNodes) {
