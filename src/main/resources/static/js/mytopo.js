@@ -268,10 +268,11 @@ $(document).ready(function(){
                 scene.translateY = topOffset-div_height;
             }
             factList[fid]['node'].click();
-            // scene.cancleAllSelected();
-            // scene.addToSelected(factList[fid]['node']);
+            scene.cancleAllSelected();
+            scene.addToSelected(factList[fid]['node']);
             // factList[fid]['node'].selected = 1;
-            scene.currentElement = factList[fid]['node'];
+            // scene.currentElement = factList[fid]['node'];
+            factList[fid]['node'].selected=1;
             // console.log(scene.selectedElements.length);
         }else{
             scene.translateX = 0;
