@@ -243,4 +243,14 @@ break;
                 ", headList=" + headListString+
                 '}';
     }
+
+
+    public boolean isHeadContained(String head){
+        for(Evidence_Head temp:headList){
+            if(temp.getHead().equals(head)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

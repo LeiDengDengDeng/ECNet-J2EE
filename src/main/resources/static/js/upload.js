@@ -5,12 +5,7 @@ var caseInfoStr = $.session.get("caseInfo");
 var caseInfo = JSON.parse(caseInfoStr);
 //hide
 $(function(){
-
-
-
     $('#userLabel').text(username);
-    console.log($.session.get('cid'));
-
     $('#exist_click').click(function () {
         if(confirm('是否确认退出？'))
         {
@@ -19,14 +14,12 @@ $(function(){
         }
     });
 
-
     $("#caseNum").text(caseInfo.cNum);
     $("#caseBrief").text("受贿罪");
     $("#caseName").text(caseInfo.cname);
     $("#underTaker").text(username);
     $("#caseDate").text(caseInfo.fillingDate);
     $("#importCaseId").val(cid);
-
     $.ajax({
         url:"/evidence/getContent",
         type:'GET',
@@ -34,6 +27,7 @@ $(function(){
         success:function (data) {
             for(var i=0;i<data.length;i++){
                 loadData(data[i].type,data[i]);
+
             }
         }
     });
@@ -94,6 +88,7 @@ function loadData(type,data){
     }
 
     var bodylist=data.bodylist;
+    console.log(bodylist);
     for(var i=0;i<bodylist.length;i++){
         createHtml(bodylist[i].id,bodylist[i].body,bodylist[i].type,bodylist[i].trust,type);
         createHeadHtml(bodylist[i].id,bodylist[i].headList,type);
@@ -199,7 +194,7 @@ function loading(num) {
             loadingMaskBg:'rgba(22,22,22,0.2)',
             mustRelative: true
         });
-    }else{
+    }if(num==2){
         $('#graph_div').loading({
             loadingWidth:240,
             title:'请稍等!',
@@ -218,6 +213,28 @@ function loading(num) {
             loadingMaskBg:'rgba(22,22,22,0.2)',
             mustRelative: true
         });
+    }else{
+
+        $('body').loading({
+            loadingWidth:240,
+            title:'请稍等!',
+            name:'test',
+            discription:'这是一个描述...',
+            direction:'row',
+            type:'origin',
+            originBg:'#71EA71',
+            originDivWidth:30,
+            originDivHeight:30,
+            originWidth:4,
+            originHeight:4,
+            smallLoading:false,
+            titleColor:'#388E7A',
+            loadingBg:'#312923',
+            loadingMaskBg:'rgba(22,22,22,0.2)',
+            mustRelative: true
+        });
+
+
     }
     setTimeout(function(){
         removeLoading('test');
@@ -517,7 +534,8 @@ function deleteHead(remove){
 function uploadExcel(){
 
 
-    loading(1);
+    loading(3);
+
     $('#excelForm').submit(      //ajax方式提交表单
         {
             url: '/evidence/importExcel',

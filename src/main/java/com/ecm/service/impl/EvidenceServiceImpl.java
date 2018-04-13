@@ -11,6 +11,7 @@ import com.ecm.model.*;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
+import com.ecm.util.ImportXMLUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -319,16 +320,21 @@ public class EvidenceServiceImpl implements EvidenceService {
                     bodylist.add(evidenceBody);
                   //  deleteHeadAllByBody(evidenceBody.getId());
                 }
-                Evidence_Head evidence_head = new Evidence_Head();
-                evidence_head.setCaseID(caseId);
+
                 // 将区域编号的cell中的内容当做字符串处理
                 row.getCell(9).setCellType(HSSFCell.CELL_TYPE_STRING);
-                evidence_head.setHead(row.getCell(9).getStringCellValue());
-                evidence_head.setBodyid(evidenceBody.getId());
-                evidence_head.setDocumentid(evidenceBody.getDocumentid());
-                System.out.println(evidence_head.toString());
-                evidence_head=save(evidence_head);
-                evidenceBody.addHead(evidence_head);
+                String headText=row.getCell(9).getStringCellValue();
+                if(!evidenceBody.isHeadContained(headText)){
+                    Evidence_Head evidence_head = new Evidence_Head();
+                    evidence_head.setCaseID(caseId);
+                    evidence_head.setHead(row.getCell(9).getStringCellValue());
+                    evidence_head.setBodyid(evidenceBody.getId());
+                    evidence_head.setDocumentid(evidenceBody.getDocumentid());
+                    System.out.println(evidence_head.toString());
+                    evidence_head=save(evidence_head);
+                    evidenceBody.addHead(evidence_head);
+                }
+
             }
 
 
@@ -353,6 +359,9 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Async
     public void importFactByExcel(String filepath, int caseId, List<Evidence_Body> bodylist) {
 
+        modelManageService.deleteArrowsByCid(caseId);
+        modelManageService.deleteJointsByCid(caseId);
+        modelManageService.deleteJointsByCid(caseId);
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -365,6 +374,7 @@ public class EvidenceServiceImpl implements EvidenceService {
         List<HashMap<String,Object>> list=new ArrayList<>();
         HashMap<String,Object> hashMap=new HashMap<>();
         List<HashMap<String,Object>> headlist=new ArrayList<>();
+        List<MOD_Joint> jointList=new ArrayList<>();
 
         MOD_Fact mod_fact=new MOD_Fact();
         for (int i = 2; i <= lastRowNum; i++) {
@@ -389,6 +399,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                     mod_fact.setContent(row.getCell(3).getStringCellValue());
                     mod_fact.setName(row.getCell(2).getStringCellValue());
                     mod_fact=modelManageService.saveFact(mod_fact);
+                    jointList=new ArrayList<>();
 
                 }
 
@@ -404,11 +415,16 @@ public class EvidenceServiceImpl implements EvidenceService {
                 headMap.put("keyText",row.getCell(7).getStringCellValue());
 
 
-                MOD_Joint mod_joint=new MOD_Joint();
-                mod_joint.setCaseID(caseId);
-                mod_joint.setContent(row.getCell(4).getStringCellValue());
-                mod_joint.setFactID(mod_fact.getId());
-                mod_joint=modelManageService.saveJoint(mod_joint);
+                MOD_Joint mod_joint=isJointContained(jointList,row.getCell(4).getStringCellValue());
+                if(mod_joint==null){
+                    mod_joint=new MOD_Joint();
+                    mod_joint.setCaseID(caseId);
+                    mod_joint.setContent(row.getCell(4).getStringCellValue());
+                    mod_joint.setFactID(mod_fact.getId());
+                    mod_joint=modelManageService.saveJoint(mod_joint);
+                    jointList.add(mod_joint);
+                }
+
                 MOD_Arrow mod_arrow=new MOD_Arrow();
                 mod_arrow.setCaseID(caseId);
                 mod_arrow.setNodeTo_jid(mod_joint.getId());
@@ -422,11 +438,21 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     }
 
+    private MOD_Joint isJointContained(List<MOD_Joint> jointList, String stringCellValue) {
+        for(MOD_Joint joint:jointList){
+            if(joint.getContent().equals(stringCellValue)){
+                return joint;
+            }
+        }
+        return null;
+    }
+
     @Override
     @Async
     public void importLogicByExcel(String filepath, int caseId,List<Evidence_Body> bodyList) {
 
 
+        logicService.deleteAllNodesByCaseID(caseId);
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -485,10 +511,18 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
+    @Transactional
+    @Override
+    public void deleteAllTable(int caseId) {
+        modelManageService.deleteAll(caseId);
+        logicService.deleteAllNodesByCaseID(caseId);
+    }
+
 
     private int getHeadIdByEvi(Evidence_Body body,String head){
         List<Evidence_Head> headList=body.getHeadList();
         for(Evidence_Head headtemp:headList){
+            System.out.println(headtemp.toString());
             if(headtemp.getHead().equals(head)){
                 return headtemp.getId();
             }
@@ -575,4 +609,27 @@ public class EvidenceServiceImpl implements EvidenceService {
         return  result;
 
     }
+
+
+
+    @Override
+    public List<Evidence_Document> importDocumentByXML(ImportXMLUtil xmlUtil) {
+        return null;
+    }
+
+    @Override
+    public List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil, List<Evidence_Document> documentList) {
+        return null;
+    }
+
+    @Override
+    public void importFactByXML(ImportXMLUtil xmlUtil, List<Evidence_Body> bodylist) {
+
+    }
+
+    @Override
+    public void importLogicByXML(ImportXMLUtil xmlUtil, List<Evidence_Body> bodylist) {
+
+    }
+
 }

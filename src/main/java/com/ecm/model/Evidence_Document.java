@@ -57,4 +57,15 @@ public class Evidence_Document {
     public void setType(int type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Evidence_Document{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", committer='" + committer + '\'' +
+                ", text='" + text + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
