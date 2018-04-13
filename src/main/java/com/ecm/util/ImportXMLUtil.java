@@ -361,26 +361,26 @@ public class ImportXMLUtil {
 //
 //
 //    }
-
-    private int getTypeByString(String typeString) {
-        if(typeString.equals("证据")){
-            return 0;
-        }
-
-        if(typeString.equals("事实")){
-            return 1;
-        }
-
-        if(typeString.equals("法条")){
-            return 2;
-        }
-
-        if(typeString.equals("结论")){
-            return 3;
-        }
-
-        return -1;
-    }
+//
+//    private int getTypeByString(String typeString) {
+//        if(typeString.equals("证据")){
+//            return 0;
+//        }
+//
+//        if(typeString.equals("事实")){
+//            return 1;
+//        }
+//
+//        if(typeString.equals("法条")){
+//            return 2;
+//        }
+//
+//        if(typeString.equals("结论")){
+//            return 3;
+//        }
+//
+//        return -1;
+//    }
 
 
 

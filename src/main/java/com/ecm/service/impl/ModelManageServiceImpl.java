@@ -229,7 +229,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void deleteFactById(int id) {
         factDao.deleteById(id);
     }
-
+    @Transactional
     @Override
     public void deleteFactByCid(int cid) {
         factDao.deleteAllByCaseID(cid);

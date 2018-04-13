@@ -55,8 +55,8 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     public Evidence_Document saveOrUpdate(Evidence_Document evidence_document) {
-        int id=findIdByAjxhAndType(evidence_document.getCaseID(),evidence_document.getType());
-        if(id!=-1){
+        int id = findIdByAjxhAndType(evidence_document.getCaseID(), evidence_document.getType());
+        if (id != -1) {
             evidence_document.setId(id);
         }
         return evidenceDocuDao.save(evidence_document);
@@ -64,10 +64,10 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     public int findIdByAjxhAndType(int ajxh, int type) {
-        Evidence_Document evidence_document=evidenceDocuDao.getEvidenceDocument(ajxh, type);
-        if(evidence_document==null){
+        Evidence_Document evidence_document = evidenceDocuDao.getEvidenceDocument(ajxh, type);
+        if (evidence_document == null) {
             return -1;
-        }else{
+        } else {
             return evidence_document.getId();
         }
     }
@@ -86,6 +86,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     public Evidence_Body save(Evidence_Body evidence_body) {
         return evidenceBodyDao.save(evidence_body);
     }
+
     @Transactional
     @Override
     public Evidence_Head save(Evidence_Head evidence_head) {
@@ -98,13 +99,14 @@ public class EvidenceServiceImpl implements EvidenceService {
         evidenceBodyDao.deleteById(id);
         return;
     }
+
     @Transactional
     @Override
     public void deleteBodyAll(int document_id) {
-        List<Integer> bodyIdList=evidenceBodyDao.findAllByDocumentid(document_id);
+        List<Integer> bodyIdList = evidenceBodyDao.findAllByDocumentid(document_id);
 
 
-        for (Integer i:bodyIdList
+        for (Integer i : bodyIdList
                 ) {
 
             logicService.deleteNode(evidenceBodyDao.findLogicId(i));
@@ -124,70 +126,73 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Transactional
     @Override
     public void updateBodyById(String body, int id) {
-        evidenceBodyDao.updateBodyById(body,id);
+        evidenceBodyDao.updateBodyById(body, id);
     }
+
     @Transactional
     @Override
     public void updateTypeById(int type, int id) {
-        evidenceBodyDao.updateTypeById(type,id);
+        evidenceBodyDao.updateTypeById(type, id);
     }
+
     @Transactional
     @Override
     public void updateTrustById(int trust, int id) {
-        evidenceBodyDao.updateTrustById(trust,id);
+        evidenceBodyDao.updateTrustById(trust, id);
     }
+
     @Transactional
     @Override
     public List<Evidence_Body> createHead(int documentid) {
-        List<Evidence_Body> bodies=evidenceBodyDao.getAllByDocumentid(documentid);
-        JSONArray jsonArray=new JSONArray();
-        for(Evidence_Body body:bodies){
-            KeyWordCalculator keyWordCalculator=new KeyWordCalculator();
-            HashMap<String, List<String>> res=keyWordCalculator.calcKeyWord(body.getBody());
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("id",body.getId());
-            jsonObject.put("content",body.getBody());
-            jsonObject.put("type",body.getTypeToString());
-            jsonObject.put("keyWordMap",res);
-            jsonObject.put("headList",new JSONArray());
+        List<Evidence_Body> bodies = evidenceBodyDao.getAllByDocumentid(documentid);
+        JSONArray jsonArray = new JSONArray();
+        for (Evidence_Body body : bodies) {
+            KeyWordCalculator keyWordCalculator = new KeyWordCalculator();
+            HashMap<String, List<String>> res = keyWordCalculator.calcKeyWord(body.getBody());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", body.getId());
+            jsonObject.put("content", body.getBody());
+            jsonObject.put("type", body.getTypeToString());
+            jsonObject.put("keyWordMap", res);
+            jsonObject.put("headList", new JSONArray());
             jsonArray.add(jsonObject);
         }
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put("evidenceList",jsonArray);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("evidenceList", jsonArray);
 
         try {
-            jsonObject= HeadCreator.getHead(jsonObject);
+            jsonObject = HeadCreator.getHead(jsonObject);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("网络传输错误");
             return null;
         }
 
-        if(jsonObject==null){
+        if (jsonObject == null) {
             System.out.println("提取链头失败");
             return null;
-        }else{
-            JSONArray evidenceList=(JSONArray)jsonObject.get("evidenceList");
-            List<Evidence_Body> evidenceBodyList=new ArrayList<>();
-            for(Object object:evidenceList){
-                JSONObject evidence=(JSONObject)object;
-                Evidence_Body evidence_body=new Evidence_Body();
+        } else {
+            JSONArray evidenceList = (JSONArray) jsonObject.get("evidenceList");
+            List<Evidence_Body> evidenceBodyList = new ArrayList<>();
+            for (Object object : evidenceList) {
+                JSONObject evidence = (JSONObject) object;
+                Evidence_Body evidence_body = new Evidence_Body();
 //                evidence_body.setCaseID(bodies.get(0).getCaseID());
 //                evidence_body.setBody(evidence.getString("content"));
 //                evidence_body.setDocumentid(documentid);
 //                evidence_body.setType(EvidenceType.getTypeByName(evidence.getString("type")).getIndex());
                 evidence_body.setId(evidence.getInt("id"));
 
-                JSONArray headArray=evidence.getJSONArray("headList");
+                JSONArray headArray = evidence.getJSONArray("headList");
                 evidenceHeadDao.deleteAllByBodyid(evidence.getInt("id"));
                 //List<String> headNameList=(ArrayList<String>)evidence.get("headList");
-                for(Object headname:headArray){
+                for (Object headname : headArray) {
                     Evidence_Head head = new Evidence_Head();
                     head.setBodyid(evidence.getInt("id"));
                     head.setCaseID(bodies.get(0).getCaseID());
                     head.setDocumentid(documentid);
                     head.setHead(headname.toString());
-                    head=evidenceHeadDao.save(head);
+                    head = evidenceHeadDao.save(head);
                     evidence_body.addHead(head);
                 }
                 evidenceBodyList.add(evidence_body);
@@ -198,17 +203,20 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 
     }
+
     @Transactional
     @Override
     public void updateHeadById(String head, int id) {
         evidenceHeadDao.updateHeadById(head, id);
     }
+
     @Transactional
     @Override
     public void deleteHeadById(int id) {
         evidenceHeadDao.deleteById(id);
         arrowDao.deleteAllByNodeFrom_hid(id);
     }
+
     @Transactional
     @Override
     public void deleteHeadAllByCaseId(int caseId) {
@@ -219,7 +227,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     public void deleteHeadAllByBody(int body_id) {
         List<Evidence_Head> heads = evidenceHeadDao.findAllByBodyid(body_id);
-        for(int i = 0;i<heads.size();i++){
+        for (int i = 0; i < heads.size(); i++) {
             Evidence_Head h = heads.get(i);
             evidenceHeadDao.deleteById(h.getId());
             arrowDao.deleteAllByNodeFrom_hid(h.getId());
@@ -240,9 +248,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     public List<Evidence_Document> importDocumentByExcel(String filepath, int caseId) {
-        List<Evidence_Document> list=new ArrayList<>();
-        Evidence_Document evidence_document1=new Evidence_Document();
-        Evidence_Document evidence_document2=new Evidence_Document();
+        List<Evidence_Document> list = new ArrayList<>();
+        Evidence_Document evidence_document1 = new Evidence_Document();
+        Evidence_Document evidence_document2 = new Evidence_Document();
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -252,18 +260,18 @@ public class EvidenceServiceImpl implements EvidenceService {
         Sheet sheet = ExcelUtil.getSheetByNum(book, 0);
         int lastRowNum = sheet.getLastRowNum();
         System.out.println("last number is " + lastRowNum);
-        String text1="";
-        String text2="";
-        int xh=1;
+        String text1 = "";
+        String text2 = "";
+        int xh = 1;
         for (int i = 2; i <= lastRowNum; i++) {
             Row row = null;
             row = sheet.getRow(i);
-            if (row.getCell(3).getStringCellValue()!=null&&row.getCell(3).getStringCellValue()!="") {
-               // System.out.println("reading line is " + i);
-                if(row.getCell(5).getStringCellValue().contains("被告")){
-                    text2+=xh+"、"+row.getCell(3).getStringCellValue();
-                }else{
-                    text1+=xh+"、"+row.getCell(3).getStringCellValue();
+            if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
+                // System.out.println("reading line is " + i);
+                if (row.getCell(5).getStringCellValue().contains("被告")) {
+                    text2 += xh + "、" + row.getCell(3).getStringCellValue();
+                } else {
+                    text1 += xh + "、" + row.getCell(3).getStringCellValue();
                 }
                 xh++;
             }
@@ -285,11 +293,11 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Transactional
     @Override
-    public List<Evidence_Body> importEviByExcel(String filepath, int caseId,List<Evidence_Document> doculist) {
+    public List<Evidence_Body> importEviByExcel(String filepath, int caseId, List<Evidence_Document> doculist) {
         deleteBodyAllByCaseId(caseId);
         deleteHeadAllByCaseId(caseId);
 
-        List<Evidence_Body> bodylist=new ArrayList<>();
+        List<Evidence_Body> bodylist = new ArrayList<>();
 
         Workbook book = null;
         try {
@@ -313,29 +321,29 @@ public class EvidenceServiceImpl implements EvidenceService {
                     //System.out.println(evidenceBody.toString());
                     evidenceBody = new Evidence_Body();
 
-                    int logicNodeId=logicService.addEvidenceOrFactNode(caseId,text,0);
+                    int logicNodeId = logicService.addEvidenceOrFactNode(caseId, text, 0);
                     evidenceBody.setCaseID(caseId);
                     evidenceBody.setBody(text);
                     evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
                     evidenceBody.setTrustByString(row.getCell(8).getStringCellValue());
-                    evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(),doculist));
+                    evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(), doculist));
                     evidenceBody.setLogicNodeID(logicNodeId);
-                    evidenceBody=save(evidenceBody);
+                    evidenceBody = save(evidenceBody);
                     bodylist.add(evidenceBody);
-                  //  deleteHeadAllByBody(evidenceBody.getId());
+                    //  deleteHeadAllByBody(evidenceBody.getId());
                 }
 
                 // 将区域编号的cell中的内容当做字符串处理
                 row.getCell(9).setCellType(HSSFCell.CELL_TYPE_STRING);
-                String headText=row.getCell(9).getStringCellValue();
-                if(!evidenceBody.isHeadContained(headText)){
+                String headText = row.getCell(9).getStringCellValue();
+                if (!evidenceBody.isHeadContained(headText)) {
                     Evidence_Head evidence_head = new Evidence_Head();
                     evidence_head.setCaseID(caseId);
                     evidence_head.setHead(row.getCell(9).getStringCellValue());
                     evidence_head.setBodyid(evidenceBody.getId());
                     evidence_head.setDocumentid(evidenceBody.getDocumentid());
                     System.out.println(evidence_head.toString());
-                    evidence_head=save(evidence_head);
+                    evidence_head = save(evidence_head);
                     evidenceBody.addHead(evidence_head);
                 }
 
@@ -343,18 +351,15 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 
         }
-        return  bodylist;
-
-
-
+        return bodylist;
 
 
     }
 
-    private int getDocuIdByDocuList(String stringCellValue,List<Evidence_Document> list) {
-        if(stringCellValue.contains("原告")){
+    private int getDocuIdByDocuList(String stringCellValue, List<Evidence_Document> list) {
+        if (stringCellValue.contains("原告")) {
             return list.get(0).getId();
-        }else{
+        } else {
             return list.get(1).getId();
         }
     }
@@ -374,13 +379,13 @@ public class EvidenceServiceImpl implements EvidenceService {
         }
         Sheet sheet = ExcelUtil.getSheetByNum(book, 1);
         int lastRowNum = sheet.getLastRowNum();
-        String text="";
-        List<HashMap<String,Object>> list=new ArrayList<>();
-        HashMap<String,Object> hashMap=new HashMap<>();
-        List<HashMap<String,Object>> headlist=new ArrayList<>();
-        List<MOD_Joint> jointList=new ArrayList<>();
+        String text = "";
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        List<HashMap<String, Object>> headlist = new ArrayList<>();
+        List<MOD_Joint> jointList = new ArrayList<>();
 
-        MOD_Fact mod_fact=new MOD_Fact();
+        MOD_Fact mod_fact = new MOD_Fact();
         for (int i = 2; i <= lastRowNum; i++) {
             Row row = null;
             row = sheet.getRow(i);
@@ -388,52 +393,51 @@ public class EvidenceServiceImpl implements EvidenceService {
                 if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
                     System.out.println("reading line is " + i);
                     System.out.println(hashMap.toString());
-                    hashMap=new HashMap<>();
+                    hashMap = new HashMap<>();
                     hashMap.put("id", row.getCell(1).getNumericCellValue());
-                    hashMap.put("name",row.getCell(2).getStringCellValue());
-                    hashMap.put("text",row.getCell(3).getStringCellValue());
-                    headlist=new ArrayList<>();
-                    hashMap.put("headList",headlist);
+                    hashMap.put("name", row.getCell(2).getStringCellValue());
+                    hashMap.put("text", row.getCell(3).getStringCellValue());
+                    headlist = new ArrayList<>();
+                    hashMap.put("headList", headlist);
                     list.add(hashMap);
 
 
-                    mod_fact=new MOD_Fact();
+                    mod_fact = new MOD_Fact();
                     mod_fact.setCaseID(caseId);
-                    mod_fact.setId((int)row.getCell(1).getNumericCellValue());
+                    mod_fact.setId((int) row.getCell(1).getNumericCellValue());
                     mod_fact.setContent(row.getCell(3).getStringCellValue());
                     mod_fact.setName(row.getCell(2).getStringCellValue());
-                    mod_fact=modelManageService.saveFact(mod_fact);
-                    jointList=new ArrayList<>();
+                    mod_fact = modelManageService.saveFact(mod_fact);
+                    jointList = new ArrayList<>();
 
                 }
 
-                HashMap<String,Object> headMap=new HashMap<>();
-
+                HashMap<String, Object> headMap = new HashMap<>();
 
 
                 row.getCell(4).setCellType(HSSFCell.CELL_TYPE_STRING);
                 row.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
-                headMap.put("link",row.getCell(4).getStringCellValue());
-                headMap.put("nodeId",row.getCell(5).getNumericCellValue());
-                headMap.put("nodeFromEvi",row.getCell(6).getStringCellValue());
-                headMap.put("keyText",row.getCell(7).getStringCellValue());
+                headMap.put("link", row.getCell(4).getStringCellValue());
+                headMap.put("nodeId", row.getCell(5).getNumericCellValue());
+                headMap.put("nodeFromEvi", row.getCell(6).getStringCellValue());
+                headMap.put("keyText", row.getCell(7).getStringCellValue());
 
 
-                MOD_Joint mod_joint=isJointContained(jointList,row.getCell(4).getStringCellValue());
-                if(mod_joint==null){
-                    mod_joint=new MOD_Joint();
+                MOD_Joint mod_joint = isJointContained(jointList, row.getCell(4).getStringCellValue());
+                if (mod_joint == null) {
+                    mod_joint = new MOD_Joint();
                     mod_joint.setCaseID(caseId);
                     mod_joint.setContent(row.getCell(4).getStringCellValue());
                     mod_joint.setFactID(mod_fact.getId());
-                    mod_joint=modelManageService.saveJoint(mod_joint);
+                    mod_joint = modelManageService.saveJoint(mod_joint);
                     jointList.add(mod_joint);
                 }
 
-                MOD_Arrow mod_arrow=new MOD_Arrow();
+                MOD_Arrow mod_arrow = new MOD_Arrow();
                 mod_arrow.setCaseID(caseId);
                 mod_arrow.setNodeTo_jid(mod_joint.getId());
-                mod_arrow.setNodeFrom_hid(getHeadIdByEvi(bodylist.get((int)row.getCell(5).getNumericCellValue()-1),row.getCell(6).getStringCellValue()));
-                mod_arrow=modelManageService.saveArrow(mod_arrow);
+                mod_arrow.setNodeFrom_hid(getHeadIdByEvi(bodylist.get((int) row.getCell(5).getNumericCellValue() - 1), row.getCell(6).getStringCellValue()));
+                mod_arrow = modelManageService.saveArrow(mod_arrow);
                 headlist.add(headMap);
             }
 
@@ -443,8 +447,8 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
     private MOD_Joint isJointContained(List<MOD_Joint> jointList, String stringCellValue) {
-        for(MOD_Joint joint:jointList){
-            if(joint.getContent().equals(stringCellValue)){
+        for (MOD_Joint joint : jointList) {
+            if (joint.getContent().equals(stringCellValue)) {
                 return joint;
             }
         }
@@ -453,7 +457,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     @Async
-    public void importLogicByExcel(String filepath, int caseId,List<Evidence_Body> bodyList) {
+    public void importLogicByExcel(String filepath, int caseId, List<Evidence_Body> bodyList) {
 
 
         logicService.deleteAllNodesByCaseID(caseId);
@@ -463,15 +467,15 @@ public class EvidenceServiceImpl implements EvidenceService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Sheet sheet =ExcelUtil.getSheetByNum(book, 2);
+        Sheet sheet = ExcelUtil.getSheetByNum(book, 2);
         int lastRowNum = sheet.getLastRowNum();
-        String text="";
+        String text = "";
 
-        List<HashMap<String,Object>> list=new ArrayList<>();
-        HashMap<String,Object> hashMap=new HashMap<>();
-        List<HashMap<String,Object>> headlist=new ArrayList<>();
-        List<HashMap<String,Object>> factList=new ArrayList<>();
-        int resultId=-1;
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        List<HashMap<String, Object>> headlist = new ArrayList<>();
+        List<HashMap<String, Object>> factList = new ArrayList<>();
+        int resultId = -1;
         for (int i = 2; i <= lastRowNum; i++) {
             Row row = null;
             row = sheet.getRow(i);
@@ -479,37 +483,36 @@ public class EvidenceServiceImpl implements EvidenceService {
                 if (row.getCell(4).getStringCellValue() != null && row.getCell(4).getStringCellValue() != "") {
                     System.out.println("reading line is " + i);
                     text = row.getCell(4).getStringCellValue();
-                    text=text.substring(4);
+                    text = text.substring(4);
 
                     System.out.println(hashMap.toString());
-                    hashMap=new HashMap<>();
-                    hashMap.put("result",text);//idList是string数组
+                    hashMap = new HashMap<>();
+                    hashMap.put("result", text);//idList是string数组
 
-                    resultId=logicService.addNode(caseId,-1,text,3);//结论
-                    List<String> lawList= saveLawList(row.getCell(3).getStringCellValue(),resultId,caseId);
-                    hashMap.put("law",lawList);
-                    factList=new ArrayList<>();
-                    hashMap.put("factList",factList);
+                    resultId = logicService.addNode(caseId, -1, text, 3);//结论
+                    List<String> lawList = saveLawList(row.getCell(3).getStringCellValue(), resultId, caseId);
+                    hashMap.put("law", lawList);
+                    factList = new ArrayList<>();
+                    hashMap.put("factList", factList);
                     list.add(hashMap);
-                    }
-                HashMap<String,Object> factMap=new HashMap<>();
-                int id=(int)row.getCell(2).getStringCellValue().charAt(2)-'0';
-                factMap.put("id",id);
-                factMap.put("fact",row.getCell(2).getStringCellValue().substring(4));
+                }
+                HashMap<String, Object> factMap = new HashMap<>();
+                int id = (int) row.getCell(2).getStringCellValue().charAt(2) - '0';
+                factMap.put("id", id);
+                factMap.put("fact", row.getCell(2).getStringCellValue().substring(4));
 
-                String detail=row.getCell(2).getStringCellValue().substring(4);
-                int factId=logicService.addNode(caseId,resultId,detail,1);
+                String detail = row.getCell(2).getStringCellValue().substring(4);
+                int factId = logicService.addNode(caseId, resultId, detail, 1);
 
-                List<Integer> eviList= saveEviList(row.getCell(1).getStringCellValue(),factId,caseId,bodyList);
-                factMap.put("evi",eviList);
+                List<Integer> eviList = saveEviList(row.getCell(1).getStringCellValue(), factId, caseId, bodyList);
+                factMap.put("evi", eviList);
                 factList.add(factMap);
 
             }
 
 
         }
-    //    System.out.println(list.toString());
-
+        //    System.out.println(list.toString());
 
 
     }
@@ -523,14 +526,13 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
-    private int getHeadIdByEvi(Evidence_Body body,String head){
-        List<Evidence_Head> headList=body.getHeadList();
-        System.out.println(headList.toString());
-        System.out.println("head string"+head);
+    private int getHeadIdByEvi(Evidence_Body body, String head) {
+        List<Evidence_Head> headList = body.getHeadList();
 
-        for(Evidence_Head headtemp:headList){
 
-            if(headtemp.getHead().equals(head)){
+        for (Evidence_Head headtemp : headList) {
+
+            if (headtemp.getHead().equals(head)) {
                 return headtemp.getId();
             }
         }
@@ -538,33 +540,34 @@ public class EvidenceServiceImpl implements EvidenceService {
         return -1;
     }
 
-    private List<Integer> saveEviList(String stringCellValue, int factId, int caseId,List<Evidence_Body> bodyList) {
+    private List<Integer> saveEviList(String stringCellValue, int factId, int caseId, List<Evidence_Body> bodyList) {
 
 
-        List<Integer> list=new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
 
-        stringCellValue=stringCellValue.substring(2);
+        stringCellValue = stringCellValue.substring(2);
         // System.out.println(stringCellValue);
-        String[] strs=stringCellValue.split("、");
-        for(String str:strs){
+        String[] strs = stringCellValue.split("、");
+        for (String str : strs) {
             list.add(Integer.valueOf(str));
             // System.out.println(str);
-            int i=Integer.valueOf(str);
-            logicService.addNode(caseId,factId,bodyList.get(i-1).getBody(),0);
+            int i = Integer.valueOf(str);
+            logicService.addNode(caseId, factId, bodyList.get(i - 1).getBody(), 0);
         }
         return list;
     }
 
     /**
      * 为了解决书名号中的顿号问题我也是煞费苦心
+     *
      * @param stringCellValue
      * @return
      */
-    private List<String> saveLawList(String stringCellValue,int resultId,int caseId) {
+    private List<String> saveLawList(String stringCellValue, int resultId, int caseId) {
 
 //        String[] strs=stringCellValue.split("\\(\\?<=《\\)\\[^》]\\+\\(\\?=》\\)");
-        List<String> result=new ArrayList<>();
-        String lawName="";
+        List<String> result = new ArrayList<>();
+        String lawName = "";
 //        lawName=lawName.substring(0,lawName.indexOf('》')+1);
 //
 //        for(String str:strs){
@@ -580,43 +583,42 @@ public class EvidenceServiceImpl implements EvidenceService {
 //            }
 //        }
 
-        int begin=0;
-        int end=0;
-        String law="";
-        for(int i=0;i<stringCellValue.length();i++){
-            if(stringCellValue.charAt(i)=='《'){
-                begin=i;
-                int j=i;
-                while(stringCellValue.charAt(j)!='》'){
+        int begin = 0;
+        int end = 0;
+        String law = "";
+        for (int i = 0; i < stringCellValue.length(); i++) {
+            if (stringCellValue.charAt(i) == '《') {
+                begin = i;
+                int j = i;
+                while (stringCellValue.charAt(j) != '》') {
                     j++;
                 }
-                end=j;
-                lawName=stringCellValue.substring(begin,end+1);
-                stringCellValue=stringCellValue.substring(end+1);
+                end = j;
+                lawName = stringCellValue.substring(begin, end + 1);
+                stringCellValue = stringCellValue.substring(end + 1);
                 // System.out.println("String"+stringCellValue);
-                i=0;
+                i = 0;
             }
-            if(stringCellValue.charAt(i)=='、'){
-                law=lawName+stringCellValue.substring(0,i);
-                stringCellValue=stringCellValue.substring(i+1);
+            if (stringCellValue.charAt(i) == '、') {
+                law = lawName + stringCellValue.substring(0, i);
+                stringCellValue = stringCellValue.substring(i + 1);
 
-                i=-1;
+                i = -1;
                 //System.out.println(law);
 
                 result.add(law);
-                logicService.addNode(caseId,resultId,law,2);
+                logicService.addNode(caseId, resultId, law, 2);
             }
 
 
         }
 
-        result.add(lawName+stringCellValue);
-        logicService.addNode(caseId,resultId,lawName+stringCellValue,2);
+        result.add(lawName + stringCellValue);
+        logicService.addNode(caseId, resultId, lawName + stringCellValue, 2);
 
-        return  result;
+        return result;
 
     }
-
 
 
     @Override
@@ -625,8 +627,8 @@ public class EvidenceServiceImpl implements EvidenceService {
         Node root = xmlUtil.getDocument().getElementsByTagName("documents").item(0);
         ArrayList<Evidence_Document> documentList = new ArrayList<>();
         //遍历
-        NodeList list=root.getChildNodes();
-        for(int i=0;i<list.getLength();i++) {
+        NodeList list = root.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
 
             //获取第i个book结点
             Node node = list.item(i);
@@ -653,7 +655,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
                 evidence_document.setCommitter(committer);
 
-                evidence_document=saveOrUpdate(evidence_document);
+                evidence_document = saveOrUpdate(evidence_document);
                 documentList.add(evidence_document);
             }
         }
@@ -665,32 +667,34 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     public List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil) {
 
+        deleteBodyAllByCaseId(xmlUtil.getCaseId());
+        deleteHeadAllByCaseId(xmlUtil.getCaseId());
         //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
         Node root = xmlUtil.getDocument().getElementsByTagName("evidences").item(0);
         ArrayList<Evidence_Body> bodyList = new ArrayList<>();
         //遍历
-        NodeList list=root.getChildNodes();
-        for(int i=0;i<list.getLength();i++) {
+        NodeList list = root.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
             //获取第i个book结点
             Node node = list.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element evi = (Element) node;
-                int id=Integer.valueOf(evi.getAttribute("id"));
-                int x=Integer.valueOf(evi.getAttribute("x"));
-                int y=Integer.valueOf(evi.getAttribute("y"));
-                int documentId=Integer.valueOf(evi.getAttribute("documentId"));
-                int type=Integer.valueOf(evi.getAttribute("type"));
-                int trust=Integer.valueOf(evi.getAttribute("trust"));
-                int logicNodeId=Integer.valueOf(evi.getAttribute("logicNodeId"));
+                int id = Integer.valueOf(evi.getAttribute("id"));
+                int x = Integer.valueOf(evi.getAttribute("x"));
+                int y = Integer.valueOf(evi.getAttribute("y"));
+                int documentId = Integer.valueOf(evi.getAttribute("documentId"));
+                int type = Integer.valueOf(evi.getAttribute("type"));
+                int trust = Integer.valueOf(evi.getAttribute("trust"));
+                int logicNodeId = Integer.valueOf(evi.getAttribute("logicNodeId"));
 
-                Evidence_Body evidence_body=new Evidence_Body();
+                Evidence_Body evidence_body = new Evidence_Body();
 
-                String name=evi.getElementsByTagName("name").item(0).getTextContent();
-                String content=evi.getElementsByTagName("content").item(0).getTextContent();
+                String name = evi.getElementsByTagName("name").item(0).getTextContent();
+                String content = evi.getElementsByTagName("content").item(0).getTextContent();
                 // String typeString=evi.getElementsByTagName("type").item(0).getTextContent();
-                String committer=evi.getElementsByTagName("committer").item(0).getTextContent();
+                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
                 //  String trustString=evi.getElementsByTagName("trust").item(0).getTextContent();
-                String reason=evi.getElementsByTagName("reason").item(0).getTextContent();
+                String reason = evi.getElementsByTagName("reason").item(0).getTextContent();
 
                 evidence_body.setId(id);
                 evidence_body.setDocumentid(documentId);
@@ -705,9 +709,9 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence_body.setReason(reason);
                 evidence_body.setCaseID(xmlUtil.getCaseId());
 
-                NodeList heads=evi.getElementsByTagName("heads").item(0).getChildNodes();
+                NodeList heads = evi.getElementsByTagName("heads").item(0).getChildNodes();
 
-                for(int j=0;j<heads.getLength();j++) {
+                for (int j = 0; j < heads.getLength(); j++) {
                     if (heads.item(j).getNodeType() == Node.ELEMENT_NODE) {
                         Element headNode = (Element) heads.item(j);
                         int headid = Integer.valueOf(headNode.getAttribute("id"));
@@ -747,7 +751,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     public void importFactByXML(ImportXMLUtil xmlUtil) {
 
         modelManageService.deleteJointsByCid(xmlUtil.getCaseId());
-     //   modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
+        //   modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
         modelManageService.deleteFactByCid(xmlUtil.getCaseId());
         List<MOD_Fact> factList = new ArrayList<>();
         //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
@@ -836,7 +840,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 Element joint = (Element) relation.getElementsByTagName("joint").item(0);
                 NodeList arrows = relation.getElementsByTagName("arrows").item(0).getChildNodes();
 
-                int jointId=Integer.valueOf(joint.getAttribute("id"));
+                int jointId = Integer.valueOf(joint.getAttribute("id"));
                 for (int j = 0; j < arrows.getLength(); j++) {
                     if (arrows.item(j).getNodeType() == Node.ELEMENT_NODE) {
                         Element arrow = (Element) arrows.item(j);
@@ -844,9 +848,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 
                         String arrowname = arrow.getElementsByTagName("name").item(0).getTextContent();
                         String arrowcontent = arrow.getElementsByTagName("content").item(0).getTextContent();
-                        Element head=(Element)arrow.getElementsByTagName("head").item(0);
-                        int headId= Integer.valueOf(head.getAttribute("id"));
-                        MOD_Arrow mod_arrow=new MOD_Arrow();
+                        Element head = (Element) arrow.getElementsByTagName("head").item(0);
+                        int headId = Integer.valueOf(head.getAttribute("id"));
+                        MOD_Arrow mod_arrow = new MOD_Arrow();
                         mod_arrow.setId(arrowId);
                         mod_arrow.setCaseID(xmlUtil.getCaseId());
                         mod_arrow.setName(arrowname);
@@ -871,9 +875,68 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Override
     public void importLogicByXML(ImportXMLUtil xmlUtil) {
 
+        List<LogicNode> nodeList = new ArrayList<>();
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = xmlUtil.getDocument().getElementsByTagName("graph").item(0);
+        //遍历
+        NodeList list = root.getChildNodes();
+        saveAndgetChildren(list);
+
+    }
+
+    private int getTypeByString(String typeString) {
+        if (typeString.equals("证据")) {
+            return 0;
+        }
+
+        if (typeString.equals("事实")) {
+            return 1;
+        }
+
+        if (typeString.equals("法条")) {
+            return 2;
+        }
+
+        if (typeString.equals("结论")) {
+            return 3;
+        }
+
+        return -1;
+    }
 
 
+    private NodeList saveAndgetChildren(NodeList nodelist) {
 
+        if(nodelist==null){
+            return null;
+        }else{
+            for(int i=0;i<nodelist.getLength();i++){
+                Node node=nodelist.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+                    String topic = element.getAttribute("topic");
+                    int nodeId = Integer.valueOf(element.getAttribute("nodeId"));
+                    String detail = element.getAttribute("detail");
+                    String typeString = element.getAttribute("type");
+                    int type = getTypeByString(typeString);
+                    int x = Integer.valueOf(element.getAttribute("x"));
+                    int y = Integer.valueOf(element.getAttribute("y"));
+                    LogicNode logicNode = new LogicNode();
+                    logicNode.setDetail(detail);
+                    logicNode.setTopic(topic);
+                    logicNode.setType(type);
+                    logicNode.setNodeID(nodeId);
+                    logicNode.setX(x);
+                    logicNode.setY(y);
+                    logicService.saveNode(logicNode);
+                }
+
+                return node.getChildNodes();
+
+            }
+
+        }
+        return null;
 
 
 
