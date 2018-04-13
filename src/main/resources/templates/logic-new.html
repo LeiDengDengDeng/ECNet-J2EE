@@ -78,35 +78,28 @@
             <!--文件选择框以及文件相关操作面板-->
             <section class="file-wrapper col-md-12 no-print">
             <span class="posMarker">
-                x: <b id="posX"></b>y<b id="posY"></b>:
-            </span>
-                <span class="posMarker">
-                操作: <b id="myAction"></b>
-            </span>
-                <span class="posMarker">
-                起始: x:<b id="startPosX"></b>, y:<b id="startPosY"></b>
-            </span>
-                <span class="posMarker">
-                终止: x:<b id="endPosX"></b>, y:<b id="endPosY"></b>
+                x: <b id="posX"></b>y: <b id="posY"></b>
             </span>
                 <span class="file-operation-btns">
-                <a id="excel-btn" class="btn btn-danger btn-sm" style="background-color: #c0a16b;border-color: #c0a16b">导出excel</a>
-                <a id="xml-btn" class="btn btn-danger btn-sm"
-                   style="background-color: blueviolet;border-color: blueviolet">导出xml</a>
-                <a id="compose-btn" class="btn btn-danger btn-sm" onclick="compose()">自动排版</a>
-                <a id="line-btn" class="btn btn-primary btn-sm" onclick="curveGraph()">显示曲线图</a>
-                <a id="print-btn" class="btn btn-default btn-sm">打印此图</a>
-                <a id="revoke-btn" class="btn btn-warning btn-sm disabled" onclick="repeal()">撤销</a>
-                <a id="save-btn" class="btn btn-success btn-sm">保存</a>
+                     <span style="margin-right: 50px;font-weight: 500">结论列表:
+                        <select id="conclusion-select" style="font-weight: normal" onchange="conclusionSelectChangeEvent()">
+                        </select>
+                    </span>
+
+                    <a id="excel-btn" class="btn btn-danger btn-sm"
+                       style="background-color: #c0a16b;border-color: #c0a16b">导出excel</a>
+                    <a id="xml-btn" class="btn btn-danger btn-sm"
+                       style="background-color: blueviolet;border-color: blueviolet">导出xml</a>
+                    <a id="compose-btn" class="btn btn-danger btn-sm" onclick="compose()">自动排版</a>
+                    <a id="line-btn" class="btn btn-primary btn-sm" onclick="curveGraph()">显示曲线图</a>
+                    <a id="print-btn" class="btn btn-default btn-sm">打印此图</a>
+                    <a id="revoke-btn" class="btn btn-warning btn-sm disabled" onclick="repeal()">撤销</a>
+                    <a id="save-btn" class="btn btn-success btn-sm">保存</a>
             </span>
             </section>
 
-            <!--画布-->
-            <!--<section class="graph-wrapper show-bar col-md-9 print">-->
-            <!--<svg width="2000" height="2000"></svg>-->
-            <!--</section>-->
-            <div class="graph-wrapper col-md-9 show-bar" style="margin-top: 20px;">
-                <canvas id="canvas" width="2000" height="10000"></canvas>
+            <div id="canvas-div" class="graph-wrapper col-md-9 show-bar" style="margin-top: 20px;">
+                <canvas id="canvas" width="2000" height="10000" style="overflow-y: auto"></canvas>
             </div>
 
             <!--图元信息-->
@@ -135,7 +128,6 @@
                                 <option value="事实">事实</option>
                                 <option value="法条">法条</option>
                                 <option value="结论">结论</option>
-                                <option value="最终结论">最终结论</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -294,11 +286,8 @@
                 <div class="form-group">
                     <label for="node-edit-type-select">类型</label>
                     <select class="form-control" id="node-edit-type-select">
-                        <option value="证据">证据</option>
-                        <option value="事实">事实</option>
                         <option value="法条">法条</option>
                         <option value="结论">结论</option>
-                        <!--<option value="最终结论">最终结论</option>-->
                     </select>
                 </div>
                 <div class="form-group">
@@ -349,12 +338,13 @@
                 <li id="mindBtn" role="presentation"><a onclick="lawsMindBtn(false)">智能算法推荐</a></li>
             </ul>
             <div class="modal-body" style="max-height:300px; overflow: scroll;">
+                <p id="id_loading" style="margin: 0 auto;" hidden>数据加载中<span id="id_loading_dots"></span></p>
                 <div class="form-group">
                     <div id="laws">
                         <!--<div class="form-group">-->
-                            <!--<input type="checkbox" id="law-checkbox-1"/>-->
-                            <!--<a>中华人民共和国刑法_第六十七条</a>-->
-                            <!--<textarea class="form-control" style="display: none" disabled >犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。</textarea>-->
+                        <!--<input type="checkbox" id="law-checkbox-1"/>-->
+                        <!--<a>中华人民共和国刑法_第六十七条</a>-->
+                        <!--<textarea class="form-control" style="display: none" disabled >犯罪以后自动投案,如实供述自己的罪行的,是自首。对于自首的犯罪分子,可以从轻或者减轻处罚。其中,犯罪较轻的,可以免除处罚。</textarea>-->
                         <!--</div>-->
                     </div>
                 </div>

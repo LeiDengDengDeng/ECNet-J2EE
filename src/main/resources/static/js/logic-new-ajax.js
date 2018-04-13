@@ -1,11 +1,4 @@
 /**
- * Created by deng on 2018/4/4.
- */
-$(function () {
-    loadLogicNodes();
-});
-
-/**
  * 获取数据库中画布节点数据
  */
 function loadLogicNodes() {
@@ -49,21 +42,51 @@ function saveLogicNodes(data) {
  * @returns {Array}
  */
 function queryFrequencyLaws(detail) {
-    var laws = [];
+    var lawsDiv = $("#laws");
+    lawsDiv.empty();
+    $('#id_loading').show();
+    var timer = setInterval(loadingDots, 1000);
+
     $.ajax({
         type: "GET",
         url: "http://127.0.0.1:8088/frequency",
         async: false,
         data: {content: detail, limit: 20},
         success: function (data) {
+            var laws = [];
             for (var i = 0; i < data.length; i++) {
                 laws.push(data[i].law);
             }
+
+            $('#id_loading').hide();
+            clearInterval(timer);
+            prepareLawsDiv(lawsDiv, laws);
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.status);
             alert(XMLHttpRequest.readyState);
             alert(textStatus);
         }
     });
-    return laws;
+}
+
+function queryMindLaws(detail) {
+    var lawsDiv = $("#laws");
+    lawsDiv.empty();
+    $('#id_loading').show();
+    var timer = setInterval(loadingDots, 1000);
+
+    $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:5000/query",
+        data: {content: detail},
+        success: function (data) {
+            $('#id_loading').hide();
+            clearInterval(timer);
+            prepareLawsDiv(lawsDiv, eval(data));
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
 }

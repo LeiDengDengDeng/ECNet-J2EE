@@ -206,6 +206,12 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
     @Transactional
     @Override
+    public void deleteHeadAllByCaseId(int caseId) {
+        evidenceHeadDao.deleteAllByCaseID(caseId);
+    }
+
+    @Transactional
+    @Override
     public void deleteHeadAllByBody(int body_id) {
         List<Evidence_Head> heads = evidenceHeadDao.findAllByBodyid(body_id);
         for(int i = 0;i<heads.size();i++){
@@ -272,10 +278,11 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
-
+    @Transactional
     @Override
     public List<Evidence_Body> importEviByExcel(String filepath, int caseId,List<Evidence_Document> doculist) {
         deleteBodyAllByCaseId(caseId);
+        deleteHeadAllByCaseId(caseId);
 
         List<Evidence_Body> bodylist=new ArrayList<>();
 
@@ -305,18 +312,18 @@ public class EvidenceServiceImpl implements EvidenceService {
                     evidenceBody.setCaseID(caseId);
                     evidenceBody.setBody(text);
                     evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
-                    evidenceBody.setTrustByString(row.getCell(7).getStringCellValue());
+                    evidenceBody.setTrustByString(row.getCell(8).getStringCellValue());
                     evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(),doculist));
                     evidenceBody.setLogicNodeID(logicNodeId);
                     evidenceBody=save(evidenceBody);
                     bodylist.add(evidenceBody);
-                    deleteHeadAllByBody(evidenceBody.getId());
+                  //  deleteHeadAllByBody(evidenceBody.getId());
                 }
                 Evidence_Head evidence_head = new Evidence_Head();
                 evidence_head.setCaseID(caseId);
                 // 将区域编号的cell中的内容当做字符串处理
-                row.getCell(8).setCellType(HSSFCell.CELL_TYPE_STRING);
-                evidence_head.setHead(row.getCell(8).getStringCellValue());
+                row.getCell(9).setCellType(HSSFCell.CELL_TYPE_STRING);
+                evidence_head.setHead(row.getCell(9).getStringCellValue());
                 evidence_head.setBodyid(evidenceBody.getId());
                 evidence_head.setDocumentid(evidenceBody.getDocumentid());
                 System.out.println(evidence_head.toString());

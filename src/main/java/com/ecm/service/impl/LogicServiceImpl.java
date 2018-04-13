@@ -117,9 +117,19 @@ public class LogicServiceImpl implements LogicService {
     @Override
     @Transactional
     public void saveAllNodesInSameCase(int caseID, List<LogicNode> logicNodes) {
-        logicNodeDao.deleteByCaseID(caseID);
         for (LogicNode node : logicNodes) {
-            logicNodeDao.save(node);
+            LogicNode originNode = logicNodeDao.findByCaseIDAndNodeID(node.getCaseID(), node.getNodeID());
+            if (originNode == null) {
+                logicNodeDao.save(node);
+            } else {
+                originNode.setDetail(node.getDetail());
+                originNode.setTopic(node.getTopic());
+                originNode.setParentNodeID(node.getParentNodeID());
+                originNode.setType(node.getType());
+                originNode.setX(node.getX());
+                originNode.setY(node.getY());
+                logicNodeDao.save(originNode);
+            }
         }
     }
 
