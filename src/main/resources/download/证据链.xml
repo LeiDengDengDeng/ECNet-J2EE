@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:ecm xmlns:ns2="http://www.runoob.com">
     <evidences>
-        <evidence id="1141" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1563">
+        <evidence id="1235" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1893">
             <name></name>
             <content>2012年12月24日塘沽卫生监督所刘谨钊等人，给其送达了行政处罚决定书，内容是两项，第一是没收先行保存的药品、器械，并处以五千元的罚款，第二是改正违法行为。为了解决这个问题，其和朋友刘宏去了塘沽卫生监督所，找到了刘谨钊的办公室，并把刘谨钊叫到了办公室外面的走廊上，要了刘谨钊的电话。过了几天刘宏约刘谨钊在开发区芝麻街一个饭店吃了一顿饭，快吃完饭时刘宏给王燕打电话给她去结账，并告诉她给刘谨钊2000元钱，其同意了。刘宏把2000元给了刘谨钊。
 2013年5月份，刘谨钊又来到她的诊所进行检查或催缴罚款，其又通过刘宏给了刘谨钊2000元。刘谨钊收了这4000元钱之后，通过给刘宏打电话或者直接给王燕发信息等方式给她通风报信，大概意思就是要有检查的了，让她避一避，等检查过后再开门营业。但到后来刘谨钊还带人去她那检查，没收她的药品，其就不乐意了。这样我就同刘谨钊闹矛盾了，其让刘谨钊把钱退还给她，后来由刘宏出面，刘宏把这4000元退给了她。
@@ -11,77 +11,77 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3471" x="-1" y="-1">
+                <head id="4066" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3472" x="-1" y="-1">
+                <head id="4067" x="-1" y="-1">
                     <name></name>
                     <content>行政处罚</content>
                 </head>
-                <head id="3473" x="-1" y="-1">
+                <head id="4068" x="-1" y="-1">
                     <name></name>
                     <content>刘宏</content>
                 </head>
-                <head id="3474" x="-1" y="-1">
+                <head id="4069" x="-1" y="-1">
                     <name></name>
                     <content>开发区芝麻街一个饭店</content>
                 </head>
-                <head id="3475" x="-1" y="-1">
+                <head id="4070" x="-1" y="-1">
                     <name></name>
                     <content>2000元</content>
                 </head>
-                <head id="3476" x="-1" y="-1">
+                <head id="4071" x="-1" y="-1">
                     <name></name>
                     <content>2013年5月份</content>
                 </head>
-                <head id="3477" x="-1" y="-1">
+                <head id="4072" x="-1" y="-1">
                     <name></name>
                     <content>4000元</content>
                 </head>
-                <head id="3478" x="-1" y="-1">
+                <head id="4073" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3479" x="-1" y="-1">
+                <head id="4074" x="-1" y="-1">
                     <name></name>
                     <content>通风报信</content>
                 </head>
-                <head id="3480" x="-1" y="-1">
+                <head id="4075" x="-1" y="-1">
                     <name></name>
                     <content>退给了她</content>
                 </head>
-                <head id="3481" x="-1" y="-1">
+                <head id="4076" x="-1" y="-1">
                     <name></name>
                     <content>41456</content>
                 </head>
-                <head id="3482" x="-1" y="-1">
+                <head id="4077" x="-1" y="-1">
                     <name></name>
                     <content>李汝德</content>
                 </head>
-                <head id="3483" x="-1" y="-1">
+                <head id="4078" x="-1" y="-1">
                     <name></name>
                     <content>塘沽解放路永和豆浆店</content>
                 </head>
-                <head id="3484" x="-1" y="-1">
+                <head id="4079" x="-1" y="-1">
                     <name></name>
                     <content>1万元</content>
                 </head>
-                <head id="3485" x="-1" y="-1">
+                <head id="4080" x="-1" y="-1">
                     <name></name>
                     <content>100元</content>
                 </head>
-                <head id="3486" x="-1" y="-1">
+                <head id="4081" x="-1" y="-1">
                     <name></name>
                     <content>9900元</content>
                 </head>
-                <head id="3487" x="-1" y="-1">
+                <head id="4082" x="-1" y="-1">
                     <name></name>
                     <content>打电话、发信息</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1142" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1564">
+        <evidence id="1236" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1894">
             <name></name>
             <content>后来通过刘宏找了一个卫生所姓刘的，那人负责医疗卫生检查，每次都是他带人来查，王燕请他吃了饭并先后一共给了4000元钱，目的是为了不交罚款或少交罚款。刘宏具体怎么办的其不清楚，反正到最后姓刘的也没怎么管上用，就通过刘宏把这4000元又要回来了。后来大约是2013年6、7月份，王燕又给了姓刘的10000元。给钱时李汝德在场，是在塘沽金街永和豆浆见的面，当时其想给他买点烟，但是身上没带钱，就从那10000元里抽了100先用了，剩余的9900元装在了信封里给了姓刘的。之后姓刘的在检查前通知过王燕几回。</content>
             <type>证人证言</type>
@@ -89,57 +89,57 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3488" x="-1" y="-1">
+                <head id="4083" x="-1" y="-1">
                     <name></name>
                     <content>刘宏</content>
                 </head>
-                <head id="3489" x="-1" y="-1">
+                <head id="4084" x="-1" y="-1">
                     <name></name>
                     <content>姓刘的</content>
                 </head>
-                <head id="3490" x="-1" y="-1">
+                <head id="4085" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3491" x="-1" y="-1">
+                <head id="4086" x="-1" y="-1">
                     <name></name>
                     <content>4000元</content>
                 </head>
-                <head id="3492" x="-1" y="-1">
+                <head id="4087" x="-1" y="-1">
                     <name></name>
                     <content>要回来了</content>
                 </head>
-                <head id="3493" x="-1" y="-1">
+                <head id="4088" x="-1" y="-1">
                     <name></name>
                     <content>2013年6、7月份</content>
                 </head>
-                <head id="3494" x="-1" y="-1">
+                <head id="4089" x="-1" y="-1">
                     <name></name>
                     <content>10000元</content>
                 </head>
-                <head id="3495" x="-1" y="-1">
+                <head id="4090" x="-1" y="-1">
                     <name></name>
                     <content>李汝德</content>
                 </head>
-                <head id="3496" x="-1" y="-1">
+                <head id="4091" x="-1" y="-1">
                     <name></name>
                     <content>塘沽金街永和豆浆</content>
                 </head>
-                <head id="3497" x="-1" y="-1">
+                <head id="4092" x="-1" y="-1">
                     <name></name>
                     <content>100</content>
                 </head>
-                <head id="3498" x="-1" y="-1">
+                <head id="4093" x="-1" y="-1">
                     <name></name>
                     <content>9900元</content>
                 </head>
-                <head id="3499" x="-1" y="-1">
+                <head id="4094" x="-1" y="-1">
                     <name></name>
                     <content>通知</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1143" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1565">
+        <evidence id="1237" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1895">
             <name></name>
             <content>2012年冬天的一天，王燕给其打电话说塘沽卫生所负责检查非法行医的刘谨钊查到他们诊所了，想让她一起去找刘谨钊。当时她们一起到塘沽卫生监督所找到刘谨钊的办公室，把刘谨钊叫到外面的走廊上，其问刘谨钊有没有时间一起出来吃个饭，他同意了。过了几天，她们在开发区一家饭店吃的饭。当天吃饭前，王燕给了其2000元钱，吃饭的时候其就把钱拿出来给了刘谨钊，并说是王燕夫妇给的钱，希望以后可以不查他们的非法行医，刘谨钊就把这钱收下了。过了几个月，刘谨钊又去查王燕的诊所了，王燕又找到她，让其再帮忙给刘谨钊2000元钱，其就把这2000元给了刘谨钊。2013年5月份左右，王燕让其帮忙再把刘谨钊约出来，她们夫妻俩单独跟刘谨钊谈的。事后其听王燕说这次见面给了刘谨钊1万元，听说还是管用了一段时间，检查前刘谨钊会给王燕发短信通知，具体情况其不了解。</content>
             <type>证人证言</type>
@@ -147,41 +147,41 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3500" x="-1" y="-1">
+                <head id="4095" x="-1" y="-1">
                     <name></name>
                     <content>2012年冬天的一天</content>
                 </head>
-                <head id="3501" x="-1" y="-1">
+                <head id="4096" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3502" x="-1" y="-1">
+                <head id="4097" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3503" x="-1" y="-1">
+                <head id="4098" x="-1" y="-1">
                     <name></name>
                     <content>开发区一家饭店</content>
                 </head>
-                <head id="3504" x="-1" y="-1">
+                <head id="4099" x="-1" y="-1">
                     <name></name>
                     <content>2000元</content>
                 </head>
-                <head id="3505" x="-1" y="-1">
+                <head id="4100" x="-1" y="-1">
                     <name></name>
                     <content>2013年5月份左右</content>
                 </head>
-                <head id="3506" x="-1" y="-1">
+                <head id="4101" x="-1" y="-1">
                     <name></name>
                     <content>1万元</content>
                 </head>
-                <head id="3507" x="-1" y="-1">
+                <head id="4102" x="-1" y="-1">
                     <name></name>
                     <content>发短信通知</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1144" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1566">
+        <evidence id="1238" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1896">
             <name></name>
             <content>其是塘沽卫生监督所医疗机构管理科科长，其单位是一个参照公务员管理的事业单位。他们科负责对本区的医疗机构的日常监督检查管理，对无证行医的取缔打击。科里分三个小组，刘谨钊是一个组的组长，成员有刘谨钊和刘林森，张子悦。刘谨钊是2012年6月至2014年3月担任的组长，后来因工作需要调到别的部门了，他的身份是监督员。刘谨钊的小组负责工农村、杭州道、新河、北塘地区和塘沽坨地地区医疗机构有证、无证的医疗机构的执法监督以及其他一些工作。他们主要是日常监督检查、根据群众举报，领导交办等进行监督管理，对非法行医点进行复查等工作。对非法行医的人员，根据规定可以进行行政处罚，主要是罚款和没收药品和器具。
 2012年12月5日，根据群众举报，其带领刘谨钊小组成员到塘沽贻成尚北23栋102号进行监督检查，发现非法行医的王燕，对她进行了查处，罚款5千元。后来因为刘谨钊上报找不到人，就没有对王燕进行实际处罚。
@@ -191,41 +191,41 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3508" x="-1" y="-1">
+                <head id="4103" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3509" x="-1" y="-1">
+                <head id="4104" x="-1" y="-1">
                     <name></name>
                     <content>刘林森</content>
                 </head>
-                <head id="3510" x="-1" y="-1">
+                <head id="4105" x="-1" y="-1">
                     <name></name>
                     <content>张子悦</content>
                 </head>
-                <head id="3511" x="-1" y="-1">
+                <head id="4106" x="-1" y="-1">
                     <name></name>
                     <content>监督员</content>
                 </head>
-                <head id="3512" x="-1" y="-1">
+                <head id="4107" x="-1" y="-1">
                     <name></name>
                     <content>41248</content>
                 </head>
-                <head id="3513" x="-1" y="-1">
+                <head id="4108" x="-1" y="-1">
                     <name></name>
                     <content>沽贻成尚北23栋102号</content>
                 </head>
-                <head id="3514" x="-1" y="-1">
+                <head id="4109" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3515" x="-1" y="-1">
+                <head id="4110" x="-1" y="-1">
                     <name></name>
                     <content>查处</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1145" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1567">
+        <evidence id="1239" x="-1" y="-1" documentId="71" type="0" trust="1" logicNodeId="1897">
             <name></name>
             <content>2012年12月5曰、2013年8月20曰刘谨钊带着张子悦和他，对塘沽贻成尚北23栋102号非法行医的王燕进行了两次行政处罚，每次都是罚款5千元，其中第一次的罚款是他们回访后，发现王小欢不在，没法落实处罚，第二次是经依法催告后，已经申请人民法院强制执行。</content>
             <type>证人证言</type>
@@ -233,33 +233,33 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3516" x="-1" y="-1">
+                <head id="4111" x="-1" y="-1">
                     <name></name>
                     <content>41248</content>
                 </head>
-                <head id="3517" x="-1" y="-1">
+                <head id="4112" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3518" x="-1" y="-1">
+                <head id="4113" x="-1" y="-1">
                     <name></name>
                     <content>张子悦</content>
                 </head>
-                <head id="3519" x="-1" y="-1">
+                <head id="4114" x="-1" y="-1">
                     <name></name>
                     <content>沽贻成尚北23栋102号</content>
                 </head>
-                <head id="3520" x="-1" y="-1">
+                <head id="4115" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3521" x="-1" y="-1">
+                <head id="4116" x="-1" y="-1">
                     <name></name>
                     <content>行政处罚</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1146" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1568">
+        <evidence id="1240" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1898">
             <name></name>
             <content>内容与刘林森证言证实内容基本一致，能互相印证，其证言还证实了 2014年5月21曰、2014年6月间接群众举报对王燕非法行医的地点进行了查处，王燕因涉嫌非法行医被移送到了公安机关。</content>
             <type>证人证言</type>
@@ -267,17 +267,17 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3522" x="-1" y="-1">
+                <head id="4117" x="-1" y="-1">
                     <name></name>
                     <content>刘林森</content>
                 </head>
-                <head id="3523" x="-1" y="-1">
+                <head id="4118" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1147" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1569">
+        <evidence id="1241" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1899">
             <name></name>
             <content>其是从2012年开始行医的，在塘沽开办了一个叫天津市塘沽华仁中医药门诊部的个体诊所，诊所有执照，是合法经营。刘谨钊是塘沽卫生监督所的监督员，负责对他的诊所进行监督检查，主要是对门诊部医护人员资质进行检查。2013年9月份时，门诊部有一个叫常樱的大夫，她的中医执业医师的地点没有变更，不能在这行医，刘谨钊总来检查。2014年快过春节时，其为了和刘谨钊搞好关系，为了让刘谨钊多照顾他的门诊部，就给了他1000元现金。给完他钱后，他去查的次数变少了，也不总挑毛病了。</content>
             <type>证人证言</type>
@@ -285,25 +285,25 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3524" x="-1" y="-1">
+                <head id="4119" x="-1" y="-1">
                     <name></name>
                     <content>天津市塘沽华仁中医药门诊部</content>
                 </head>
-                <head id="3525" x="-1" y="-1">
+                <head id="4120" x="-1" y="-1">
                     <name></name>
                     <content>2014年快过春节时</content>
                 </head>
-                <head id="3526" x="-1" y="-1">
+                <head id="4121" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3527" x="-1" y="-1">
+                <head id="4122" x="-1" y="-1">
                     <name></name>
                     <content>1000元</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1148" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1570">
+        <evidence id="1242" x="-1" y="-1" documentId="72" type="0" trust="1" logicNodeId="1900">
             <name></name>
             <content>其开的诊所名称叫天津市滨海新区塘沽孟繁明中医诊所，刘谨钊是塘沽卫生监督所的监督员，负责对他的诊所进行监督检查。2013年时，有一次刘谨钊来其诊所检查，发现诊所没有护士（按规定诊所必须要有一名护士），就说诊所有问题。其当时就给他解释，说护士有事出去了。但其怕刘谨钊影响他的生意，也为了和刘谨钊搞好关系，在2013年中秋节前，其为了感谢刘谨钊的照顾,给了刘谨钊1000元的购物卡。刘谨钊收下东西后，其感觉更照顾他的诊所了。</content>
             <type>证人证言</type>
@@ -311,25 +311,25 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3528" x="-1" y="-1">
+                <head id="4123" x="-1" y="-1">
                     <name></name>
                     <content>天津市滨海新区塘沽孟繁明中医诊所</content>
                 </head>
-                <head id="3529" x="-1" y="-1">
+                <head id="4124" x="-1" y="-1">
                     <name></name>
                     <content>2013年中秋节前</content>
                 </head>
-                <head id="3530" x="-1" y="-1">
+                <head id="4125" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3531" x="-1" y="-1">
+                <head id="4126" x="-1" y="-1">
                     <name></name>
                     <content>1000元</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1149" x="-1" y="-1" documentId="72" type="5" trust="1" logicNodeId="1571">
+        <evidence id="1243" x="-1" y="-1" documentId="72" type="5" trust="1" logicNodeId="1901">
             <name></name>
             <content>其是天津市塘沽卫生监督所科员，牵头负责一个小组的工作，负责杭州道、新河、北塘、坨地等地方有证、无证行医等工作的监督检查。他们对非法行医进行检查一是根据群众举报，二是根据上级安排，其他还有自己在巡逻中发现的。
 有一个在塘沽贻成尚北小区非法行医的叫王燕的，2012年12月5日，他们根据群众举报，来到该处进行查处，发现王燕非法行医，对其进行了处罚。事后，王小欢就带着一个叫刘宏的女同志，到塘沽卫生监督所找到了刘谨钊，并要了其办公室的电话。过了几天刘宏打电话联系他出去坐坐，约在开发区一个饭馆。刘宏请他吃饭时说让其帮帮忙，别再查王燕的诊所了，也别再罚款了，并给了他2千元现金，说是王燕给的，其谦让几下就收下了。当他们从饭店出来的时候看见了王燕，王燕给其打了一辆出租车送他上的车。
@@ -343,97 +343,97 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3532" x="-1" y="-1">
+                <head id="4127" x="-1" y="-1">
                     <name></name>
                     <content>塘沽贻成尚北小区</content>
                 </head>
-                <head id="3533" x="-1" y="-1">
+                <head id="4128" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3534" x="-1" y="-1">
+                <head id="4129" x="-1" y="-1">
                     <name></name>
                     <content>41248</content>
                 </head>
-                <head id="3535" x="-1" y="-1">
+                <head id="4130" x="-1" y="-1">
                     <name></name>
                     <content>处罚</content>
                 </head>
-                <head id="3536" x="-1" y="-1">
+                <head id="4131" x="-1" y="-1">
                     <name></name>
                     <content>开发区一个饭馆</content>
                 </head>
-                <head id="3537" x="-1" y="-1">
+                <head id="4132" x="-1" y="-1">
                     <name></name>
                     <content>刘宏</content>
                 </head>
-                <head id="3538" x="-1" y="-1">
+                <head id="4133" x="-1" y="-1">
                     <name></name>
                     <content>2千元</content>
                 </head>
-                <head id="3539" x="-1" y="-1">
+                <head id="4134" x="-1" y="-1">
                     <name></name>
                     <content>2000元</content>
                 </head>
-                <head id="3540" x="-1" y="-1">
+                <head id="4135" x="-1" y="-1">
                     <name></name>
                     <content>退钱</content>
                 </head>
-                <head id="3541" x="-1" y="-1">
+                <head id="4136" x="-1" y="-1">
                     <name></name>
                     <content>塘沽永和豆浆饭馆</content>
                 </head>
-                <head id="3542" x="-1" y="-1">
+                <head id="4137" x="-1" y="-1">
                     <name></name>
                     <content>王燕的丈夫</content>
                 </head>
-                <head id="3543" x="-1" y="-1">
+                <head id="4138" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3544" x="-1" y="-1">
+                <head id="4139" x="-1" y="-1">
                     <name></name>
                     <content>10000元</content>
                 </head>
-                <head id="3545" x="-1" y="-1">
+                <head id="4140" x="-1" y="-1">
                     <name></name>
                     <content>100元</content>
                 </head>
-                <head id="3546" x="-1" y="-1">
+                <head id="4141" x="-1" y="-1">
                     <name></name>
                     <content>9900元</content>
                 </head>
-                <head id="3547" x="-1" y="-1">
+                <head id="4142" x="-1" y="-1">
                     <name></name>
                     <content>提前通知</content>
                 </head>
-                <head id="3548" x="-1" y="-1">
+                <head id="4143" x="-1" y="-1">
                     <name></name>
                     <content>刘玉光</content>
                 </head>
-                <head id="3549" x="-1" y="-1">
+                <head id="4144" x="-1" y="-1">
                     <name></name>
                     <content>塘沽华仁门诊部</content>
                 </head>
-                <head id="3550" x="-1" y="-1">
+                <head id="4145" x="-1" y="-1">
                     <name></name>
                     <content>1000元</content>
                 </head>
-                <head id="3551" x="-1" y="-1">
+                <head id="4146" x="-1" y="-1">
                     <name></name>
                     <content>孟繁明诊所</content>
                 </head>
-                <head id="3552" x="-1" y="-1">
+                <head id="4147" x="-1" y="-1">
                     <name></name>
                     <content>孟繁明</content>
                 </head>
-                <head id="3553" x="-1" y="-1">
+                <head id="4148" x="-1" y="-1">
                     <name></name>
                     <content>2013年中秋节前</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1150" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1572">
+        <evidence id="1244" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1902">
             <name></name>
             <content>天津市卫生局出具的参照公务员管理单位工作人员录用审批表、工作人员登记表、评定授予预备役军官军衔报告表、军队干部转业审批报告表、塘沽卫生监督所出具的主体证明、组织机构代码证证实了被告人刘谨钊的主体身份情况，其具有国家工作人员身份。</content>
             <type>书证</type>
@@ -441,17 +441,17 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3554" x="-1" y="-1">
+                <head id="4149" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3555" x="-1" y="-1">
+                <head id="4150" x="-1" y="-1">
                     <name></name>
                     <content>国家工作人员身份</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1151" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1573">
+        <evidence id="1245" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1903">
             <name></name>
             <content>天津市塘沽卫生监督所出具的书证：包括检查笔录、立案报告、行政处罚决定书、现场照片、结案报告、案件移送书等，证实该所对在塘沽贻成尚北23栋102号非法行医的王燕两次进行了行政处罚，出具了行政处罚决定书，王燕均未履行行政处罚决定。后因王燕继续非法行医，被移送公安塘沽分局处理。</content>
             <type>书证</type>
@@ -459,21 +459,21 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3556" x="-1" y="-1">
+                <head id="4151" x="-1" y="-1">
                     <name></name>
                     <content>塘沽贻成尚北23栋102号</content>
                 </head>
-                <head id="3557" x="-1" y="-1">
+                <head id="4152" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3558" x="-1" y="-1">
+                <head id="4153" x="-1" y="-1">
                     <name></name>
                     <content>行政处罚</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1152" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1574">
+        <evidence id="1246" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1904">
             <name></name>
             <content>天津市人民法院（2014)滨塘刑初字第488号刑事判决书证实，王燕因犯非法行医罪被天津市人民法院判处拘役四个月。</content>
             <type>书证</type>
@@ -481,13 +481,13 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3559" x="-1" y="-1">
+                <head id="4154" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1153" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1575">
+        <evidence id="1247" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1905">
             <name></name>
             <content>个体工商户营业执照、医疗机构执业许可证、医师资格证书、医师执业证书证实了塘沽华仁中医药门诊部、天津滨海塘沽孟繁明中医诊所的法人代表、经营资质、其坐诊大夫的相关资质等情况。</content>
             <type>书证</type>
@@ -495,17 +495,17 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3560" x="-1" y="-1">
+                <head id="4155" x="-1" y="-1">
                     <name></name>
                     <content>塘沽华仁中医药门诊部</content>
                 </head>
-                <head id="3561" x="-1" y="-1">
+                <head id="4156" x="-1" y="-1">
                     <name></name>
                     <content>天津滨海塘沽孟繁明中医诊所</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1154" x="-1" y="-1" documentId="72" type="5" trust="1" logicNodeId="1576">
+        <evidence id="1248" x="-1" y="-1" documentId="72" type="5" trust="1" logicNodeId="1906">
             <name></name>
             <content>最高人民检察院司法鉴定中心对涉案的金立GN600手机一部（刘谨钊所有，号码15620061079)、三星GT-S6818手机一部（王燕所有，号码15222522722)中的通话记录、短信、通讯录等内容进行恢复后出具的电子证据检验报告证实了被告人刘谨钊与王燕的短信联系和通话情况。</content>
             <type>其他</type>
@@ -513,21 +513,21 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3562" x="-1" y="-1">
+                <head id="4157" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3563" x="-1" y="-1">
+                <head id="4158" x="-1" y="-1">
                     <name></name>
                     <content>王燕</content>
                 </head>
-                <head id="3564" x="-1" y="-1">
+                <head id="4159" x="-1" y="-1">
                     <name></name>
                     <content>短信联系和通话情况</content>
                 </head>
             </heads>
         </evidence>
-        <evidence id="1155" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1577">
+        <evidence id="1249" x="-1" y="-1" documentId="72" type="2" trust="1" logicNodeId="1907">
             <name></name>
             <content>天津市塘沽人民检察院出具的收缴赃款凭证证实，被告人刘谨钊于2014年7月17日退缴赃款人民币二万元。另有侦查机关出具的案件来源、抓获经过、情况说明材料在案佐证。</content>
             <type>书证</type>
@@ -535,15 +535,15 @@
             <reason></reason>
             <trust>采信</trust>
             <heads>
-                <head id="3565" x="-1" y="-1">
+                <head id="4160" x="-1" y="-1">
                     <name></name>
                     <content>刘谨钊</content>
                 </head>
-                <head id="3566" x="-1" y="-1">
+                <head id="4161" x="-1" y="-1">
                     <name></name>
                     <content>退缴赃款</content>
                 </head>
-                <head id="3567" x="-1" y="-1">
+                <head id="4162" x="-1" y="-1">
                     <name></name>
                     <content>二万元</content>
                 </head>
@@ -551,282 +551,150 @@
         </evidence>
     </evidences>
     <facts>
-        <fact id="25" x="950" y="1290" logicNodeId="1238">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="26" x="950" y="2935" logicNodeId="1265">
-            <name>事实节点27</name>
-            <content>事实节点27</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="27" x="950" y="3005" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="28" x="950" y="3880" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="29" x="950" y="4720" logicNodeId="-1">
-            <name>收受9900元
-</name>
-            <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="30" x="950" y="5280" logicNodeId="-1">
-            <name>其他受贿情节
-</name>
-            <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="31" x="950" y="6050" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="32" x="950" y="6890" logicNodeId="-1">
-            <name>收受9900元
-</name>
-            <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="33" x="950" y="7450" logicNodeId="-1">
-            <name>其他受贿情节
-</name>
-            <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="34" x="950" y="8220" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="35" x="950" y="9060" logicNodeId="-1">
-            <name>收受9900元
-</name>
-            <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="36" x="950" y="9620" logicNodeId="-1">
-            <name>其他受贿情节
-</name>
-            <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="37" x="0" y="0" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="38" x="0" y="0" logicNodeId="-1">
-            <name>收受9900元
-</name>
-            <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="39" x="0" y="0" logicNodeId="-1">
-            <name>其他受贿情节
-</name>
-            <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="40" x="0" y="0" logicNodeId="-1">
-            <name>收受贿赂4000元后退回
-
-</name>
-            <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="41" x="0" y="0" logicNodeId="-1">
-            <name>收受9900元
-</name>
-            <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="42" x="0" y="0" logicNodeId="-1">
-            <name>其他受贿情节
-</name>
-            <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
-            <type></type>
-            <joints/>
-        </fact>
-        <fact id="43" x="0" y="0" logicNodeId="-1">
+        <fact id="63" x="0" y="0" logicNodeId="-1">
             <name>收受贿赂4000元后退回
 
 </name>
             <content>上诉人刘谨钊于2012年12月至2014年初期间，利用天津市滨海新区塘沽卫生监督所医疗机构管理科监督员、组长的职务上便利，通过刘宏接收宴请并先后二次收受非法行医人王燕贿赂共计4000元，后王燕因不满刘谨钊经常检查诊所，通过刘宏要回了4000元。</content>
             <type></type>
             <joints>
-                <joint id="585" x="0" y="0">
+                <joint id="897" x="0" y="0">
                     <name></name>
                     <content>刘谨钊</content>
                 </joint>
-                <joint id="586" x="0" y="0">
+                <joint id="898" x="0" y="0">
                     <name></name>
                     <content>行政处罚</content>
                 </joint>
-                <joint id="587" x="0" y="0">
+                <joint id="899" x="0" y="0">
                     <name></name>
                     <content>刘宏</content>
                 </joint>
-                <joint id="588" x="0" y="0">
+                <joint id="900" x="0" y="0">
                     <name></name>
                     <content>开发区一个饭店</content>
                 </joint>
-                <joint id="589" x="0" y="0">
+                <joint id="901" x="0" y="0">
                     <name></name>
                     <content>2000元</content>
                 </joint>
-                <joint id="590" x="0" y="0">
+                <joint id="902" x="0" y="0">
                     <name></name>
                     <content>2013年5月份</content>
                 </joint>
-                <joint id="591" x="0" y="0">
+                <joint id="903" x="0" y="0">
                     <name></name>
                     <content>4000元</content>
                 </joint>
-                <joint id="592" x="0" y="0">
+                <joint id="904" x="0" y="0">
                     <name></name>
                     <content>王燕</content>
                 </joint>
-                <joint id="593" x="0" y="0">
+                <joint id="905" x="0" y="0">
                     <name></name>
                     <content>退还</content>
                 </joint>
-                <joint id="594" x="0" y="0">
+                <joint id="906" x="0" y="0">
                     <name></name>
                     <content>41248</content>
                 </joint>
-                <joint id="595" x="0" y="0">
+                <joint id="907" x="0" y="0">
                     <name></name>
                     <content>刘林森</content>
                 </joint>
-                <joint id="596" x="0" y="0">
+                <joint id="908" x="0" y="0">
                     <name></name>
                     <content>张子悦</content>
                 </joint>
-                <joint id="597" x="0" y="0">
+                <joint id="909" x="0" y="0">
                     <name></name>
                     <content>国家工作人员</content>
                 </joint>
-                <joint id="598" x="0" y="0">
+                <joint id="910" x="0" y="0">
                     <name></name>
                     <content>塘沽贻成尚北23栋102号</content>
                 </joint>
-                <joint id="599" x="0" y="0">
+                <joint id="911" x="0" y="0">
                     <name></name>
                     <content></content>
                 </joint>
             </joints>
         </fact>
-        <fact id="44" x="0" y="0" logicNodeId="-1">
+        <fact id="64" x="0" y="0" logicNodeId="-1">
             <name>收受9900元
 </name>
             <content>2013年7月间，上诉人刘谨钊再次收受王燕钱款9900元。上诉人刘谨钊收受贿赂后，为王燕逃避检查事先通风报信。</content>
             <type></type>
             <joints>
-                <joint id="600" x="0" y="0">
+                <joint id="912" x="0" y="0">
                     <name></name>
                     <content>41456</content>
                 </joint>
-                <joint id="601" x="0" y="0">
+                <joint id="913" x="0" y="0">
                     <name></name>
                     <content>李汝德</content>
                 </joint>
-                <joint id="602" x="0" y="0">
+                <joint id="914" x="0" y="0">
                     <name></name>
                     <content>塘沽解放路永和豆浆店</content>
                 </joint>
-                <joint id="603" x="0" y="0">
+                <joint id="915" x="0" y="0">
                     <name></name>
                     <content>刘谨钊</content>
                 </joint>
-                <joint id="604" x="0" y="0">
+                <joint id="916" x="0" y="0">
                     <name></name>
                     <content>10000元</content>
                 </joint>
-                <joint id="605" x="0" y="0">
+                <joint id="917" x="0" y="0">
                     <name></name>
                     <content>100元</content>
                 </joint>
-                <joint id="606" x="0" y="0">
+                <joint id="918" x="0" y="0">
                     <name></name>
                     <content>9900元</content>
                 </joint>
-                <joint id="607" x="0" y="0">
+                <joint id="919" x="0" y="0">
                     <name></name>
                     <content>通风报信</content>
                 </joint>
-                <joint id="608" x="0" y="0">
+                <joint id="920" x="0" y="0">
                     <name></name>
                     <content>王燕</content>
                 </joint>
             </joints>
         </fact>
-        <fact id="45" x="0" y="0" logicNodeId="-1">
+        <fact id="65" x="0" y="0" logicNodeId="-1">
             <name>其他受贿情节
 </name>
             <content>上诉人刘谨钊主动交代了其在工作中收受开办医疗诊所的刘玉光、孟繁明钱、卡共计价值人民币2000元。案发后，上诉人刘谨钊已退缴人民币20000元。</content>
             <type></type>
             <joints>
-                <joint id="609" x="0" y="0">
+                <joint id="921" x="0" y="0">
                     <name></name>
                     <content>天津市塘沽华仁中医药门诊部</content>
                 </joint>
-                <joint id="610" x="0" y="0">
+                <joint id="922" x="0" y="0">
                     <name></name>
                     <content>刘谨钊</content>
                 </joint>
-                <joint id="611" x="0" y="0">
+                <joint id="923" x="0" y="0">
                     <name></name>
                     <content>1000元</content>
                 </joint>
-                <joint id="612" x="0" y="0">
+                <joint id="924" x="0" y="0">
                     <name></name>
                     <content>天津市滨海新区塘沽孟繁明中医诊所</content>
                 </joint>
-                <joint id="613" x="0" y="0">
+                <joint id="925" x="0" y="0">
                     <name></name>
                     <content>2013年中秋节前</content>
                 </joint>
-                <joint id="614" x="0" y="0">
+                <joint id="926" x="0" y="0">
                     <name></name>
                     <content>退缴赃款</content>
                 </joint>
-                <joint id="615" x="0" y="0">
+                <joint id="927" x="0" y="0">
                     <name></name>
                     <content>二万元</content>
                 </joint>
@@ -836,660 +704,660 @@
     <relations>
         <relation>
             <arrows>
-                <arrow id="1397">
+                <arrow id="1949">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1400">
+                <arrow id="1952">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1404">
+                <arrow id="1956">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1407">
+                <arrow id="1959">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1410">
+                <arrow id="1962">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1414">
+                <arrow id="1966">
                     <name></name>
                     <content></content>
-                    <head id="3489" x="-1" y="-1">
+                    <head id="4084" x="-1" y="-1">
                         <name></name>
                         <content>姓刘的</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1418">
+                <arrow id="1970">
                     <name></name>
                     <content></content>
-                    <head id="3489" x="-1" y="-1">
+                    <head id="4084" x="-1" y="-1">
                         <name></name>
                         <content>姓刘的</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1423">
+                <arrow id="1975">
                     <name></name>
                     <content></content>
-                    <head id="3502" x="-1" y="-1">
+                    <head id="4097" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1427">
+                <arrow id="1979">
                     <name></name>
                     <content></content>
-                    <head id="3502" x="-1" y="-1">
+                    <head id="4097" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1429">
+                <arrow id="1981">
                     <name></name>
                     <content></content>
-                    <head id="3502" x="-1" y="-1">
+                    <head id="4097" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1431">
+                <arrow id="1983">
                     <name></name>
                     <content></content>
-                    <head id="3508" x="-1" y="-1">
+                    <head id="4103" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1436">
+                <arrow id="1988">
                     <name></name>
                     <content></content>
-                    <head id="3508" x="-1" y="-1">
+                    <head id="4103" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1441">
+                <arrow id="1993">
                     <name></name>
                     <content></content>
-                    <head id="3517" x="-1" y="-1">
+                    <head id="4112" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1145</bodyID>
+                        <bodyID>1239</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1457">
+                <arrow id="2009">
                     <name></name>
                     <content></content>
-                    <head id="3554" x="-1" y="-1">
+                    <head id="4149" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1150</bodyID>
+                        <bodyID>1244</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="585" x="0" y="0">
+            <joint id="897" x="0" y="0">
                 <name></name>
                 <content>刘谨钊</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1398">
+                <arrow id="1950">
                     <name></name>
                     <content></content>
-                    <head id="3472" x="-1" y="-1">
+                    <head id="4067" x="-1" y="-1">
                         <name></name>
                         <content>行政处罚</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1439">
+                <arrow id="1991">
                     <name></name>
                     <content></content>
-                    <head id="3515" x="-1" y="-1">
+                    <head id="4110" x="-1" y="-1">
                         <name></name>
                         <content>查处</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1445">
+                <arrow id="1997">
                     <name></name>
                     <content></content>
-                    <head id="3521" x="-1" y="-1">
+                    <head id="4116" x="-1" y="-1">
                         <name></name>
                         <content>行政处罚</content>
-                        <bodyID>1145</bodyID>
+                        <bodyID>1239</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1451">
+                <arrow id="2003">
                     <name></name>
                     <content></content>
-                    <head id="3535" x="-1" y="-1">
+                    <head id="4130" x="-1" y="-1">
                         <name></name>
                         <content>处罚</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1461">
+                <arrow id="2013">
                     <name></name>
                     <content></content>
-                    <head id="3558" x="-1" y="-1">
+                    <head id="4153" x="-1" y="-1">
                         <name></name>
                         <content>行政处罚</content>
-                        <bodyID>1151</bodyID>
+                        <bodyID>1245</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="586" x="0" y="0">
+            <joint id="898" x="0" y="0">
                 <name></name>
                 <content>行政处罚</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1399">
+                <arrow id="1951">
                     <name></name>
                     <content></content>
-                    <head id="3473" x="-1" y="-1">
+                    <head id="4068" x="-1" y="-1">
                         <name></name>
                         <content>刘宏</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1405">
+                <arrow id="1957">
                     <name></name>
                     <content></content>
-                    <head id="3473" x="-1" y="-1">
+                    <head id="4068" x="-1" y="-1">
                         <name></name>
                         <content>刘宏</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1413">
+                <arrow id="1965">
                     <name></name>
                     <content></content>
-                    <head id="3488" x="-1" y="-1">
+                    <head id="4083" x="-1" y="-1">
                         <name></name>
                         <content>刘宏</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1417">
+                <arrow id="1969">
                     <name></name>
                     <content></content>
-                    <head id="3488" x="-1" y="-1">
+                    <head id="4083" x="-1" y="-1">
                         <name></name>
                         <content>刘宏</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1453">
+                <arrow id="2005">
                     <name></name>
                     <content></content>
-                    <head id="3537" x="-1" y="-1">
+                    <head id="4132" x="-1" y="-1">
                         <name></name>
                         <content>刘宏</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="587" x="0" y="0">
+            <joint id="899" x="0" y="0">
                 <name></name>
                 <content>刘宏</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1401">
+                <arrow id="1953">
                     <name></name>
                     <content></content>
-                    <head id="3474" x="-1" y="-1">
+                    <head id="4069" x="-1" y="-1">
                         <name></name>
                         <content>开发区芝麻街一个饭店</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1424">
+                <arrow id="1976">
                     <name></name>
                     <content></content>
-                    <head id="3503" x="-1" y="-1">
+                    <head id="4098" x="-1" y="-1">
                         <name></name>
                         <content>开发区一家饭店</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1452">
+                <arrow id="2004">
                     <name></name>
                     <content></content>
-                    <head id="3536" x="-1" y="-1">
+                    <head id="4131" x="-1" y="-1">
                         <name></name>
                         <content>开发区一个饭馆</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="588" x="0" y="0">
+            <joint id="900" x="0" y="0">
                 <name></name>
                 <content>开发区一个饭店</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1402">
+                <arrow id="1954">
                     <name></name>
                     <content></content>
-                    <head id="3475" x="-1" y="-1">
+                    <head id="4070" x="-1" y="-1">
                         <name></name>
                         <content>2000元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1406">
+                <arrow id="1958">
                     <name></name>
                     <content></content>
-                    <head id="3475" x="-1" y="-1">
+                    <head id="4070" x="-1" y="-1">
                         <name></name>
                         <content>2000元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1426">
+                <arrow id="1978">
                     <name></name>
                     <content></content>
-                    <head id="3504" x="-1" y="-1">
+                    <head id="4099" x="-1" y="-1">
                         <name></name>
                         <content>2000元</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1430">
+                <arrow id="1982">
                     <name></name>
                     <content></content>
-                    <head id="3504" x="-1" y="-1">
+                    <head id="4099" x="-1" y="-1">
                         <name></name>
                         <content>2000元</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1454">
+                <arrow id="2006">
                     <name></name>
                     <content></content>
-                    <head id="3538" x="-1" y="-1">
+                    <head id="4133" x="-1" y="-1">
                         <name></name>
                         <content>2千元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1455">
+                <arrow id="2007">
                     <name></name>
                     <content></content>
-                    <head id="3539" x="-1" y="-1">
+                    <head id="4134" x="-1" y="-1">
                         <name></name>
                         <content>2000元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="589" x="0" y="0">
+            <joint id="901" x="0" y="0">
                 <name></name>
                 <content>2000元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1403">
+                <arrow id="1955">
                     <name></name>
                     <content></content>
-                    <head id="3476" x="-1" y="-1">
+                    <head id="4071" x="-1" y="-1">
                         <name></name>
                         <content>2013年5月份</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="590" x="0" y="0">
+            <joint id="902" x="0" y="0">
                 <name></name>
                 <content>2013年5月份</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1408">
+                <arrow id="1960">
                     <name></name>
                     <content></content>
-                    <head id="3477" x="-1" y="-1">
+                    <head id="4072" x="-1" y="-1">
                         <name></name>
                         <content>4000元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1411">
+                <arrow id="1963">
                     <name></name>
                     <content></content>
-                    <head id="3477" x="-1" y="-1">
+                    <head id="4072" x="-1" y="-1">
                         <name></name>
                         <content>4000元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1416">
+                <arrow id="1968">
                     <name></name>
                     <content></content>
-                    <head id="3491" x="-1" y="-1">
+                    <head id="4086" x="-1" y="-1">
                         <name></name>
                         <content>4000元</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1419">
+                <arrow id="1971">
                     <name></name>
                     <content></content>
-                    <head id="3491" x="-1" y="-1">
+                    <head id="4086" x="-1" y="-1">
                         <name></name>
                         <content>4000元</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="591" x="0" y="0">
+            <joint id="903" x="0" y="0">
                 <name></name>
                 <content>4000元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1409">
+                <arrow id="1961">
                     <name></name>
                     <content></content>
-                    <head id="3478" x="-1" y="-1">
+                    <head id="4073" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1415">
+                <arrow id="1967">
                     <name></name>
                     <content></content>
-                    <head id="3490" x="-1" y="-1">
+                    <head id="4085" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1422">
+                <arrow id="1974">
                     <name></name>
                     <content></content>
-                    <head id="3501" x="-1" y="-1">
+                    <head id="4096" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1425">
+                <arrow id="1977">
                     <name></name>
                     <content></content>
-                    <head id="3501" x="-1" y="-1">
+                    <head id="4096" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1428">
+                <arrow id="1980">
                     <name></name>
                     <content></content>
-                    <head id="3501" x="-1" y="-1">
+                    <head id="4096" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1438">
+                <arrow id="1990">
                     <name></name>
                     <content></content>
-                    <head id="3514" x="-1" y="-1">
+                    <head id="4109" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1444">
+                <arrow id="1996">
                     <name></name>
                     <content></content>
-                    <head id="3520" x="-1" y="-1">
+                    <head id="4115" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1145</bodyID>
+                        <bodyID>1239</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1447">
+                <arrow id="1999">
                     <name></name>
                     <content></content>
-                    <head id="3523" x="-1" y="-1">
+                    <head id="4118" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1146</bodyID>
+                        <bodyID>1240</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1449">
+                <arrow id="2001">
                     <name></name>
                     <content></content>
-                    <head id="3533" x="-1" y="-1">
+                    <head id="4128" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1460">
+                <arrow id="2012">
                     <name></name>
                     <content></content>
-                    <head id="3557" x="-1" y="-1">
+                    <head id="4152" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1151</bodyID>
+                        <bodyID>1245</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1462">
+                <arrow id="2014">
                     <name></name>
                     <content></content>
-                    <head id="3559" x="-1" y="-1">
+                    <head id="4154" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1152</bodyID>
+                        <bodyID>1246</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="592" x="0" y="0">
+            <joint id="904" x="0" y="0">
                 <name></name>
                 <content>王燕</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1412">
+                <arrow id="1964">
                     <name></name>
                     <content></content>
-                    <head id="3480" x="-1" y="-1">
+                    <head id="4075" x="-1" y="-1">
                         <name></name>
                         <content>退给了她</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1420">
+                <arrow id="1972">
                     <name></name>
                     <content></content>
-                    <head id="3492" x="-1" y="-1">
+                    <head id="4087" x="-1" y="-1">
                         <name></name>
                         <content>要回来了</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1456">
+                <arrow id="2008">
                     <name></name>
                     <content></content>
-                    <head id="3540" x="-1" y="-1">
+                    <head id="4135" x="-1" y="-1">
                         <name></name>
                         <content>退钱</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="593" x="0" y="0">
+            <joint id="905" x="0" y="0">
                 <name></name>
                 <content>退还</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1421">
+                <arrow id="1973">
                     <name></name>
                     <content></content>
-                    <head id="3500" x="-1" y="-1">
+                    <head id="4095" x="-1" y="-1">
                         <name></name>
                         <content>2012年冬天的一天</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1435">
+                <arrow id="1987">
                     <name></name>
                     <content></content>
-                    <head id="3512" x="-1" y="-1">
+                    <head id="4107" x="-1" y="-1">
                         <name></name>
                         <content>41248</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1440">
+                <arrow id="1992">
                     <name></name>
                     <content></content>
-                    <head id="3516" x="-1" y="-1">
+                    <head id="4111" x="-1" y="-1">
                         <name></name>
                         <content>41248</content>
-                        <bodyID>1145</bodyID>
+                        <bodyID>1239</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1450">
+                <arrow id="2002">
                     <name></name>
                     <content></content>
-                    <head id="3534" x="-1" y="-1">
+                    <head id="4129" x="-1" y="-1">
                         <name></name>
                         <content>41248</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="594" x="0" y="0">
+            <joint id="906" x="0" y="0">
                 <name></name>
                 <content>41248</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1432">
+                <arrow id="1984">
                     <name></name>
                     <content></content>
-                    <head id="3509" x="-1" y="-1">
+                    <head id="4104" x="-1" y="-1">
                         <name></name>
                         <content>刘林森</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1446">
+                <arrow id="1998">
                     <name></name>
                     <content></content>
-                    <head id="3522" x="-1" y="-1">
+                    <head id="4117" x="-1" y="-1">
                         <name></name>
                         <content>刘林森</content>
-                        <bodyID>1146</bodyID>
+                        <bodyID>1240</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="595" x="0" y="0">
+            <joint id="907" x="0" y="0">
                 <name></name>
                 <content>刘林森</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1433">
+                <arrow id="1985">
                     <name></name>
                     <content></content>
-                    <head id="3510" x="-1" y="-1">
+                    <head id="4105" x="-1" y="-1">
                         <name></name>
                         <content>张子悦</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1442">
+                <arrow id="1994">
                     <name></name>
                     <content></content>
-                    <head id="3518" x="-1" y="-1">
+                    <head id="4113" x="-1" y="-1">
                         <name></name>
                         <content>张子悦</content>
-                        <bodyID>1145</bodyID>
+                        <bodyID>1239</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="596" x="0" y="0">
+            <joint id="908" x="0" y="0">
                 <name></name>
                 <content>张子悦</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1434">
+                <arrow id="1986">
                     <name></name>
                     <content></content>
-                    <head id="3511" x="-1" y="-1">
+                    <head id="4106" x="-1" y="-1">
                         <name></name>
                         <content>监督员</content>
-                        <bodyID>1144</bodyID>
+                        <bodyID>1238</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="597" x="0" y="0">
+            <joint id="909" x="0" y="0">
                 <name></name>
                 <content>国家工作人员</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1437">
+                <arrow id="1989">
                     <name></name>
                     <content></content>
                     <head id="-1" x="-1" y="-1">
@@ -1498,7 +1366,7 @@
                         <bodyID>-1</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1443">
+                <arrow id="1995">
                     <name></name>
                     <content></content>
                     <head id="-1" x="-1" y="-1">
@@ -1507,648 +1375,648 @@
                         <bodyID>-1</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1448">
+                <arrow id="2000">
                     <name></name>
                     <content></content>
-                    <head id="3532" x="-1" y="-1">
+                    <head id="4127" x="-1" y="-1">
                         <name></name>
                         <content>塘沽贻成尚北小区</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1459">
+                <arrow id="2011">
                     <name></name>
                     <content></content>
-                    <head id="3556" x="-1" y="-1">
+                    <head id="4151" x="-1" y="-1">
                         <name></name>
                         <content>塘沽贻成尚北23栋102号</content>
-                        <bodyID>1151</bodyID>
+                        <bodyID>1245</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="598" x="0" y="0">
+            <joint id="910" x="0" y="0">
                 <name></name>
                 <content>塘沽贻成尚北23栋102号</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1458">
+                <arrow id="2010">
                     <name></name>
                     <content></content>
-                    <head id="3555" x="-1" y="-1">
+                    <head id="4150" x="-1" y="-1">
                         <name></name>
                         <content>国家工作人员身份</content>
-                        <bodyID>1150</bodyID>
+                        <bodyID>1244</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="599" x="0" y="0">
+            <joint id="911" x="0" y="0">
                 <name></name>
                 <content></content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1463">
+                <arrow id="2015">
                     <name></name>
                     <content></content>
-                    <head id="3481" x="-1" y="-1">
+                    <head id="4076" x="-1" y="-1">
                         <name></name>
                         <content>41456</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1472">
+                <arrow id="2024">
                     <name></name>
                     <content></content>
-                    <head id="3493" x="-1" y="-1">
+                    <head id="4088" x="-1" y="-1">
                         <name></name>
                         <content>2013年6、7月份</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1483">
+                <arrow id="2035">
                     <name></name>
                     <content></content>
-                    <head id="3505" x="-1" y="-1">
+                    <head id="4100" x="-1" y="-1">
                         <name></name>
                         <content>2013年5月份左右</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="600" x="0" y="0">
+            <joint id="912" x="0" y="0">
                 <name></name>
                 <content>41456</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1464">
+                <arrow id="2016">
                     <name></name>
                     <content></content>
-                    <head id="3482" x="-1" y="-1">
+                    <head id="4077" x="-1" y="-1">
                         <name></name>
                         <content>李汝德</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1474">
+                <arrow id="2026">
                     <name></name>
                     <content></content>
-                    <head id="3495" x="-1" y="-1">
+                    <head id="4090" x="-1" y="-1">
                         <name></name>
                         <content>李汝德</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1489">
+                <arrow id="2041">
                     <name></name>
                     <content></content>
-                    <head id="3542" x="-1" y="-1">
+                    <head id="4137" x="-1" y="-1">
                         <name></name>
                         <content>王燕的丈夫</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="601" x="0" y="0">
+            <joint id="913" x="0" y="0">
                 <name></name>
                 <content>李汝德</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1465">
+                <arrow id="2017">
                     <name></name>
                     <content></content>
-                    <head id="3483" x="-1" y="-1">
+                    <head id="4078" x="-1" y="-1">
                         <name></name>
                         <content>塘沽解放路永和豆浆店</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1475">
+                <arrow id="2027">
                     <name></name>
                     <content></content>
-                    <head id="3496" x="-1" y="-1">
+                    <head id="4091" x="-1" y="-1">
                         <name></name>
                         <content>塘沽金街永和豆浆</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1488">
+                <arrow id="2040">
                     <name></name>
                     <content></content>
-                    <head id="3541" x="-1" y="-1">
+                    <head id="4136" x="-1" y="-1">
                         <name></name>
                         <content>塘沽永和豆浆饭馆</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="602" x="0" y="0">
+            <joint id="914" x="0" y="0">
                 <name></name>
                 <content>塘沽解放路永和豆浆店</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1466">
+                <arrow id="2018">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1470">
+                <arrow id="2022">
                     <name></name>
                     <content></content>
-                    <head id="3471" x="-1" y="-1">
+                    <head id="4066" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1479">
+                <arrow id="2031">
                     <name></name>
                     <content></content>
-                    <head id="3489" x="-1" y="-1">
+                    <head id="4084" x="-1" y="-1">
                         <name></name>
                         <content>姓刘的</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1480">
+                <arrow id="2032">
                     <name></name>
                     <content></content>
-                    <head id="3489" x="-1" y="-1">
+                    <head id="4084" x="-1" y="-1">
                         <name></name>
                         <content>姓刘的</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1485">
+                <arrow id="2037">
                     <name></name>
                     <content></content>
-                    <head id="3502" x="-1" y="-1">
+                    <head id="4097" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1491">
+                <arrow id="2043">
                     <name></name>
                     <content></content>
-                    <head id="3543" x="-1" y="-1">
+                    <head id="4138" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1496">
+                <arrow id="2048">
                     <name></name>
                     <content></content>
-                    <head id="3562" x="-1" y="-1">
+                    <head id="4157" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1154</bodyID>
+                        <bodyID>1248</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="603" x="0" y="0">
+            <joint id="915" x="0" y="0">
                 <name></name>
                 <content>刘谨钊</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1467">
+                <arrow id="2019">
                     <name></name>
                     <content></content>
-                    <head id="3484" x="-1" y="-1">
+                    <head id="4079" x="-1" y="-1">
                         <name></name>
                         <content>1万元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1473">
+                <arrow id="2025">
                     <name></name>
                     <content></content>
-                    <head id="3494" x="-1" y="-1">
+                    <head id="4089" x="-1" y="-1">
                         <name></name>
                         <content>10000元</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1476">
+                <arrow id="2028">
                     <name></name>
                     <content></content>
-                    <head id="3494" x="-1" y="-1">
+                    <head id="4089" x="-1" y="-1">
                         <name></name>
                         <content>10000元</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1486">
+                <arrow id="2038">
                     <name></name>
                     <content></content>
-                    <head id="3506" x="-1" y="-1">
+                    <head id="4101" x="-1" y="-1">
                         <name></name>
                         <content>1万元</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1492">
+                <arrow id="2044">
                     <name></name>
                     <content></content>
-                    <head id="3544" x="-1" y="-1">
+                    <head id="4139" x="-1" y="-1">
                         <name></name>
                         <content>10000元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="604" x="0" y="0">
+            <joint id="916" x="0" y="0">
                 <name></name>
                 <content>10000元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1468">
+                <arrow id="2020">
                     <name></name>
                     <content></content>
-                    <head id="3485" x="-1" y="-1">
+                    <head id="4080" x="-1" y="-1">
                         <name></name>
                         <content>100元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1477">
+                <arrow id="2029">
                     <name></name>
                     <content></content>
-                    <head id="3497" x="-1" y="-1">
+                    <head id="4092" x="-1" y="-1">
                         <name></name>
                         <content>100</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1493">
+                <arrow id="2045">
                     <name></name>
                     <content></content>
-                    <head id="3545" x="-1" y="-1">
+                    <head id="4140" x="-1" y="-1">
                         <name></name>
                         <content>100元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="605" x="0" y="0">
+            <joint id="917" x="0" y="0">
                 <name></name>
                 <content>100元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1469">
+                <arrow id="2021">
                     <name></name>
                     <content></content>
-                    <head id="3486" x="-1" y="-1">
+                    <head id="4081" x="-1" y="-1">
                         <name></name>
                         <content>9900元</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1478">
+                <arrow id="2030">
                     <name></name>
                     <content></content>
-                    <head id="3498" x="-1" y="-1">
+                    <head id="4093" x="-1" y="-1">
                         <name></name>
                         <content>9900元</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1494">
+                <arrow id="2046">
                     <name></name>
                     <content></content>
-                    <head id="3546" x="-1" y="-1">
+                    <head id="4141" x="-1" y="-1">
                         <name></name>
                         <content>9900元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="606" x="0" y="0">
+            <joint id="918" x="0" y="0">
                 <name></name>
                 <content>9900元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1471">
+                <arrow id="2023">
                     <name></name>
                     <content></content>
-                    <head id="3487" x="-1" y="-1">
+                    <head id="4082" x="-1" y="-1">
                         <name></name>
                         <content>打电话、发信息</content>
-                        <bodyID>1141</bodyID>
+                        <bodyID>1235</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1481">
+                <arrow id="2033">
                     <name></name>
                     <content></content>
-                    <head id="3499" x="-1" y="-1">
+                    <head id="4094" x="-1" y="-1">
                         <name></name>
                         <content>通知</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1487">
+                <arrow id="2039">
                     <name></name>
                     <content></content>
-                    <head id="3507" x="-1" y="-1">
+                    <head id="4102" x="-1" y="-1">
                         <name></name>
                         <content>发短信通知</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1495">
+                <arrow id="2047">
                     <name></name>
                     <content></content>
-                    <head id="3547" x="-1" y="-1">
+                    <head id="4142" x="-1" y="-1">
                         <name></name>
                         <content>提前通知</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1498">
+                <arrow id="2050">
                     <name></name>
                     <content></content>
-                    <head id="3564" x="-1" y="-1">
+                    <head id="4159" x="-1" y="-1">
                         <name></name>
                         <content>短信联系和通话情况</content>
-                        <bodyID>1154</bodyID>
+                        <bodyID>1248</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="607" x="0" y="0">
+            <joint id="919" x="0" y="0">
                 <name></name>
                 <content>通风报信</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1482">
+                <arrow id="2034">
                     <name></name>
                     <content></content>
-                    <head id="3490" x="-1" y="-1">
+                    <head id="4085" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1142</bodyID>
+                        <bodyID>1236</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1484">
+                <arrow id="2036">
                     <name></name>
                     <content></content>
-                    <head id="3501" x="-1" y="-1">
+                    <head id="4096" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1143</bodyID>
+                        <bodyID>1237</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1490">
+                <arrow id="2042">
                     <name></name>
                     <content></content>
-                    <head id="3533" x="-1" y="-1">
+                    <head id="4128" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1497">
+                <arrow id="2049">
                     <name></name>
                     <content></content>
-                    <head id="3563" x="-1" y="-1">
+                    <head id="4158" x="-1" y="-1">
                         <name></name>
                         <content>王燕</content>
-                        <bodyID>1154</bodyID>
+                        <bodyID>1248</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="608" x="0" y="0">
+            <joint id="920" x="0" y="0">
                 <name></name>
                 <content>王燕</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1499">
+                <arrow id="2051">
                     <name></name>
                     <content></content>
-                    <head id="3524" x="-1" y="-1">
+                    <head id="4119" x="-1" y="-1">
                         <name></name>
                         <content>天津市塘沽华仁中医药门诊部</content>
-                        <bodyID>1147</bodyID>
+                        <bodyID>1241</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1506">
+                <arrow id="2058">
                     <name></name>
                     <content></content>
-                    <head id="3549" x="-1" y="-1">
+                    <head id="4144" x="-1" y="-1">
                         <name></name>
                         <content>塘沽华仁门诊部</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1511">
+                <arrow id="2063">
                     <name></name>
                     <content></content>
-                    <head id="3560" x="-1" y="-1">
+                    <head id="4155" x="-1" y="-1">
                         <name></name>
                         <content>塘沽华仁中医药门诊部</content>
-                        <bodyID>1153</bodyID>
+                        <bodyID>1247</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="609" x="0" y="0">
+            <joint id="921" x="0" y="0">
                 <name></name>
                 <content>天津市塘沽华仁中医药门诊部</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1500">
+                <arrow id="2052">
                     <name></name>
                     <content></content>
-                    <head id="3526" x="-1" y="-1">
+                    <head id="4121" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1147</bodyID>
+                        <bodyID>1241</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1504">
+                <arrow id="2056">
                     <name></name>
                     <content></content>
-                    <head id="3530" x="-1" y="-1">
+                    <head id="4125" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1148</bodyID>
+                        <bodyID>1242</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1513">
+                <arrow id="2065">
                     <name></name>
                     <content></content>
-                    <head id="3565" x="-1" y="-1">
+                    <head id="4160" x="-1" y="-1">
                         <name></name>
                         <content>刘谨钊</content>
-                        <bodyID>1155</bodyID>
+                        <bodyID>1249</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="610" x="0" y="0">
+            <joint id="922" x="0" y="0">
                 <name></name>
                 <content>刘谨钊</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1501">
+                <arrow id="2053">
                     <name></name>
                     <content></content>
-                    <head id="3527" x="-1" y="-1">
+                    <head id="4122" x="-1" y="-1">
                         <name></name>
                         <content>1000元</content>
-                        <bodyID>1147</bodyID>
+                        <bodyID>1241</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1505">
+                <arrow id="2057">
                     <name></name>
                     <content></content>
-                    <head id="3531" x="-1" y="-1">
+                    <head id="4126" x="-1" y="-1">
                         <name></name>
                         <content>1000元</content>
-                        <bodyID>1148</bodyID>
+                        <bodyID>1242</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1507">
+                <arrow id="2059">
                     <name></name>
                     <content></content>
-                    <head id="3550" x="-1" y="-1">
+                    <head id="4145" x="-1" y="-1">
                         <name></name>
                         <content>1000元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1510">
+                <arrow id="2062">
                     <name></name>
                     <content></content>
-                    <head id="3550" x="-1" y="-1">
+                    <head id="4145" x="-1" y="-1">
                         <name></name>
                         <content>1000元</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="611" x="0" y="0">
+            <joint id="923" x="0" y="0">
                 <name></name>
                 <content>1000元</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1502">
+                <arrow id="2054">
                     <name></name>
                     <content></content>
-                    <head id="3528" x="-1" y="-1">
+                    <head id="4123" x="-1" y="-1">
                         <name></name>
                         <content>天津市滨海新区塘沽孟繁明中医诊所</content>
-                        <bodyID>1148</bodyID>
+                        <bodyID>1242</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1508">
+                <arrow id="2060">
                     <name></name>
                     <content></content>
-                    <head id="3551" x="-1" y="-1">
+                    <head id="4146" x="-1" y="-1">
                         <name></name>
                         <content>孟繁明诊所</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1512">
+                <arrow id="2064">
                     <name></name>
                     <content></content>
-                    <head id="3561" x="-1" y="-1">
+                    <head id="4156" x="-1" y="-1">
                         <name></name>
                         <content>天津滨海塘沽孟繁明中医诊所</content>
-                        <bodyID>1153</bodyID>
+                        <bodyID>1247</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="612" x="0" y="0">
+            <joint id="924" x="0" y="0">
                 <name></name>
                 <content>天津市滨海新区塘沽孟繁明中医诊所</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1503">
+                <arrow id="2055">
                     <name></name>
                     <content></content>
-                    <head id="3529" x="-1" y="-1">
+                    <head id="4124" x="-1" y="-1">
                         <name></name>
                         <content>2013年中秋节前</content>
-                        <bodyID>1148</bodyID>
+                        <bodyID>1242</bodyID>
                     </head>
                 </arrow>
-                <arrow id="1509">
+                <arrow id="2061">
                     <name></name>
                     <content></content>
-                    <head id="3553" x="-1" y="-1">
+                    <head id="4148" x="-1" y="-1">
                         <name></name>
                         <content>2013年中秋节前</content>
-                        <bodyID>1149</bodyID>
+                        <bodyID>1243</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="613" x="0" y="0">
+            <joint id="925" x="0" y="0">
                 <name></name>
                 <content>2013年中秋节前</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1514">
+                <arrow id="2066">
                     <name></name>
                     <content></content>
-                    <head id="3566" x="-1" y="-1">
+                    <head id="4161" x="-1" y="-1">
                         <name></name>
                         <content>退缴赃款</content>
-                        <bodyID>1155</bodyID>
+                        <bodyID>1249</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="614" x="0" y="0">
+            <joint id="926" x="0" y="0">
                 <name></name>
                 <content>退缴赃款</content>
             </joint>
         </relation>
         <relation>
             <arrows>
-                <arrow id="1515">
+                <arrow id="2067">
                     <name></name>
                     <content></content>
-                    <head id="3567" x="-1" y="-1">
+                    <head id="4162" x="-1" y="-1">
                         <name></name>
                         <content>二万元</content>
-                        <bodyID>1155</bodyID>
+                        <bodyID>1249</bodyID>
                     </head>
                 </arrow>
             </arrows>
-            <joint id="615" x="0" y="0">
+            <joint id="927" x="0" y="0">
                 <name></name>
                 <content>二万元</content>
             </joint>

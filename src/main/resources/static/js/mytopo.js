@@ -25,10 +25,10 @@ var isNodeClicked_left = false;//节点（链头、链体、连接点、连线�
 // var isCtrlPressed = false;//ctrl键是否按下
 var nodeFroms = [];//连线or箭头链头节点（允许同时创建多个连线或箭头），存储在nodeList_selected中的index
 var nodeTo;//连线链体节点or箭头连接点节点
-var header_radius = 20;//链头节点半径
-var body_width = 80;//链体节点长
-var body_height = 30;//链体节点宽
-var joint_width = 30;//连接点边长
+var header_radius = 17;//链头节点半径
+var body_width = 65;//链体节点长
+var body_height = 25;//链体节点宽
+var joint_width = 25;//连接点边长
 var fact_borderRadius = 6;//事实节点borderRadius
 var header_color = 'rgba(127,185,136,0.8)';//链头边框颜色
 var header_color_num = '127,185,136';
@@ -261,11 +261,12 @@ $(document).ready(function(){
             var topOffset = y-(div_height/2)+body_height;
             $("#canvasDiv").scrollLeft(leftOffset);
             $("#canvasDiv").scrollTop(topOffset);
+            scene.selectedElements.empty();
             factList[fid]['node'].selected = 1;
         }
     });
 
-    window.setInterval(saveAll,180000);
+    // window.setInterval(saveAll,180000);
 });
 
 function updateFactListofGraph() {

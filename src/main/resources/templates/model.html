@@ -129,19 +129,19 @@
     </div>
 
     <div class="row" style="background: white;padding-top: 150px;padding-left: 4%">
-        <div style="font-size: 18px;">
+        <div style="font-size: 17px;">
             <div>案号：<span id="caseNum"></span>, 案由：<span id="caseBrief"></span></div>
             <div>案件名称：<span id="caseName"></span></div>
             <div>承办人：<span id="underTaker">XXX</span>，立案日期：<span id="caseDate">XXXX年XX月XX日</span></div>
         </div>
 
         <div id="mainPanel" style="margin-top: 40px;">
-            <a id="list_hide" style="font-size: 18px;" href="#">隐藏<<</a><br/>
-            <div style="display: inline-block;width: 32%;min-height: 300px;vertical-align: top;margin-top:15px;" id="list_div">
+            <a id="list_hide" style="font-size: 16px;" href="#">隐藏<<</a><br/>
+            <div style="display: inline-block;width: 28%;min-height: 300px;vertical-align: top;margin-top:15px;" id="list_div">
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title" style="font-size: 20px;">
+                        <h4 class="panel-title" style="font-size: 16px;">
                             <a data-toggle="collapse" href="#adoption">
                                 已采信证据
                             </a>
@@ -157,7 +157,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title" style="font-size: 20px;">
+                        <h4 class="panel-title" style="font-size: 16px;">
                             <a data-toggle="collapse" href="#rejection">
                                 未采信证据
                             </a>
@@ -172,7 +172,7 @@
                 </div>
             </div>
 
-            <div style="display: inline-block;width: 66%;min-height: 300px;vertical-align: top;margin-top:10px;padding-bottom: 50px;" id="graph_div">
+            <div style="display: inline-block;width: 70%;min-height: 300px;vertical-align: top;margin-top:10px;padding-bottom: 50px;" id="graph_div">
                 <div class="page-content container10" style="top:0;">
                     <div class="row">
                         <!--&lt;!&ndash;文件选择框以及文件相关操作面板&ndash;&gt;-->
@@ -189,7 +189,7 @@
                         </div>
 
                         <!--图元面板-->
-                        <section class="graph-primitive-wrapper col-md-6" style="margin-top: 30px;">
+                        <section class="graph-primitive-wrapper col-md-6" style="margin-top: 22px;">
                             <div id='draggableDiv' class="ui-widget-content" style="z-index: 1000;position: absolute;">
                             </div>
 
@@ -252,7 +252,7 @@
                         <!--证据链集图-->
                         <!--startprint-->
                         <div class="graph-wrapper col-md-9 show-bar" style="margin-top: 20px;" id="canvasDiv">
-                            <canvas id="canvas" width="10000" height="10000"></canvas>
+                            <canvas id="canvas" width="3800" height="3800"></canvas>
                         </div>
                         <!--endprint-->
 
@@ -610,8 +610,8 @@
             function(){
 
                 if($("#list_div").width()=="0"){
-                    $("#list_div").animate({ opacity: "1",width: "32%"}, { duration: 800});
-                    $("#graph_div").animate({ width: "66%"}, { duration: 800});
+                    $("#list_div").animate({ opacity: "1",width: "28%"}, { duration: 800});
+                    $("#graph_div").animate({ width: "70%"}, { duration: 800});
                     $("#list_hide").html("隐藏<<");
                 }else{
                     $("#list_div").animate({  opacity: "0",width: "0"}, { duration: 800});

@@ -1,8 +1,8 @@
 .evidence{
-    font-size: 18px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left:25px;
+    font-size: 15px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left:24px;
     width: 100%;
 }
 .evidence_plaintiff{
@@ -26,8 +26,8 @@
 }
 
 .head_div{
-    margin-top: 10px;
-    font-size: 16px;
+    margin-top: 6px;
+    font-size: 14px;
 }
 
 .menu_graph{
