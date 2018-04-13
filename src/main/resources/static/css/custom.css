@@ -85,15 +85,19 @@
     background: rgba(59, 59, 59, 0.2);
 }
 
+.panel-body label{
+    font-size: 14px;
+}
+
 /*switch*/
 .mui-switch {
-    width: 50px;
-    height: 27px;
+    width: 42px;
+    height: 16px;
     position: relative;
     border: 1px solid #dfdfdf;
     background-color: #fdfdfd;
     box-shadow: #dfdfdf 0 0 0 0 inset;
-    border-radius: 18px;
+    border-radius: 9px;
     /*border-top-left-radius: 20px;*/
     /*border-top-right-radius: 20px;*/
     /*border-bottom-left-radius: 20px;*/
@@ -105,12 +109,12 @@
     outline: none; }
 .mui-switch:before {
     content: '';
-    width: 27px;
-    height: 27px;
+    width: 16px;
+    height: 16px;
     position: absolute;
     top: 0px;
     left: 0;
-    border-radius: 18px;
+    border-radius: 9px;
     /*border-top-left-radius: 20px;*/
     /*border-top-right-radius: 20px;*/
     /*border-bottom-left-radius: 20px;*/
@@ -122,7 +126,7 @@
     box-shadow: #64bd63 0 0 0 16px inset;
     background-color: #64bd63; }
 .mui-switch:checked:before {
-    left: 21px; }
+    left: 26px; }
 .mui-switch.mui-switch-animbg {
     transition: background-color ease 0.4s; }
 .mui-switch.mui-switch-animbg:before {

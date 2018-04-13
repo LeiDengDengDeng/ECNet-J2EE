@@ -256,17 +256,32 @@ $(document).ready(function(){
             var y = factList[fid]['node'].y;
             var div_width = $("#canvasDiv").width();
             var div_height = $("#canvasDiv").height();
-            console.log("dw:"+div_width+";dh:"+div_height);
+
             var leftOffset = x-(div_width/2)+body_width;
             var topOffset = y-(div_height/2)+body_height;
             $("#canvasDiv").scrollLeft(leftOffset);
             $("#canvasDiv").scrollTop(topOffset);
-            scene.selectedElements.empty();
-            factList[fid]['node'].selected = 1;
+            if(leftOffset>div_width){
+                scene.translateX = leftOffset-div_width;
+            }
+            if(topOffset>div_height){
+                scene.translateY = topOffset-div_height;
+            }
+            factList[fid]['node'].click();
+            // scene.cancleAllSelected();
+            // scene.addToSelected(factList[fid]['node']);
+            // factList[fid]['node'].selected = 1;
+            scene.currentElement = factList[fid]['node'];
+            // console.log(scene.selectedElements.length);
+        }else{
+            scene.translateX = 0;
+            scene.translateY =0;
+            $("#canvasDiv").scrollLeft(0);
+            $("#canvasDiv").scrollTop(0);
         }
     });
 
-    // window.setInterval(saveAll,180000);
+    window.setInterval(saveAll,360000);
 });
 
 function updateFactListofGraph() {
@@ -975,7 +990,7 @@ function saveFact(node) {
             node.id = data;
             factList[node.id] = {'node':node, "type":f['type']};
             factIndex = data+1;
-            // updateFactListofGraph();
+            updateFactListofGraph();
             // removeLoading("事实节点保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("save fact");
@@ -2565,7 +2580,7 @@ function deleteFact(factID) {
     scene.remove(fact);
     factList[factID] = null;
     $('#fact-panel').attr('hidden', 'hidden');
-    // updateFactListofGraph();
+    updateFactListofGraph();
 }
 
 //点击图元左侧列表相应证据高亮
