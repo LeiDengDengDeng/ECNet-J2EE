@@ -10,6 +10,7 @@ import com.ecm.model.Evidence_Document;
 import com.ecm.model.Evidence_Head;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
+import com.ecm.util.ImportXMLUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -207,7 +208,13 @@ public class EvidenceController {
 
         if(fileName.contains("xml")){
 
+            ImportXMLUtil xmlUtil=new ImportXMLUtil(filePath+sepa+fileName,ajxh);
 
+            evidenceService.importDocumentByXML(xmlUtil);
+            evidenceService.importEviByXML(xmlUtil);
+            evidenceService.importFactByXML(xmlUtil);
+            evidenceService.importArrowByXML(xmlUtil);
+            evidenceService.importLogicByXML(xmlUtil);
 
         }
         if(fileName.contains("xls")){

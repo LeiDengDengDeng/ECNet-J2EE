@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.12 时间 05:28:50 PM CST
+// 生成时间: 2018.04.13 时间 11:28:21 AM CST
 //
 
 
@@ -53,6 +53,10 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="x" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="y" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="documentId" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="trust" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="logicNodeId" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -67,13 +71,13 @@ import javax.xml.bind.annotation.XmlType;
 public class Evidence {
 
     @XmlElementRefs({
-            @XmlElementRef(name = "content", type = JAXBElement.class),
-            @XmlElementRef(name = "trust", type = JAXBElement.class),
-            @XmlElementRef(name = "committer", type = JAXBElement.class),
-            @XmlElementRef(name = "heads", type = JAXBElement.class),
-            @XmlElementRef(name = "reason", type = JAXBElement.class),
             @XmlElementRef(name = "name", type = JAXBElement.class),
-            @XmlElementRef(name = "type", type = JAXBElement.class)
+            @XmlElementRef(name = "content", type = JAXBElement.class),
+            @XmlElementRef(name = "committer", type = JAXBElement.class),
+            @XmlElementRef(name = "reason", type = JAXBElement.class),
+            @XmlElementRef(name = "type", type = JAXBElement.class),
+            @XmlElementRef(name = "heads", type = JAXBElement.class),
+            @XmlElementRef(name = "trust", type = JAXBElement.class)
     })
     @XmlMixed
     protected List<Serializable> content;
@@ -83,6 +87,14 @@ public class Evidence {
     protected BigInteger x;
     @XmlAttribute(name = "y")
     protected BigInteger y;
+    @XmlAttribute(name = "documentId")
+    protected BigInteger documentId;
+    @XmlAttribute(name = "type")
+    protected BigInteger type;
+    @XmlAttribute(name = "trust")
+    protected BigInteger trust;
+    @XmlAttribute(name = "logicNodeId")
+    protected BigInteger logicNodeId;
 
     /**
      * Gets the value of the content property.
@@ -105,10 +117,10 @@ public class Evidence {
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link Evidence.Heads }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link String }
+     * {@link JAXBElement }{@code <}{@link String }{@code >}
+     * {@link JAXBElement }{@code <}{@link Evidence.Heads }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      *
      *
@@ -192,6 +204,102 @@ public class Evidence {
         this.y = value;
     }
 
+    /**
+     * 获取documentId属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getDocumentId() {
+        return documentId;
+    }
+
+    /**
+     * 设置documentId属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setDocumentId(BigInteger value) {
+        this.documentId = value;
+    }
+
+    /**
+     * 获取type属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getType() {
+        return type;
+    }
+
+    /**
+     * 设置type属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setType(BigInteger value) {
+        this.type = value;
+    }
+
+    /**
+     * 获取trust属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getTrust() {
+        return trust;
+    }
+
+    /**
+     * 设置trust属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setTrust(BigInteger value) {
+        this.trust = value;
+    }
+
+    /**
+     * 获取logicNodeId属性的值。
+     *
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *
+     */
+    public BigInteger getLogicNodeId() {
+        return logicNodeId;
+    }
+
+    /**
+     * 设置logicNodeId属性的值。
+     *
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *
+     */
+    public void setLogicNodeId(BigInteger value) {
+        this.logicNodeId = value;
+    }
+
 
     /**
      * <p>anonymous complex type的 Java 类。
@@ -240,8 +348,8 @@ public class Evidence {
          *
          * <p>
          * Objects of the following type(s) are allowed in the list
-         * {@link String }
          * {@link JAXBElement }{@code <}{@link Head }{@code >}
+         * {@link String }
          *
          *
          */

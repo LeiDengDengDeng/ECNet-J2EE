@@ -11,6 +11,7 @@ import com.ecm.model.*;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
+import com.ecm.util.ImportXMLUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -21,6 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -319,16 +324,21 @@ public class EvidenceServiceImpl implements EvidenceService {
                     bodylist.add(evidenceBody);
                   //  deleteHeadAllByBody(evidenceBody.getId());
                 }
-                Evidence_Head evidence_head = new Evidence_Head();
-                evidence_head.setCaseID(caseId);
+
                 // 将区域编号的cell中的内容当做字符串处理
                 row.getCell(9).setCellType(HSSFCell.CELL_TYPE_STRING);
-                evidence_head.setHead(row.getCell(9).getStringCellValue());
-                evidence_head.setBodyid(evidenceBody.getId());
-                evidence_head.setDocumentid(evidenceBody.getDocumentid());
-                System.out.println(evidence_head.toString());
-                evidence_head=save(evidence_head);
-                evidenceBody.addHead(evidence_head);
+                String headText=row.getCell(9).getStringCellValue();
+                if(!evidenceBody.isHeadContained(headText)){
+                    Evidence_Head evidence_head = new Evidence_Head();
+                    evidence_head.setCaseID(caseId);
+                    evidence_head.setHead(row.getCell(9).getStringCellValue());
+                    evidence_head.setBodyid(evidenceBody.getId());
+                    evidence_head.setDocumentid(evidenceBody.getDocumentid());
+                    System.out.println(evidence_head.toString());
+                    evidence_head=save(evidence_head);
+                    evidenceBody.addHead(evidence_head);
+                }
+
             }
 
 
@@ -353,6 +363,9 @@ public class EvidenceServiceImpl implements EvidenceService {
     @Async
     public void importFactByExcel(String filepath, int caseId, List<Evidence_Body> bodylist) {
 
+        modelManageService.deleteArrowsByCid(caseId);
+        modelManageService.deleteJointsByCid(caseId);
+        modelManageService.deleteFactByCid(caseId);
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -365,6 +378,7 @@ public class EvidenceServiceImpl implements EvidenceService {
         List<HashMap<String,Object>> list=new ArrayList<>();
         HashMap<String,Object> hashMap=new HashMap<>();
         List<HashMap<String,Object>> headlist=new ArrayList<>();
+        List<MOD_Joint> jointList=new ArrayList<>();
 
         MOD_Fact mod_fact=new MOD_Fact();
         for (int i = 2; i <= lastRowNum; i++) {
@@ -389,6 +403,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                     mod_fact.setContent(row.getCell(3).getStringCellValue());
                     mod_fact.setName(row.getCell(2).getStringCellValue());
                     mod_fact=modelManageService.saveFact(mod_fact);
+                    jointList=new ArrayList<>();
 
                 }
 
@@ -404,11 +419,16 @@ public class EvidenceServiceImpl implements EvidenceService {
                 headMap.put("keyText",row.getCell(7).getStringCellValue());
 
 
-                MOD_Joint mod_joint=new MOD_Joint();
-                mod_joint.setCaseID(caseId);
-                mod_joint.setContent(row.getCell(4).getStringCellValue());
-                mod_joint.setFactID(mod_fact.getId());
-                mod_joint=modelManageService.saveJoint(mod_joint);
+                MOD_Joint mod_joint=isJointContained(jointList,row.getCell(4).getStringCellValue());
+                if(mod_joint==null){
+                    mod_joint=new MOD_Joint();
+                    mod_joint.setCaseID(caseId);
+                    mod_joint.setContent(row.getCell(4).getStringCellValue());
+                    mod_joint.setFactID(mod_fact.getId());
+                    mod_joint=modelManageService.saveJoint(mod_joint);
+                    jointList.add(mod_joint);
+                }
+
                 MOD_Arrow mod_arrow=new MOD_Arrow();
                 mod_arrow.setCaseID(caseId);
                 mod_arrow.setNodeTo_jid(mod_joint.getId());
@@ -422,11 +442,21 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     }
 
+    private MOD_Joint isJointContained(List<MOD_Joint> jointList, String stringCellValue) {
+        for(MOD_Joint joint:jointList){
+            if(joint.getContent().equals(stringCellValue)){
+                return joint;
+            }
+        }
+        return null;
+    }
+
     @Override
     @Async
     public void importLogicByExcel(String filepath, int caseId,List<Evidence_Body> bodyList) {
 
 
+        logicService.deleteAllNodesByCaseID(caseId);
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
@@ -485,15 +515,26 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
+    @Transactional
+    @Override
+    public void deleteAllTable(int caseId) {
+        modelManageService.deleteAll(caseId);
+        logicService.deleteAllNodesByCaseID(caseId);
+    }
+
 
     private int getHeadIdByEvi(Evidence_Body body,String head){
         List<Evidence_Head> headList=body.getHeadList();
+        System.out.println(headList.toString());
+        System.out.println("head string"+head);
+
         for(Evidence_Head headtemp:headList){
+
             if(headtemp.getHead().equals(head)){
                 return headtemp.getId();
             }
         }
-
+        System.out.println("error");
         return -1;
     }
 
@@ -575,4 +616,267 @@ public class EvidenceServiceImpl implements EvidenceService {
         return  result;
 
     }
+
+
+
+    @Override
+    public List<Evidence_Document> importDocumentByXML(ImportXMLUtil xmlUtil) {
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = xmlUtil.getDocument().getElementsByTagName("documents").item(0);
+        ArrayList<Evidence_Document> documentList = new ArrayList<>();
+        //遍历
+        NodeList list=root.getChildNodes();
+        for(int i=0;i<list.getLength();i++) {
+
+            //获取第i个book结点
+            Node node = list.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element evi = (Element) node;
+                // System.out.println(evi.getTagName());
+                Evidence_Document evidence_document = new Evidence_Document();
+
+                //获取第i个book的所有属性
+                NamedNodeMap namedNodeMap = evi.getAttributes();
+                //获取已知名为id的属性值
+                //System.out.println(namedNodeMap.getLength());
+                int id = Integer.parseInt(namedNodeMap.getNamedItem("id").getTextContent());
+                int type = Integer.parseInt(namedNodeMap.getNamedItem("type").getTextContent());
+                evidence_document.setId(id);
+                evidence_document.setCaseID(xmlUtil.getCaseId());
+                evidence_document.setType(type);
+
+                //获取book结点的子节点,包含了Test类型的换行
+                String text = evi.getElementsByTagName("text").item(0).getTextContent();
+                evidence_document.setText(text);
+                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
+                evidence_document.setCommitter(committer);
+
+                evidence_document=saveOrUpdate(evidence_document);
+                documentList.add(evidence_document);
+            }
+        }
+
+        return documentList;
+    }
+
+    @Transactional
+    @Override
+    public List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil) {
+
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = xmlUtil.getDocument().getElementsByTagName("evidences").item(0);
+        ArrayList<Evidence_Body> bodyList = new ArrayList<>();
+        //遍历
+        NodeList list=root.getChildNodes();
+        for(int i=0;i<list.getLength();i++) {
+            //获取第i个book结点
+            Node node = list.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element evi = (Element) node;
+                int id=Integer.valueOf(evi.getAttribute("id"));
+                int x=Integer.valueOf(evi.getAttribute("x"));
+                int y=Integer.valueOf(evi.getAttribute("y"));
+                int documentId=Integer.valueOf(evi.getAttribute("documentId"));
+                int type=Integer.valueOf(evi.getAttribute("type"));
+                int trust=Integer.valueOf(evi.getAttribute("trust"));
+                int logicNodeId=Integer.valueOf(evi.getAttribute("logicNodeId"));
+
+                Evidence_Body evidence_body=new Evidence_Body();
+
+                String name=evi.getElementsByTagName("name").item(0).getTextContent();
+                String content=evi.getElementsByTagName("content").item(0).getTextContent();
+                // String typeString=evi.getElementsByTagName("type").item(0).getTextContent();
+                String committer=evi.getElementsByTagName("committer").item(0).getTextContent();
+                //  String trustString=evi.getElementsByTagName("trust").item(0).getTextContent();
+                String reason=evi.getElementsByTagName("reason").item(0).getTextContent();
+
+                evidence_body.setId(id);
+                evidence_body.setDocumentid(documentId);
+                evidence_body.setLogicNodeID(logicNodeId);
+                evidence_body.setTrust(trust);
+                evidence_body.setType(type);
+                evidence_body.setX(x);
+                evidence_body.setY(y);
+                evidence_body.setName(name);
+                evidence_body.setBody(content);
+                evidence_body.setCommitter(committer);
+                evidence_body.setReason(reason);
+                evidence_body.setCaseID(xmlUtil.getCaseId());
+
+                NodeList heads=evi.getElementsByTagName("heads").item(0).getChildNodes();
+
+                for(int j=0;j<heads.getLength();j++) {
+                    if (heads.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        Element headNode = (Element) heads.item(j);
+                        int headid = Integer.valueOf(headNode.getAttribute("id"));
+                        int headx = Integer.valueOf(evi.getAttribute("x"));
+                        int heady = Integer.valueOf(evi.getAttribute("y"));
+                        String headname = evi.getElementsByTagName("name").item(0).getTextContent();
+                        String headcontent = evi.getElementsByTagName("content").item(0).getTextContent();
+
+                        Evidence_Head head = new Evidence_Head();
+                        head.setId(headid);
+                        head.setDocumentid(documentId);
+                        head.setHead(headcontent);
+                        head.setBodyid(id);
+                        head.setCaseID(xmlUtil.getCaseId());
+                        head.setName(headname);
+                        head.setX(headx);
+                        head.setY(heady);
+                        save(head);
+                        evidence_body.addHead(head);
+                    }
+                }
+
+                save(evidence_body);
+                bodyList.add(evidence_body);
+
+
+            }
+        }
+
+        return bodyList;
+    }
+
+
+    @Async
+    @Transactional
+    @Override
+    public void importFactByXML(ImportXMLUtil xmlUtil) {
+
+        modelManageService.deleteJointsByCid(xmlUtil.getCaseId());
+     //   modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
+        modelManageService.deleteFactByCid(xmlUtil.getCaseId());
+        List<MOD_Fact> factList = new ArrayList<>();
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = xmlUtil.getDocument().getElementsByTagName("facts").item(0);
+        //遍历
+        NodeList list = root.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+            //获取第i个book结点
+            Node node = list.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element fact = (Element) node;
+                int id = Integer.valueOf(fact.getAttribute("id"));
+                int x = Integer.valueOf(fact.getAttribute("x"));
+                int y = Integer.valueOf(fact.getAttribute("y"));
+                int logicNodeId = Integer.valueOf(fact.getAttribute("logicNodeId"));
+
+                String name = fact.getElementsByTagName("name").item(0).getTextContent();
+                String content = fact.getElementsByTagName("content").item(0).getTextContent();
+                String type = fact.getElementsByTagName("type").item(0).getTextContent();
+
+                MOD_Fact mod_fact = new MOD_Fact();
+                mod_fact.setId(id);
+                mod_fact.setCaseID(xmlUtil.getCaseId());
+                mod_fact.setName(name);
+                mod_fact.setContent(content);
+                mod_fact.setLogicNodeID(logicNodeId);
+                mod_fact.setType(type);
+                mod_fact.setX(x);
+                mod_fact.setY(y);
+                NodeList joints = fact.getElementsByTagName("joints").item(0).getChildNodes();
+
+                System.out.println(mod_fact.toString());
+
+                modelManageService.saveFact(mod_fact);
+                for (int j = 0; j < joints.getLength(); j++) {
+                    if (joints.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        Element headNode = (Element) joints.item(j);
+
+                        int jointsid = Integer.valueOf(headNode.getAttribute("id"));
+                        int jointsx = Integer.valueOf(headNode.getAttribute("x"));
+                        int jointsy = Integer.valueOf(headNode.getAttribute("y"));
+                        String jointname = headNode.getElementsByTagName("name").item(0).getTextContent();
+                        String jointcontent = headNode.getElementsByTagName("content").item(0).getTextContent();
+
+                        MOD_Joint mod_joint = new MOD_Joint();
+                        mod_joint.setId(jointsid);
+                        mod_joint.setFactID(id);
+                        mod_joint.setContent(jointcontent);
+                        mod_joint.setCaseID(xmlUtil.getCaseId());
+                        mod_joint.setName(jointname);
+                        //      mod_joint.setType(type);
+
+                        mod_joint.setX(jointsx);
+                        mod_joint.setY(jointsy);
+                        //    evidence_body.addHead(head);
+                        modelManageService.saveJoint(mod_joint);
+                        System.out.println(mod_joint.toString());
+                    }
+                }
+
+                //  bodyList.add(evidence_body);
+
+
+            }
+        }
+    }
+
+    @Transactional
+    @Async
+    @Override
+    public void importArrowByXML(ImportXMLUtil xmlUtil) {
+
+        modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
+        List<MOD_Arrow> arrowList = new ArrayList<>();
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = xmlUtil.getDocument().getElementsByTagName("relations").item(0);
+        //遍历
+        NodeList list = root.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++) {
+            //获取第i个book结点
+            Node node = list.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element relation = (Element) node;
+
+
+                Element joint = (Element) relation.getElementsByTagName("joint").item(0);
+                NodeList arrows = relation.getElementsByTagName("arrows").item(0).getChildNodes();
+
+                int jointId=Integer.valueOf(joint.getAttribute("id"));
+                for (int j = 0; j < arrows.getLength(); j++) {
+                    if (arrows.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        Element arrow = (Element) arrows.item(j);
+                        int arrowId = Integer.valueOf(arrow.getAttribute("id"));
+
+                        String arrowname = arrow.getElementsByTagName("name").item(0).getTextContent();
+                        String arrowcontent = arrow.getElementsByTagName("content").item(0).getTextContent();
+                        Element head=(Element)arrow.getElementsByTagName("head").item(0);
+                        int headId= Integer.valueOf(head.getAttribute("id"));
+                        MOD_Arrow mod_arrow=new MOD_Arrow();
+                        mod_arrow.setId(arrowId);
+                        mod_arrow.setCaseID(xmlUtil.getCaseId());
+                        mod_arrow.setName(arrowname);
+                        mod_arrow.setContent(arrowcontent);
+                        mod_arrow.setNodeTo_jid(jointId);
+                        mod_arrow.setNodeFrom_hid(headId);
+                        System.out.println(mod_arrow.toString());
+                        modelManageService.saveArrow(mod_arrow);
+                    }
+                }
+
+                //  bodyList.add(evidence_body);
+
+
+            }
+        }
+    }
+
+
+    @Async
+    @Transactional
+    @Override
+    public void importLogicByXML(ImportXMLUtil xmlUtil) {
+
+
+
+
+
+
+
+    }
+
 }

@@ -82,4 +82,19 @@ public class MOD_Joint {
     public void setFactID(int factID) {
         this.factID = factID;
     }
+
+
+    @Override
+    public String toString() {
+        return "MOD_Joint{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", factID=" + factID +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }
