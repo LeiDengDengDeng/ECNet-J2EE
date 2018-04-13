@@ -35,9 +35,10 @@ public interface EvidenceService{
     void importFactByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
     void importLogicByExcel(String filepath,int caseId,List<Evidence_Body> bodylist);
     List<Evidence_Document> importDocumentByXML(ImportXMLUtil xmlUtil);
-    List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil,List<Evidence_Document> documentList);
-    void importFactByXML(ImportXMLUtil xmlUtil,List<Evidence_Body> bodylist);
-    void importLogicByXML(ImportXMLUtil xmlUtil,List<Evidence_Body> bodylist);
+    List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil);
+    void importFactByXML(ImportXMLUtil xmlUtil);
+    void importArrowByXML(ImportXMLUtil xmlUtil);
+    void importLogicByXML(ImportXMLUtil xmlUtil);
     void deleteAllTable(int caseId);
 
 }

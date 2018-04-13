@@ -83,4 +83,18 @@ public class MOD_Fact {
     public void setLogicNodeID(int logicNodeID) {
         this.logicNodeID = logicNodeID;
     }
+
+    @Override
+    public String toString() {
+        return "MOD_Fact{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", type='" + type + '\'' +
+                ", logicNodeID=" + logicNodeID +
+                '}';
+    }
 }

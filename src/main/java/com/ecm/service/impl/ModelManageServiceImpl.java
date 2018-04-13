@@ -231,6 +231,11 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+    public void deleteFactByCid(int cid) {
+        factDao.deleteAllByCaseID(cid);
+    }
+
+    @Override
     @Transactional
     public void deleteJointsByCid(int cid) {
         jointDao.deleteAllByCaseID(cid);
