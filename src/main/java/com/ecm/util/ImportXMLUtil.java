@@ -1,8 +1,13 @@
 package com.ecm.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,12 +31,18 @@ public class ImportXMLUtil {
     private int caseId = -1;
 
     private List<Evidence_Document> documentList = new ArrayList<>();
-
     private List<Evidence_Body> bodyList = new ArrayList<>();
-
     private List<MOD_Fact> factList = new ArrayList<>();
-
     private List<LogicNode> logicNodeList = new ArrayList<>();
+    private List<MOD_Joint> jointList=new ArrayList<>();
+
+
+//    private Map<Integer,Integer> documentList=new HashMap<>();//key-type value-id
+
+
+
+
+
 
     public ImportXMLUtil(String fileName, int caseId) {
         try {
@@ -41,8 +52,10 @@ public class ImportXMLUtil {
             document = db.parse(fileName);
             this.caseId = caseId;
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            e.getCause().printStackTrace();
         }
+
+
 
     }
 
@@ -62,46 +75,109 @@ public class ImportXMLUtil {
         this.caseId = caseId;
     }
 
+    public DocumentBuilderFactory getDbFactory() {
+        return dbFactory;
+    }
 
-//    public  List<Evidence_Document> getDocuments(){
-//        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
-//        Node root = document.getElementsByTagName("documents").item(0);
-//        documentList=new ArrayList<>();
-//        //遍历
-//        NodeList list=root.getChildNodes();
-//        for(int i=0;i<list.getLength();i++) {
-//
-//            //获取第i个book结点
-//            Node node = list.item(i);
-//
-//            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//
-//                Element evi = (Element) node;
-//               // System.out.println(evi.getTagName());
-//                Evidence_Document evidence_document = new Evidence_Document();
-//
-//                //获取第i个book的所有属性
-//                NamedNodeMap namedNodeMap = evi.getAttributes();
-//                //获取已知名为id的属性值
-//                //System.out.println(namedNodeMap.getLength());
-//                int id = Integer.parseInt(namedNodeMap.getNamedItem("id").getTextContent());
-//                int type = Integer.parseInt(namedNodeMap.getNamedItem("type").getTextContent());
-//                evidence_document.setId(id);
-//                evidence_document.setCaseID(caseId);
-//                evidence_document.setType(type);
-//
-//                //获取book结点的子节点,包含了Test类型的换行
-//                String text = evi.getElementsByTagName("text").item(0).getTextContent();
-//                evidence_document.setText(text);
-//                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
-//                evidence_document.setCommitter(committer);
-//
-//                documentList.add(evidence_document);
-//            }
-//        }
-//
-//        return documentList;
-//    }
+    public void setDbFactory(DocumentBuilderFactory dbFactory) {
+        this.dbFactory = dbFactory;
+    }
+
+    public DocumentBuilder getDb() {
+        return db;
+    }
+
+    public void setDb(DocumentBuilder db) {
+        this.db = db;
+    }
+
+    public List<Evidence_Document> getDocumentList() {
+        return documentList;
+    }
+
+    public void setDocumentList(List<Evidence_Document> documentList) {
+        this.documentList = documentList;
+    }
+
+    public List<Evidence_Body> getBodyList() {
+        return bodyList;
+    }
+
+    public void setBodyList(List<Evidence_Body> bodyList) {
+        this.bodyList = bodyList;
+    }
+
+    public List<MOD_Fact> getFactList() {
+        return factList;
+    }
+
+    public void setFactList(List<MOD_Fact> factList) {
+        this.factList = factList;
+    }
+
+    public List<LogicNode> getLogicNodeList() {
+        return logicNodeList;
+    }
+
+    public void setLogicNodeList(List<LogicNode> logicNodeList) {
+        this.logicNodeList = logicNodeList;
+    }
+
+    public List<MOD_Joint> getJointList() {
+        return jointList;
+    }
+
+    public void setJointList(List<MOD_Joint> jointList) {
+        this.jointList = jointList;
+    }
+
+
+
+
+    public void addLogicNode(LogicNode logicNode){
+        this.logicNodeList.add(logicNode);
+    }
+
+
+    public  List<Evidence_Document> getDocuments(){
+        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+        Node root = document.getElementsByTagName("documents").item(0);
+        documentList=new ArrayList<>();
+        //遍历
+        NodeList list=root.getChildNodes();
+        for(int i=0;i<list.getLength();i++) {
+
+            //获取第i个book结点
+            Node node = list.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element evi = (Element) node;
+               // System.out.println(evi.getTagName());
+                Evidence_Document evidence_document = new Evidence_Document();
+
+                //获取第i个book的所有属性
+                NamedNodeMap namedNodeMap = evi.getAttributes();
+                //获取已知名为id的属性值
+                //System.out.println(namedNodeMap.getLength());
+                int id = Integer.parseInt(namedNodeMap.getNamedItem("id").getTextContent());
+                int type = Integer.parseInt(namedNodeMap.getNamedItem("type").getTextContent());
+                evidence_document.setId(id);
+                evidence_document.setCaseID(caseId);
+                evidence_document.setType(type);
+
+                //获取book结点的子节点,包含了Test类型的换行
+                String text = evi.getElementsByTagName("text").item(0).getTextContent();
+                evidence_document.setText(text);
+                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
+                evidence_document.setCommitter(committer);
+                System.out.println(evidence_document.toString());
+                documentList.add(evidence_document);
+            }
+        }
+
+        return documentList;
+    }
 
 
 //    public  List<Evidence_Body> getEvidences(){
@@ -187,7 +263,8 @@ public class ImportXMLUtil {
         String fileName = "upload.xml";
         ImportXMLUtil importXMLUtil = new ImportXMLUtil(fileName, 41722);
         try {
-         //   importXMLUtil.getLogic();
+            importXMLUtil.getLogic();
+   //        importXMLUtil.getDocuments();
 //            for (MOD_Fact document : list) {
 //                System.out.println(document.toString());
 //            }
@@ -314,74 +391,76 @@ public class ImportXMLUtil {
 //    }
 
 
-//    private void getLogic() {
-//        List<LogicNode> nodeList = new ArrayList<>();
-//        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
-//        Node root = document.getElementsByTagName("graph").item(0);
-//        //遍历
-//        NodeList list = root.getChildNodes();
-//        for (int i = 0; i < list.getLength(); i++) {
-//            //获取第i个book结点
-//            Node node = list.item(i);
-//            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//                Element element = (Element) node;
-//                String topic=element.getAttribute("topic");
-//                int nodeId=Integer.valueOf(element.getAttribute("nodeId"));
-//                String detail=element.getAttribute("detail");
-//                String typeString=element.getAttribute("type");
-//                int type=getTypeByString(typeString);
-//                int x=Integer.valueOf(element.getAttribute("x"));
-//                int y=Integer.valueOf(element.getAttribute("y"));
-//                LogicNode logicNode=new LogicNode();
-//                logicNode.setDetail(detail);
-//                logicNode.setTopic(topic);
-//                logicNode.setType(type);
-//
-//
-//                if(element.hasChildNodes()){
-//                    NodeList children=element.getChildNodes();
-//                    for(int j=0;j<children.getLength();j++){
-//
-//                        Element temp= (Element) children.item(j);
-//                        String topic=temp.getAttribute("topic");
-//                        int nodeId=Integer.valueOf(temp.getAttribute("nodeId"));
-//                        String detail=temp.getAttribute("detail");
-//                        String type=temp.getAttribute("type");
-//                        int x=Integer.valueOf(temp.getAttribute("x"));
-//                        int y=Integer.valueOf(temp.getAttribute("y"));
-//
-//
-//                    }
-//
-//                }
-//
-//
-//            }
-//        }
-//
-//
-//    }
-//
-//    private int getTypeByString(String typeString) {
-//        if(typeString.equals("证据")){
-//            return 0;
-//        }
-//
-//        if(typeString.equals("事实")){
-//            return 1;
-//        }
-//
-//        if(typeString.equals("法条")){
-//            return 2;
-//        }
-//
-//        if(typeString.equals("结论")){
-//            return 3;
-//        }
-//
-//        return -1;
-//    }
+    private void getLogic() {
+        Node root = getDocument().getElementsByTagName("graph").item(0);
 
+        //遍历
+        NodeList list = root.getChildNodes();
+        saveAndgetChildren(-1,list);
 
+    }
+
+    private int getTypeByString(String typeString) {
+        if(typeString.equals("证据")){
+            return 0;
+        }
+
+        if(typeString.equals("事实")){
+            return 1;
+        }
+
+        if(typeString.equals("法条")){
+            return 2;
+        }
+
+        if(typeString.equals("结论")){
+            return 3;
+        }
+
+        return -1;
+    }
+
+    /**
+     * 递归遍历graph节点
+     * @param nodelist
+     * @param
+     * @return
+     */
+    private NodeList saveAndgetChildren(int parentNodeId,NodeList nodelist) {
+
+        NodeList list=null;
+        for(int i=0;i<nodelist.getLength();i++) {
+            Node node = nodelist.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+              //  Element element = (Element) node;
+
+                NamedNodeMap nodeMap = node.getAttributes();
+                String topic = nodeMap.getNamedItem("topic").getTextContent();
+                int nodeId = Integer.valueOf(nodeMap.getNamedItem("nodeId").getTextContent());
+                String detail = nodeMap.getNamedItem("detail").getTextContent();
+                String typeString = nodeMap.getNamedItem("type").getTextContent();
+                int type = getTypeByString(typeString);
+                int x = Integer.valueOf(nodeMap.getNamedItem("x").getTextContent());
+                int y = Integer.valueOf(nodeMap.getNamedItem("y").getTextContent());
+                LogicNode logicNode = new LogicNode();
+                logicNode.setDetail(detail);
+                logicNode.setTopic(topic);
+                logicNode.setType(type);
+                logicNode.setNodeID(nodeId);
+                logicNode.setX(x);
+                logicNode.setY(y);
+                logicNode.setCaseID(getCaseId());
+                logicNode.setParentNodeID(parentNodeId);
+                System.out.println(logicNode.toString());
+                //     parentNodeId=logicService.saveNode(logicNode);
+                addLogicNode(logicNode);
+              //  System.out.println(logicNode.toString());
+                list = saveAndgetChildren(parentNodeId, node.getChildNodes());
+            }
+        }
+        return  list;
+
+    }
 
 }

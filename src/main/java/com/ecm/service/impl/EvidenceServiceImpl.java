@@ -656,6 +656,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence_document.setCommitter(committer);
 
                 evidence_document = saveOrUpdate(evidence_document);
+
                 documentList.add(evidence_document);
             }
         }
@@ -729,6 +730,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                         head.setName(headname);
                         head.setX(headx);
                         head.setY(heady);
+                        System.out.println(head.toString());
                         save(head);
                         evidence_body.addHead(head);
                     }
@@ -870,17 +872,23 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
-    @Async
+
+
+
+
+
+
     @Transactional
     @Override
     public void importLogicByXML(ImportXMLUtil xmlUtil) {
 
-        List<LogicNode> nodeList = new ArrayList<>();
+        logicService.deleteAllNodesByCaseID(xmlUtil.getCaseId());
         //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
         Node root = xmlUtil.getDocument().getElementsByTagName("graph").item(0);
-        //遍历
+
+        //递归遍历
         NodeList list = root.getChildNodes();
-        saveAndgetChildren(list);
+        saveAndgetChildren(-1,list,xmlUtil);
 
     }
 
@@ -905,40 +913,44 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
 
-    private NodeList saveAndgetChildren(NodeList nodelist) {
 
-        if(nodelist==null){
-            return null;
-        }else{
-            for(int i=0;i<nodelist.getLength();i++){
-                Node node=nodelist.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-                    String topic = element.getAttribute("topic");
-                    int nodeId = Integer.valueOf(element.getAttribute("nodeId"));
-                    String detail = element.getAttribute("detail");
-                    String typeString = element.getAttribute("type");
-                    int type = getTypeByString(typeString);
-                    int x = Integer.valueOf(element.getAttribute("x"));
-                    int y = Integer.valueOf(element.getAttribute("y"));
-                    LogicNode logicNode = new LogicNode();
-                    logicNode.setDetail(detail);
-                    logicNode.setTopic(topic);
-                    logicNode.setType(type);
-                    logicNode.setNodeID(nodeId);
-                    logicNode.setX(x);
-                    logicNode.setY(y);
-                    logicService.saveNode(logicNode);
-                }
+    /**
+     * 递归遍历graph节点
+     * @param nodelist
+     * @param xmlUtil
+     * @return
+     */
+    private NodeList saveAndgetChildren(int parentNodeId,NodeList nodelist,ImportXMLUtil xmlUtil) {
+        NodeList list=null;
+        for(int i=0;i<nodelist.getLength();i++) {
+            Node node = nodelist.item(i);
 
-                return node.getChildNodes();
-
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                //  Element element = (Element) node;
+                NamedNodeMap nodeMap = node.getAttributes();
+                String topic = nodeMap.getNamedItem("topic").getTextContent();
+                int nodeId = Integer.valueOf(nodeMap.getNamedItem("nodeId").getTextContent());
+                String detail = nodeMap.getNamedItem("detail").getTextContent();
+                String typeString = nodeMap.getNamedItem("type").getTextContent();
+                int type = getTypeByString(typeString);
+                int x = Integer.valueOf(nodeMap.getNamedItem("x").getTextContent());
+                int y = Integer.valueOf(nodeMap.getNamedItem("y").getTextContent());
+                LogicNode logicNode = new LogicNode();
+                logicNode.setDetail(detail);
+                logicNode.setTopic(topic);
+                logicNode.setType(type);
+                logicNode.setNodeID(nodeId);
+                logicNode.setX(x);
+                logicNode.setY(y);
+                logicNode.setCaseID(xmlUtil.getCaseId());
+                logicNode.setParentNodeID(parentNodeId);
+                System.out.println(logicNode.toString());
+                logicNode=logicService.saveNode(logicNode);
+                xmlUtil.addLogicNode(logicNode);
+                list = saveAndgetChildren(nodeId, node.getChildNodes(),xmlUtil);
             }
-
         }
-        return null;
-
-
+        return  list;
 
     }
 

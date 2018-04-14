@@ -115,8 +115,8 @@ public class LogicServiceImpl implements LogicService {
     }
 
     @Override
-    public void saveNode(LogicNode logicNode) {
-        logicNodeDao.save(logicNode);
+    public LogicNode saveNode(LogicNode logicNode) {
+       return logicNodeDao.save(logicNode);
     }
 
     @Override

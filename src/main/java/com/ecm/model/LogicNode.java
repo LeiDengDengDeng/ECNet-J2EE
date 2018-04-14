@@ -106,4 +106,19 @@ public class LogicNode {
     public void setY(int y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "LogicNode{" +
+                "id=" + id +
+                ", caseID=" + caseID +
+                ", nodeID=" + nodeID +
+                ", parentNodeID=" + parentNodeID +
+                ", topic='" + topic + '\'' +
+                ", detail='" + detail + '\'' +
+                ", type=" + type +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
