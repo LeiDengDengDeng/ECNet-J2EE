@@ -49,7 +49,6 @@ public class EvidenceServiceImpl implements EvidenceService {
     public LogicService logicService;
     @Autowired
     public MOD_ArrowDao arrowDao;
-
     @Autowired
     public ModelManageService modelManageService;
 
@@ -657,6 +656,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
                 evidence_document = saveOrUpdate(evidence_document);
 
+                xmlUtil.addDocument(evidence_document);
                 documentList.add(evidence_document);
             }
         }
@@ -666,7 +666,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Transactional
     @Override
-    public List<Evidence_Body> importEviByXML(ImportXMLUtil xmlUtil) {
+    public void importEviByXML(ImportXMLUtil xmlUtil) {
 
         deleteBodyAllByCaseId(xmlUtil.getCaseId());
         deleteHeadAllByCaseId(xmlUtil.getCaseId());
@@ -680,13 +680,14 @@ public class EvidenceServiceImpl implements EvidenceService {
             Node node = list.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element evi = (Element) node;
-                int id = Integer.valueOf(evi.getAttribute("id"));
+
                 int x = Integer.valueOf(evi.getAttribute("x"));
                 int y = Integer.valueOf(evi.getAttribute("y"));
-                int documentId = Integer.valueOf(evi.getAttribute("documentId"));
+
                 int type = Integer.valueOf(evi.getAttribute("type"));
                 int trust = Integer.valueOf(evi.getAttribute("trust"));
-                int logicNodeId = Integer.valueOf(evi.getAttribute("logicNodeId"));
+                int isDefendant = Integer.valueOf(evi.getAttribute("isDefendant"));
+
 
                 Evidence_Body evidence_body = new Evidence_Body();
 
@@ -696,8 +697,8 @@ public class EvidenceServiceImpl implements EvidenceService {
                 String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
                 //  String trustString=evi.getElementsByTagName("trust").item(0).getTextContent();
                 String reason = evi.getElementsByTagName("reason").item(0).getTextContent();
-
-                evidence_body.setId(id);
+                int logicNodeId=xmlUtil.getLogicNodeId(content);
+                int documentId =xmlUtil.getDocumentId(isDefendant);
                 evidence_body.setDocumentid(documentId);
                 evidence_body.setLogicNodeID(logicNodeId);
                 evidence_body.setTrust(trust);
@@ -709,41 +710,42 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence_body.setCommitter(committer);
                 evidence_body.setReason(reason);
                 evidence_body.setCaseID(xmlUtil.getCaseId());
+                //save body
+                evidence_body= save(evidence_body);
+
 
                 NodeList heads = evi.getElementsByTagName("heads").item(0).getChildNodes();
 
                 for (int j = 0; j < heads.getLength(); j++) {
                     if (heads.item(j).getNodeType() == Node.ELEMENT_NODE) {
                         Element headNode = (Element) heads.item(j);
-                        int headid = Integer.valueOf(headNode.getAttribute("id"));
                         int headx = Integer.valueOf(evi.getAttribute("x"));
                         int heady = Integer.valueOf(evi.getAttribute("y"));
                         String headname = evi.getElementsByTagName("name").item(0).getTextContent();
                         String headcontent = evi.getElementsByTagName("content").item(0).getTextContent();
 
                         Evidence_Head head = new Evidence_Head();
-                        head.setId(headid);
+
                         head.setDocumentid(documentId);
                         head.setHead(headcontent);
-                        head.setBodyid(id);
+                        head.setBodyid(evidence_body.getId());
                         head.setCaseID(xmlUtil.getCaseId());
                         head.setName(headname);
                         head.setX(headx);
                         head.setY(heady);
                         System.out.println(head.toString());
-                        save(head);
+                        head=save(head);
                         evidence_body.addHead(head);
                     }
                 }
 
-                save(evidence_body);
-                bodyList.add(evidence_body);
 
+                xmlUtil.addBody(evidence_body);
 
             }
         }
 
-        return bodyList;
+
     }
 
 
@@ -753,7 +755,6 @@ public class EvidenceServiceImpl implements EvidenceService {
     public void importFactByXML(ImportXMLUtil xmlUtil) {
 
         modelManageService.deleteJointsByCid(xmlUtil.getCaseId());
-        //   modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
         modelManageService.deleteFactByCid(xmlUtil.getCaseId());
         List<MOD_Fact> factList = new ArrayList<>();
         //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
@@ -765,17 +766,16 @@ public class EvidenceServiceImpl implements EvidenceService {
             Node node = list.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element fact = (Element) node;
-                int id = Integer.valueOf(fact.getAttribute("id"));
+
                 int x = Integer.valueOf(fact.getAttribute("x"));
                 int y = Integer.valueOf(fact.getAttribute("y"));
-                int logicNodeId = Integer.valueOf(fact.getAttribute("logicNodeId"));
 
                 String name = fact.getElementsByTagName("name").item(0).getTextContent();
                 String content = fact.getElementsByTagName("content").item(0).getTextContent();
                 String type = fact.getElementsByTagName("type").item(0).getTextContent();
+                int logicNodeId = xmlUtil.getLogicNodeId(content);
 
                 MOD_Fact mod_fact = new MOD_Fact();
-                mod_fact.setId(id);
                 mod_fact.setCaseID(xmlUtil.getCaseId());
                 mod_fact.setName(name);
                 mod_fact.setContent(content);
@@ -783,24 +783,23 @@ public class EvidenceServiceImpl implements EvidenceService {
                 mod_fact.setType(type);
                 mod_fact.setX(x);
                 mod_fact.setY(y);
+
+                mod_fact=modelManageService.saveFact(mod_fact);
+
                 NodeList joints = fact.getElementsByTagName("joints").item(0).getChildNodes();
 
-                System.out.println(mod_fact.toString());
-
-                modelManageService.saveFact(mod_fact);
                 for (int j = 0; j < joints.getLength(); j++) {
                     if (joints.item(j).getNodeType() == Node.ELEMENT_NODE) {
                         Element headNode = (Element) joints.item(j);
 
-                        int jointsid = Integer.valueOf(headNode.getAttribute("id"));
                         int jointsx = Integer.valueOf(headNode.getAttribute("x"));
                         int jointsy = Integer.valueOf(headNode.getAttribute("y"));
                         String jointname = headNode.getElementsByTagName("name").item(0).getTextContent();
                         String jointcontent = headNode.getElementsByTagName("content").item(0).getTextContent();
 
                         MOD_Joint mod_joint = new MOD_Joint();
-                        mod_joint.setId(jointsid);
-                        mod_joint.setFactID(id);
+
+                        mod_joint.setFactID(mod_fact.getId());
                         mod_joint.setContent(jointcontent);
                         mod_joint.setCaseID(xmlUtil.getCaseId());
                         mod_joint.setName(jointname);
@@ -808,14 +807,14 @@ public class EvidenceServiceImpl implements EvidenceService {
 
                         mod_joint.setX(jointsx);
                         mod_joint.setY(jointsy);
-                        //    evidence_body.addHead(head);
-                        modelManageService.saveJoint(mod_joint);
+
+                        mod_joint=modelManageService.saveJoint(mod_joint);
+                        mod_fact.addJoint(mod_joint);
                         System.out.println(mod_joint.toString());
                     }
                 }
 
-                //  bodyList.add(evidence_body);
-
+                xmlUtil.addFact(mod_fact);
 
             }
         }
@@ -827,7 +826,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     public void importArrowByXML(ImportXMLUtil xmlUtil) {
 
         modelManageService.deleteArrowsByCid(xmlUtil.getCaseId());
-        List<MOD_Arrow> arrowList = new ArrayList<>();
+
         //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
         Node root = xmlUtil.getDocument().getElementsByTagName("relations").item(0);
         //遍历
@@ -838,22 +837,26 @@ public class EvidenceServiceImpl implements EvidenceService {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element relation = (Element) node;
 
-
                 Element joint = (Element) relation.getElementsByTagName("joint").item(0);
+                String factContent = joint.getElementsByTagName("factContent").item(0).getTextContent();
+                String jointContent = joint.getElementsByTagName("content").item(0).getTextContent();
+                int jointId =xmlUtil.getJointId(factContent,jointContent);
+
                 NodeList arrows = relation.getElementsByTagName("arrows").item(0).getChildNodes();
 
-                int jointId = Integer.valueOf(joint.getAttribute("id"));
                 for (int j = 0; j < arrows.getLength(); j++) {
                     if (arrows.item(j).getNodeType() == Node.ELEMENT_NODE) {
                         Element arrow = (Element) arrows.item(j);
-                        int arrowId = Integer.valueOf(arrow.getAttribute("id"));
 
                         String arrowname = arrow.getElementsByTagName("name").item(0).getTextContent();
                         String arrowcontent = arrow.getElementsByTagName("content").item(0).getTextContent();
                         Element head = (Element) arrow.getElementsByTagName("head").item(0);
-                        int headId = Integer.valueOf(head.getAttribute("id"));
+                        String bodyContent = head.getElementsByTagName("bodyContent").item(0).getTextContent();
+                        String headContent = head.getElementsByTagName("content").item(0).getTextContent();
+
+                        int headId =xmlUtil.getHeadId(bodyContent,headContent);
                         MOD_Arrow mod_arrow = new MOD_Arrow();
-                        mod_arrow.setId(arrowId);
+
                         mod_arrow.setCaseID(xmlUtil.getCaseId());
                         mod_arrow.setName(arrowname);
                         mod_arrow.setContent(arrowcontent);
@@ -864,19 +867,10 @@ public class EvidenceServiceImpl implements EvidenceService {
                     }
                 }
 
-                //  bodyList.add(evidence_body);
-
 
             }
         }
     }
-
-
-
-
-
-
-
 
     @Transactional
     @Override

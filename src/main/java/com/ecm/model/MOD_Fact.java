@@ -1,6 +1,8 @@
 package com.ecm.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="MOD_FACT")
@@ -19,6 +21,22 @@ public class MOD_Fact {
     private String type;
 
     private int logicNodeID = -1; // 关联LogicNode中的id
+
+    @Transient
+    private List<MOD_Joint> jointList=new ArrayList<>();//持有的joint
+
+
+    public List<MOD_Joint> getJointList() {
+        return jointList;
+    }
+
+    public void setJointList(List<MOD_Joint> jointList) {
+        this.jointList = jointList;
+    }
+
+    public void addJoint(MOD_Joint joint){
+        this.jointList.add(joint);
+    }
 
     public int getId() {
         return id;

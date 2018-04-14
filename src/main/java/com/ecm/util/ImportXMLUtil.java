@@ -34,7 +34,7 @@ public class ImportXMLUtil {
     private List<Evidence_Body> bodyList = new ArrayList<>();
     private List<MOD_Fact> factList = new ArrayList<>();
     private List<LogicNode> logicNodeList = new ArrayList<>();
-    private List<MOD_Joint> jointList=new ArrayList<>();
+
 
 
 //    private Map<Integer,Integer> documentList=new HashMap<>();//key-type value-id
@@ -123,13 +123,6 @@ public class ImportXMLUtil {
         this.logicNodeList = logicNodeList;
     }
 
-    public List<MOD_Joint> getJointList() {
-        return jointList;
-    }
-
-    public void setJointList(List<MOD_Joint> jointList) {
-        this.jointList = jointList;
-    }
 
 
 
@@ -137,47 +130,57 @@ public class ImportXMLUtil {
     public void addLogicNode(LogicNode logicNode){
         this.logicNodeList.add(logicNode);
     }
-
-
-    public  List<Evidence_Document> getDocuments(){
-        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
-        Node root = document.getElementsByTagName("documents").item(0);
-        documentList=new ArrayList<>();
-        //遍历
-        NodeList list=root.getChildNodes();
-        for(int i=0;i<list.getLength();i++) {
-
-            //获取第i个book结点
-            Node node = list.item(i);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-
-                Element evi = (Element) node;
-               // System.out.println(evi.getTagName());
-                Evidence_Document evidence_document = new Evidence_Document();
-
-                //获取第i个book的所有属性
-                NamedNodeMap namedNodeMap = evi.getAttributes();
-                //获取已知名为id的属性值
-                //System.out.println(namedNodeMap.getLength());
-                int id = Integer.parseInt(namedNodeMap.getNamedItem("id").getTextContent());
-                int type = Integer.parseInt(namedNodeMap.getNamedItem("type").getTextContent());
-                evidence_document.setId(id);
-                evidence_document.setCaseID(caseId);
-                evidence_document.setType(type);
-
-                //获取book结点的子节点,包含了Test类型的换行
-                String text = evi.getElementsByTagName("text").item(0).getTextContent();
-                evidence_document.setText(text);
-                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
-                evidence_document.setCommitter(committer);
-                System.out.println(evidence_document.toString());
-                documentList.add(evidence_document);
-            }
-        }
-
-        return documentList;
+    public void addDocument(Evidence_Document document){
+        this.documentList.add(document);
     }
+
+    public void addBody(Evidence_Body evidence_body){
+        this.bodyList.add(evidence_body);
+    }
+
+    public void addFact(MOD_Fact fact){
+        this.factList.add(fact);
+    }
+
+//    public  List<Evidence_Document> getDocuments(){
+//        //按文档顺序返回包含在文档中且具有给定标记名称的所有 Element 的 NodeList
+//        Node root = document.getElementsByTagName("documents").item(0);
+//        documentList=new ArrayList<>();
+//        //遍历
+//        NodeList list=root.getChildNodes();
+//        for(int i=0;i<list.getLength();i++) {
+//
+//            //获取第i个book结点
+//            Node node = list.item(i);
+//
+//            if (node.getNodeType() == Node.ELEMENT_NODE) {
+//
+//                Element evi = (Element) node;
+//               // System.out.println(evi.getTagName());
+//                Evidence_Document evidence_document = new Evidence_Document();
+//
+//                //获取第i个book的所有属性
+//                NamedNodeMap namedNodeMap = evi.getAttributes();
+//                //获取已知名为id的属性值
+//                //System.out.println(namedNodeMap.getLength());
+//                int id = Integer.parseInt(namedNodeMap.getNamedItem("id").getTextContent());
+//                int type = Integer.parseInt(namedNodeMap.getNamedItem("type").getTextContent());
+//                evidence_document.setId(id);
+//                evidence_document.setCaseID(caseId);
+//                evidence_document.setType(type);
+//
+//                //获取book结点的子节点,包含了Test类型的换行
+//                String text = evi.getElementsByTagName("text").item(0).getTextContent();
+//                evidence_document.setText(text);
+//                String committer = evi.getElementsByTagName("committer").item(0).getTextContent();
+//                evidence_document.setCommitter(committer);
+//                System.out.println(evidence_document.toString());
+//                documentList.add(evidence_document);
+//            }
+//        }
+//
+//        return documentList;
+//    }
 
 
 //    public  List<Evidence_Body> getEvidences(){
@@ -462,5 +465,71 @@ public class ImportXMLUtil {
         return  list;
 
     }
+
+    public int getLogicNodeId(String content) {
+        for(LogicNode node:logicNodeList){
+            if(node.getType()!=2&&node.getType()!=3&&node.getDetail().contains(content)){
+                return node.getId();
+            }
+        }
+        return -1;
+
+    }
+
+    public int getDocumentId(int type){
+        for (Evidence_Document evidence_document:documentList){
+            if(evidence_document.getType()==type){
+                return evidence_document.getId();
+            }
+        }
+        return -1;
+    }
+
+    public int getBodyId(String body){
+        for(Evidence_Body evidence_body:bodyList){
+            if(evidence_body.getBody().contains(body)){
+                return evidence_body.getId();
+            }
+        }
+        return -1;
+    }
+
+
+    public int getFactId(String fact){
+        for(MOD_Fact mod_fact:factList){
+            if(mod_fact.getContent().contains(fact)){
+                return mod_fact.getId();
+            }
+        }
+        return -1;
+    }
+
+    public int getHeadId(String bodyContent,String heaadContent){
+        for(Evidence_Body evidence_body:bodyList){
+            if(evidence_body.getBody().contains(bodyContent)){
+                for(Evidence_Head evidence_head:evidence_body.getHeadList()){
+                    if(evidence_head.getHead().equals(heaadContent)){
+                        return evidence_head.getId();
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+
+    public int getJointId(String factContent,String jointContent){
+        for(MOD_Fact fact:factList){
+            if(fact.getContent().contains(factContent)){
+                for(MOD_Joint joint:fact.getJointList()){
+                    if(joint.getContent().equals(jointContent)){
+                        return joint.getId();
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
 
 }

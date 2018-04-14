@@ -210,11 +210,12 @@ public class EvidenceController {
 
             ImportXMLUtil xmlUtil=new ImportXMLUtil(filePath+sepa+fileName,ajxh);
 
-           // evidenceService.importDocumentByXML(xmlUtil);
-          //  evidenceService.importEviByXML(xmlUtil);
-            //evidenceService.importFactByXML(xmlUtil);
-           // evidenceService.importArrowByXML(xmlUtil);
+            evidenceService.importDocumentByXML(xmlUtil);
             evidenceService.importLogicByXML(xmlUtil);
+            evidenceService.importEviByXML(xmlUtil);
+            evidenceService.importFactByXML(xmlUtil);
+            evidenceService.importArrowByXML(xmlUtil);
+
 
         }
         if(fileName.contains("xls")){
