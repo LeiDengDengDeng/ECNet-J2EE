@@ -25,6 +25,11 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
 
     public Evidence_Body save(Evidence_Body evi);
 
+    public Evidence_Body findById(int id);
+
+    @Query(value = "select b.body from Evidence_Body b where b.id= ?1")
+    public String getContentById(int id);
+
     public void deleteById(int id);
 
     public void deleteAllByDocumentid(int document_id);

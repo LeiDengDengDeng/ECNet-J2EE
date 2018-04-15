@@ -6,7 +6,7 @@
 			<xs:element name="name" type="xs:string" nillable="true"/>
 			<xs:element name="content" type="xs:string" nillable="true"/>
 		</xs:sequence>
-        <xs:attribute name="id" type="xs:integer"/>
+        <!--<xs:attribute name="id" type="xs:integer"/>-->
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
     </xs:complexType>
@@ -16,7 +16,7 @@
 			<xs:element name="name" type="xs:string" nillable="true"/>
 			<xs:element name="content" type="xs:string" nillable="true"/>
 		</xs:sequence>
-        <xs:attribute name="id" type="xs:integer"/>
+        <!--<xs:attribute name="id" type="xs:integer"/>-->
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
 	</xs:complexType>
@@ -30,15 +30,16 @@
 					<xs:sequence>
 						<xs:element name="name" type="xs:string" nillable="true"/>
 						<xs:element name="content" type="xs:string" nillable="true"/>
-						<xs:element name="bodyID" type="xs:integer"/>
+						<xs:element name="bodyContent" type="xs:string" nillable="true"/>
+						<!--<xs:element name="bodyID" type="xs:integer"/>-->
 					</xs:sequence>
-					<xs:attribute name="id" type="xs:integer"/>
+					<!--<xs:attribute name="id" type="xs:integer"/>-->
 					<xs:attribute name="x" type="xs:integer"/>
 					<xs:attribute name="y" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-        <xs:attribute name="id" type="xs:integer"/>
+        <!--<xs:attribute name="id" type="xs:integer"/>-->
 	</xs:complexType>
 
 	<xs:complexType mixed="true" name="evidence">
@@ -57,13 +58,14 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-        <xs:attribute name="id" type="xs:integer"/>
+        <!--<xs:attribute name="id" type="xs:integer"/>-->
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
-		<xs:attribute name="documentId" type="xs:integer"/>
+		<!--<xs:attribute name="documentId" type="xs:integer"/>-->
 		<xs:attribute name="type" type="xs:integer"/>
 		<xs:attribute name="trust" type="xs:integer"/>
-		<xs:attribute name="logicNodeId" type="xs:integer"/>
+		<xs:attribute name="isDefendant" type="xs:integer"/>
+		<!--<xs:attribute name="logicNodeId" type="xs:integer"/>-->
 	</xs:complexType>
 
 	<xs:complexType mixed="true" name="fact">
@@ -79,10 +81,10 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-        <xs:attribute name="id" type="xs:integer"/>
+        <!--<xs:attribute name="id" type="xs:integer"/>-->
 		<xs:attribute name="x" type="xs:integer"/>
 		<xs:attribute name="y" type="xs:integer"/>
-		<xs:attribute name="logicNodeId" type="xs:integer"/>
+		<!--<xs:attribute name="logicNodeId" type="xs:integer"/>-->
 	</xs:complexType>
 
 
@@ -118,7 +120,17 @@
 												</xs:sequence>
 											</xs:complexType>
 										</xs:element>
-										<xs:element name="joint" type="joint" minOccurs="0"/>
+										<xs:element name="joint" minOccurs="0">
+											<xs:complexType mixed="true">
+												<xs:sequence>
+													<xs:element name="name" type="xs:string" nillable="true"/>
+													<xs:element name="content" type="xs:string" nillable="true"/>
+													<xs:element name="factContent" type="xs:string" nillable="true"/>
+												</xs:sequence>
+												<xs:attribute name="x" type="xs:integer"/>
+												<xs:attribute name="y" type="xs:integer"/>
+											</xs:complexType>
+										</xs:element>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
