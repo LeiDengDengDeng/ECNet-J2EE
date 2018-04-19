@@ -265,24 +265,26 @@ $(document).ready(function(){
             var y = factList[fid]['node'].y;
             var div_width = $("#canvasDiv").width();
             var div_height = $("#canvasDiv").height();
+            var canvas_width = canvas.width;
+            var canvas_height = canvas.height;
 
             var leftOffset = x-(div_width/2)+body_width;
             var topOffset = y-(div_height/2)+body_height;
+
+            if(leftOffset>canvas_width){
+                scene.translateX = leftOffset-canvas_width;
+                leftOffset = canvas_width;
+            }
+            if(topOffset>canvas_height){
+                scene.translateY = topOffset-canvas_height;
+                topOffset = canvas_height;
+            }
             $("#canvasDiv").scrollLeft(leftOffset);
             $("#canvasDiv").scrollTop(topOffset);
-            if(leftOffset>div_width){
-                scene.translateX = leftOffset-div_width;
-            }
-            if(topOffset>div_height){
-                scene.translateY = topOffset-div_height;
-            }
             factList[fid]['node'].click();
             scene.cancleAllSelected();
             scene.addToSelected(factList[fid]['node']);
-            // factList[fid]['node'].selected = 1;
-            // scene.currentElement = factList[fid]['node'];
             factList[fid]['node'].selected=1;
-            // console.log(scene.selectedElements.length);
         }else{
             scene.translateX = 0;
             scene.translateY =0;
@@ -478,305 +480,6 @@ function saveAll(isAsync) {
         });
     }
 
-}
-
-//存储Excel
-function saveExcel() {
-    var bList = [];
-    for(var bid in bodyList){
-        var body = bodyList[bid];
-
-        if(body!=null){
-            var node = body['node'];
-            var heads = [];
-            var outL = node.outLinks;
-            if(outL!=null&&outL.length>0){
-                for(var i=0;i<outL.length;i++){
-                    var h = outL[i].nodeZ;
-                    heads.push({"content":h.content,"keyText":h.keyText})
-                }
-            }
-            var b = {"id":bid,"name":node.text,"content":node.content,"type":typeStr[body['type']],
-                "committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
-                "heads":heads};
-            bList.push(b);
-        }
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/exportExcel",
-        data: JSON.stringify(bList),
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-            // alert("%%%%%%");
-            return data;
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("@*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-}
-
-//存储链头
-function saveHeaders() {
-    var hList = [];
-    for(var hid in headerList){
-        var node = headerList[hid];
-
-        if(node!=null){
-            var documentID = -1;
-            var bodyID = -1;
-
-            if(node.inLinks!=null&&node.inLinks.length>0){
-                bodyID = node.inLinks[0].nodeA.id;
-                documentID = bodyList[bodyID]['documentID'];
-            }
-
-            var h = {"id":hid,"caseID":cid,"documentid":documentID,"bodyid":bodyID,
-                "name":node.text,"head":node.content,"x":node.x,"y":node.y};
-            hList.push(h);
-        }
-    }
-
-    if(header_delete.length>0){
-        $.ajax({
-            type: "post",
-            url: "/model/deleteHeaders",
-            data: JSON.stringify(header_delete),
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (data) {
-
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("1!");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-            }
-        });
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/saveHeaders",
-        data: JSON.stringify(hList),
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("1*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-}
-
-//存储链体
-function saveBodies() {
-    var bList = [];
-    for(var bid in bodyList){
-        var body = bodyList[bid];
-
-        if(body!=null){
-            var node = body['node'];
-            var b = {"id":bid,"caseID":cid,"documentid":body['documentID'],"name":node.text,"body":node.content,"x":node.x,"y":node.y,
-                "type":body['type'],"committer":body['committer'],"reason":body['reason'],"trust":body['conclusion'],
-                "isDefendant":body['isDefendant'],"logicNodeID":body['logicNodeID']};
-            bList.push(b);
-        }
-    }
-
-    if(body_delete.length>0){
-        $.ajax({
-            type: "post",
-            url: "/model/deleteBodies",
-            data: JSON.stringify(body_delete),
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (data) {
-
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("2!");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-            }
-        });
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/saveBodies",
-        data: JSON.stringify(bList),
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("2*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-}
-
-//存储连接点
-function saveJoints() {
-    var jList = [];
-    for(var jid in jointList){
-        var joint = jointList[jid];
-
-        if(joint!=null){
-            var node = joint['node'];
-            var factID = -1;
-            if(node.outLinks!=null&&node.outLinks.length>0){
-                factID = node.outLinks[0].nodeZ.id;
-            }
-            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
-            jList.push(j);
-        }
-    }
-
-    if(joint_delete.length>0){
-        $.ajax({
-            type: "post",
-            url: "/model/deleteJoints",
-            data: {"jids":JSON.stringify(joint_delete),"cid":cid},
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (data) {
-
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("3!");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-            }
-        });
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/saveJoints",
-        data: {"fids":JSON.stringify(jList),"cid":cid},
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("3*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-}
-
-//存储连接点
-function saveArrows() {
-    var aList = [];
-    for(var aid in arrowList){
-        var node = arrowList[aid];
-
-        if(node!=null){
-            var a = {"id":aid,"caseID":cid,"nodeFrom_hid":node.nodeA.id,"nodeTo_jid":node.nodeZ.id,
-                "name":node.text,"content":node.content};
-            aList.push(a);
-        }
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/deleteArrows",
-        data:{"cid":cid},
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("4!");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-
-    $.ajax({
-        type: "post",
-        url: "/model/saveArrows",
-        data: JSON.stringify(aList),
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("4*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
-}
-
-//存储事实
-function saveFacts() {
-    var fList = [];
-    for(var fid in factList){
-        var fact = factList[fid];
-
-        if(fact!=null){
-            var node = fact['node'];
-            var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
-                "type":fact['type'],"logicNodeID":fact['logicNodeID']};
-            fList.push(f);
-        }
-    }
-
-    if(fact_delete.length>0){
-        $.ajax({
-            type: "post",
-            url: "/model/deleteFacts",
-            data: JSON.stringify(fact_delete),
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (data) {
-
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("5!");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-            }
-        });
-    }
-
-    $.ajax({
-        type: "post",
-        url: "/model/saveFacts",
-        data: JSON.stringify(fList),
-        // dataType:"json",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        success: function (data) {
-
-        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("5*");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
 }
 
 //存储单个链头
@@ -2075,6 +1778,26 @@ function bindRightPanel() {
     });
 }
 
+//节点悬停效果,isover=1悬停,isover=0 mouseout
+function nodeMouseOver(node,isover) {
+    if(node!=null){
+        var outL = node.outLinks;
+        if(outL!=null){
+            for(var i = 0;i<outL.length;i++){
+                outL[i].isMouseOver = isover;
+                outL[i].nodeZ.isMouseOver = isover;
+            }
+        }
+        var inL = node.inLinks;
+        if(inL!=null){
+            for(var i = 0;i<inL.length;i++){
+                inL[i].isMouseOver = isover;
+                inL[i].nodeA.isMouseOver = isover;
+            }
+        }
+    }
+}
+
 //添加连线(链体，链头，id)/(连接点，事实，id)
 function addLink(nodeFrom,nodeTo,id){
     var hasLink = false;
@@ -2104,12 +1827,12 @@ function addLink(nodeFrom,nodeTo,id){
 
         var link = new JTopo.Link(nodeFrom, nodeTo);
         link.id = id;
-        link.lineWidth = 2; // 线宽
+        link.lineWidth = 0.7; // 线宽
         // link.dashedPattern = dashedPattern; // 虚线
         link.bundleOffset = 60; // 折线拐角处的长度
         link.bundleGap = 20; // 线条之间的间隔
         // link.textOffsetY = 3; // 文本偏移量（向下3个像素）
-        link.strokeColor = 'black';
+        link.strokeColor = 'gray';
         link.node_type = 'link';
 
         link.addEventListener('mouseup', function(event){
@@ -2164,12 +1887,12 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
         var arrow = new JTopo.Link(nodeFrom, nodeTo, name);
         arrow.id = id;
         arrow.content = content;
-        arrow.lineWidth = 2; // 线宽
+        arrow.lineWidth = 0.7; // 线宽
         // arrow.dashedPattern = dashedPattern; // 虚线
         arrow.bundleOffset = 60; // 折线拐角处的长度
         arrow.bundleGap = 20; // 线条之间的间隔
         // arrow.textOffsetY = 3; // 文本偏移量（向下3个像素）
-        arrow.strokeColor = 'black';
+        arrow.strokeColor = 'gray';
         arrow.fontColor = 'black';
         arrow.arrowsRadius = 10;
         arrow.node_type = 'arrow';
@@ -2277,9 +2000,13 @@ function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
         sourceNode = this;
     });
 
+    circleNode.addEventListener('mouseover', function(event){
+        nodeMouseOver(this,1);
+    });
     circleNode.addEventListener('mouseout', function(event){
         isNodeClicked_right = false;
         isNodeClicked_left = false;
+        nodeMouseOver(this,0);
     });
 
     return circleNode;
@@ -2402,10 +2129,13 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
         y_origin = this.y;
         sourceNode = this;
     });
-
+    node.addEventListener('mouseover', function(event){
+       nodeMouseOver(this,1);
+    });
     node.addEventListener('mouseout', function(event){
         isNodeClicked_right = false;
         isNodeClicked_left = false;
+        nodeMouseOver(this,0);
     });
 
     if(content==null)
@@ -2489,9 +2219,14 @@ function drawJoint(isNew,x,y,id,name,content,type,isinit){
         y_origin = this.y;
         sourceNode = this;
     });
+
+    node.addEventListener('mouseover', function(event){
+        nodeMouseOver(this,1);
+    });
     node.addEventListener('mouseout', function(event){
         isNodeClicked_right = false;
         isNodeClicked_left = false;
+        nodeMouseOver(this,0);
     });
 
     return node;
@@ -2578,9 +2313,14 @@ function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
         y_origin = this.y;
         sourceNode = this;
     });
+
+    node.addEventListener('mouseover', function(event){
+        nodeMouseOver(this,1);
+    });
     node.addEventListener('mouseout', function(event){
         isNodeClicked_right = false;
         isNodeClicked_left = false;
+        nodeMouseOver(this,0);
     });
 
     return node;
