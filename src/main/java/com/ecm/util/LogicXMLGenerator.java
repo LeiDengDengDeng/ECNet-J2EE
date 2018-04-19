@@ -53,10 +53,10 @@ public class LogicXMLGenerator {
     }
 
     public void generateXMLFile() throws IOException {
-        Element rootEle = document.addElement("graph");
+        Element rootEle = document.addElement("graph").addElement("nodes");
         for (Integer root : roots) {
             Element rootNodeEle = generateNodeElement(rootEle, root);
-            recursive(rootNodeEle, parentAndItsChildren.get(root));
+            recursive(rootNodeEle.addElement("children"), parentAndItsChildren.get(root));
         }
 
         File file = new File(FILE_PATH);
@@ -72,17 +72,17 @@ public class LogicXMLGenerator {
 
         for (Integer child : children) {
             Element childEle = generateNodeElement(rootElement, child);
-            recursive(childEle, parentAndItsChildren.get(child));
+            recursive(childEle.addElement("children"), parentAndItsChildren.get(child));
         }
     }
 
     private Element generateNodeElement(Element parentEle, int nodeID) {
         LogicNode node = nodeMap.get(nodeID);
         Element nodeEle = parentEle.addElement("node");
-        nodeEle.addAttribute("topic", node.getTopic());
+        nodeEle.addElement("topic").setText(node.getTopic());
         nodeEle.addAttribute("nodeId", "" + node.getNodeID());
-        nodeEle.addAttribute("type", types[node.getType()]);
-        nodeEle.addAttribute("detail", node.getDetail());
+        nodeEle.addElement("type").setText(types[node.getType()]);
+        nodeEle.addElement("detail").setText(node.getDetail());
         nodeEle.addAttribute("x", "" + node.getX());
         nodeEle.addAttribute("y", "" + node.getY());
 

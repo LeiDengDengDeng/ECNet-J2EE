@@ -140,8 +140,10 @@ public class ModelManageServiceImpl implements ModelManageService {
             Evidence_Body body = bodies.get(i);
             if(body.getLogicNodeID()>=0){
                 LogicNode node = logicNodeDao.findById(body.getLogicNodeID());
-                node.setDetail(body.getBody());
-                logicNodeDao.save(node);
+                if(node!=null){
+                    node.setDetail(body.getBody());
+                    logicNodeDao.save(node);
+                }
             }
             evidenceBodyDao.save(body);
         }
@@ -201,8 +203,10 @@ public class ModelManageServiceImpl implements ModelManageService {
             MOD_Fact fact = facts.get(i);
             if(fact.getLogicNodeID()>=0){
                 LogicNode node = logicNodeDao.findById(fact.getLogicNodeID());
-                node.setDetail(fact.getContent());
-                logicNodeDao.save(node);
+                if(node!=null){
+                    node.setDetail(fact.getContent());
+                    logicNodeDao.save(node);
+                }
             }
             factDao.save(fact);
         }
@@ -751,13 +755,14 @@ public class ModelManageServiceImpl implements ModelManageService {
             for(int i = 0;i<bodies.size();i++){
                 Evidence_Body body = bodies.get(i);
                 Evidence e = of.createEvidence();
-                e.setId(new BigInteger(body.getId()+""));
+//                e.setId(new BigInteger(body.getId()+""));
                 e.setX(new BigInteger(body.getX()+""));
                 e.setY(new BigInteger(body.getY()+""));
-                e.setDocumentId(new BigInteger(body.getDocumentid()+""));
+//                e.setDocumentId(new BigInteger(body.getDocumentid()+""));
                 e.setType(new BigInteger(body.getType()+""));
                 e.setTrust(new BigInteger(body.getTrust()+""));
-                e.setLogicNodeId(new BigInteger(body.getLogicNodeID()+""));
+                e.setIsDefendant(new BigInteger(body.getIsDefendant()+""));
+//                e.setLogicNodeId(new BigInteger(body.getLogicNodeID()+""));
                 e.getContent().add(of.createEvidenceName(transNull(body.getName())));
                 e.getContent().add(of.createEvidenceContent(transNull(body.getBody())));
                 e.getContent().add(of.createEvidenceType(body.getTypeToString()));
@@ -770,7 +775,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                 for(int j = 0;j<heads.size();j++){
                     Evidence_Head head = heads.get(j);
                     Head h = of.createHead();
-                    h.setId(new BigInteger(head.getId()+""));
+//                    h.setId(new BigInteger(head.getId()+""));
                     h.setX(new BigInteger(head.getX()+""));
                     h.setY(new BigInteger(head.getY()+""));
                     h.getContent().add(of.createHeadName(transNull(head.getName())));
@@ -787,10 +792,10 @@ public class ModelManageServiceImpl implements ModelManageService {
             for(int i = 0;i<facts.size();i++){
                 MOD_Fact fact = facts.get(i);
                 Fact f = of.createFact();
-                f.setId(new BigInteger(fact.getId()+""));
+//                f.setId(new BigInteger(fact.getId()+""));
                 f.setX(new BigInteger(fact.getX()+""));
                 f.setY(new BigInteger(fact.getY()+""));
-                f.setLogicNodeId(new BigInteger(fact.getLogicNodeID()+""));
+//                f.setLogicNodeId(new BigInteger(fact.getLogicNodeID()+""));
                 f.getContent().add(of.createFactName(transNull(fact.getName())));
                 f.getContent().add(of.createFactContent(transNull(fact.getContent())));
                 f.getContent().add(of.createFactType(transNull(fact.getType())));
@@ -800,7 +805,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                 for(int j = 0;j<joints.size();j++){
                     MOD_Joint joint = joints.get(j);
                     Joint jx = of.createJoint();
-                    jx.setId(new BigInteger(joint.getId()+""));
+//                    jx.setId(new BigInteger(joint.getId()+""));
                     jx.setX(new BigInteger(joint.getX()+""));
                     jx.setY(new BigInteger(joint.getY()+""));
                     jx.getContent().add(of.createJointName(transNull(joint.getName())));
@@ -826,7 +831,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                         MOD_Arrow arrow = arrows.get(j);
                         Evidence_Head head = evidenceHeadDao.findById(arrow.getNodeFrom_hid());
                         Arrow arrowXml = of.createArrow();
-                        arrowXml.setId(new BigInteger(arrow.getId()+""));
+//                        arrowXml.setId(new BigInteger(arrow.getId()+""));
                         arrowXml.getContent().add(of.createArrowName(transNull(arrow.getName())));
                         arrowXml.getContent().add(of.createArrowContent(transNull(arrow.getContent())));
                         Arrow.Head hXml = of.createArrowHead();
@@ -836,6 +841,7 @@ public class ModelManageServiceImpl implements ModelManageService {
                         String hname = "";
                         String hcontent = "";
                         int bodyId = -1;
+                        String bodyContent = "";
                         if(head!=null){
                             hid = head.getId();
                             hx = head.getX();
@@ -843,24 +849,34 @@ public class ModelManageServiceImpl implements ModelManageService {
                             hname = head.getName();
                             hcontent = head.getHead();
                             bodyId = head.getBodyid();
+                            if(bodyId>=0){
+                                bodyContent = evidenceBodyDao.getContentById(bodyId);
+                            }
                         }
-                        hXml.setId(new BigInteger(hid+""));
+//                        hXml.setId(new BigInteger(hid+""));
                         hXml.setX(new BigInteger(hx+""));
                         hXml.setY(new BigInteger(hy+""));
                         hXml.setName(transNull(hname));
                         hXml.setContent(transNull(hcontent));
-                        hXml.setBodyID(new BigInteger(bodyId+""));
+                        hXml.setBodyContent(transNull(bodyContent));
+//                        hXml.setBodyID(new BigInteger(bodyId+""));
                         arrowXml.getContent().add(of.createArrowHead(hXml));
                         arrowsXml.getContent().add(of.createEcmRelationsRelationArrowsArrow(arrowXml));
                     }
                     relation.getContent().add(of.createEcmRelationsRelationArrows(arrowsXml));
 
-                    Joint jXml = of.createJoint();
-                    jXml.setId(new BigInteger(joint.getId()+""));
+                    String factContent = "";
+                    int fid = joint.getFactID();
+                    if(fid>=0){
+                        factContent = factDao.findById(fid).getContent();
+                    }
+                    Ecm.Relations.Relation.Joint jXml = of.createEcmRelationsRelationJoint();
+//                    jXml.setId(new BigInteger(joint.getId()+""));
                     jXml.setX(new BigInteger(joint.getX()+""));
                     jXml.setY(new BigInteger(joint.getY()+""));
-                    jXml.getContent().add(of.createJointName(transNull(joint.getName())));
-                    jXml.getContent().add(of.createJointContent(transNull(joint.getContent())));
+                    jXml.getContent().add(of.createEcmRelationsRelationJointName(transNull(joint.getName())));
+                    jXml.getContent().add(of.createEcmRelationsRelationJointContent(transNull(joint.getContent())));
+                    jXml.getContent().add(of.createEcmRelationsRelationJointFactContent(transNull(factContent)));
                     relation.getContent().add(of.createEcmRelationsRelationJoint(jXml));
                     relations.getContent().add(of.createEcmRelationsRelation(relation));
                 }

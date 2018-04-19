@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.13 时间 11:28:21 AM CST
+// 生成时间: 2018.04.15 时间 03:07:06 PM CST
 //
 
 
@@ -47,10 +47,8 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;/complexType>
  *         &lt;/element>
  *       &lt;/sequence>
- *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="x" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="y" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *       &lt;attribute name="logicNodeId" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -66,20 +64,16 @@ public class Fact {
 
     @XmlElementRefs({
             @XmlElementRef(name = "content", type = JAXBElement.class),
+            @XmlElementRef(name = "joints", type = JAXBElement.class),
             @XmlElementRef(name = "name", type = JAXBElement.class),
-            @XmlElementRef(name = "type", type = JAXBElement.class),
-            @XmlElementRef(name = "joints", type = JAXBElement.class)
+            @XmlElementRef(name = "type", type = JAXBElement.class)
     })
     @XmlMixed
     protected List<Serializable> content;
-    @XmlAttribute(name = "id")
-    protected BigInteger id;
     @XmlAttribute(name = "x")
     protected BigInteger x;
     @XmlAttribute(name = "y")
     protected BigInteger y;
-    @XmlAttribute(name = "logicNodeId")
-    protected BigInteger logicNodeId;
 
     /**
      * Gets the value of the content property.
@@ -100,9 +94,9 @@ public class Fact {
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link Fact.Joints }{@code >}
+     * {@link JAXBElement }{@code <}{@link String }{@code >}
+     * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link String }
      *
      *
@@ -112,30 +106,6 @@ public class Fact {
             content = new ArrayList<Serializable>();
         }
         return this.content;
-    }
-
-    /**
-     * 获取id属性的值。
-     *
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *
-     */
-    public BigInteger getId() {
-        return id;
-    }
-
-    /**
-     * 设置id属性的值。
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *
-     */
-    public void setId(BigInteger value) {
-        this.id = value;
     }
 
     /**
@@ -184,30 +154,6 @@ public class Fact {
      */
     public void setY(BigInteger value) {
         this.y = value;
-    }
-
-    /**
-     * 获取logicNodeId属性的值。
-     *
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *
-     */
-    public BigInteger getLogicNodeId() {
-        return logicNodeId;
-    }
-
-    /**
-     * 设置logicNodeId属性的值。
-     *
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *
-     */
-    public void setLogicNodeId(BigInteger value) {
-        this.logicNodeId = value;
     }
 
 

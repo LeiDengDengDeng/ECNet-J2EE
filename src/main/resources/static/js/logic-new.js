@@ -25,6 +25,9 @@ var mouseY;
 
 var dotNum = 0;
 
+// 存储自动补全插件参数
+var autoComParams;
+
 $(document).ready(function () {
     canvas = document.getElementById('canvas');
     stage = new JTopo.Stage(canvas); // 创建一个舞台对象
@@ -90,6 +93,8 @@ $(document).ready(function () {
 
     loadLogicNodes();
     prepareConclusionSelect();
+
+    $('#search-form').autocomplete();
 });
 
 function drawNode(x, y, id, topic, type, detail, parentId) {
@@ -108,7 +113,7 @@ function drawNode(x, y, id, topic, type, detail, parentId) {
     // 根据内容长度决定node宽度
     node.setSize(topicLength, 24);
     // 设置树的方向
-    node.layout = {type: 'tree', direction: 'left', width: 80, height: 280};
+    node.layout = {type: 'tree', direction: 'left', width: 100, height: 300};
 
     node.addEventListener('mouseup', function (event) {
         nodeClickEvent(node.id, event);
@@ -230,6 +235,9 @@ function prepareAddModal(id) {
     $("#node-add-modal #node-add-detail-input").val("");
     $("#node-add-modal #node-add-type-select").val("法条");
     $("#node-add-modal #node-add-leadTo-select").empty();
+
+    autoComParams.hints = [];
+    $("#search-results").hide();
 
     prepareSelect($("#node-add-modal #node-add-leadTo-select"), id, null);
 }
@@ -430,18 +438,12 @@ function delNodeAndItsChildren(delNodes, id) {
 }
 
 function prepareLawModal(id) {
-    lawsFrequencyBtn(false);
-
     var node = findNodeById(id);
     $("#node-law-id").val(id);
     $("#node-law-topic").val(node.topic);
     $("#node-law-detail").val(node.detail);
 
-    // queryFrequencyLaws(node.detail);
-    var lawsDiv = $("#laws");
-    lawsDiv.empty();
-    var laws = ["中华人民共和国刑法_第六十七条", "中华人民共和国刑法_第六十八条"];
-    prepareLawsDiv(lawsDiv, laws);
+    lawsFrequencyBtn(false);
 }
 
 function prepareMulLawModal() {
@@ -467,6 +469,12 @@ function lawsFrequencyBtn(isMultiple) {
         $("#frequencyBtn").addClass("active");
         $("#lawSumBtn").removeClass("active");
         $("#mindBtn").removeClass("active");
+
+        // var lawsDiv = $("#laws");
+        // lawsDiv.empty();
+        // var laws = ["中华人民共和国刑法_第六十七条", "中华人民共和国刑法_第六十八条"];
+        // prepareLawsDiv(lawsDiv, laws);
+        queryFrequencyLaws();
     }
 }
 
@@ -479,6 +487,8 @@ function lawsSumBtn(isMultiple) {
         $("#frequencyBtn").removeClass("active");
         $("#lawSumBtn").addClass("active");
         $("#mindBtn").removeClass("active");
+
+        queryLawSumLaws();
     }
 }
 
@@ -497,38 +507,51 @@ function lawsMindBtn(isMultiple) {
 }
 
 function prepareLawsDiv(lawsDiv, laws) {
-    for (var i = 0, len = laws.length; i < len; i++) {
-        var div = document.createElement("div");
-        div.setAttribute("class", "form-group");
-        var checkbox = document.createElement("input");
-        checkbox.setAttribute("style", "margin-right:5px;");
-        checkbox.setAttribute("type", "checkbox");
-        checkbox.setAttribute("id", "checkbox-" + i);
-        var a = document.createElement("a");
-        a.setAttribute("id", "law-" + i);
-        a.setAttribute("onclick", "lawClick(" + i + ")");
-        a.text = laws[i];
-        var textarea = document.createElement("textarea");
-        textarea.value = "犯罪以后自动投案，如实供述自己的罪行的，是自首。对于自首的犯罪分子，可以从轻或者减轻处罚。其中，犯罪较轻的，可以免除处罚。";
-        textarea.setAttribute("class", "form-control");
-        textarea.setAttribute("style", "display: none;");
-        textarea.setAttribute("id", "textarea-" + i);
-        textarea.setAttribute("disabled", "disabled");
+    if (laws.length == 0) {
+        $("#law_empty").show();
+    } else {
+        $("#law_empty").hide();
+        for (var i = 0, len = laws.length; i < len; i++) {
+            var div = document.createElement("div");
+            div.setAttribute("class", "form-group");
+            var checkbox = document.createElement("input");
+            checkbox.setAttribute("style", "margin-right:5px;");
+            checkbox.setAttribute("type", "checkbox");
+            checkbox.setAttribute("id", "checkbox-" + i);
+            var a = document.createElement("a");
+            a.setAttribute("id", "law-" + i);
+            a.setAttribute("onclick", "lawClick(" + i + ")");
+            a.text = laws[i];
+            var textarea = document.createElement("textarea");
+            textarea.value = null;
+            textarea.setAttribute("class", "form-control");
+            textarea.setAttribute("style", "display: none;height:100px;");
+            textarea.setAttribute("id", "textarea-" + i);
+            textarea.setAttribute("disabled", "disabled");
 
-        div.append(checkbox);
-        div.append(a);
-        div.append(textarea);
-        lawsDiv.append(div);
+            div.append(checkbox);
+            div.append(a);
+            div.append(textarea);
+            lawsDiv.append(div);
+        }
     }
 }
 
 function lawClick(id) {
-    if ($("#textarea-" + id).css('display') == "none") {
-        $("#textarea-" + id).show();
-    } else {
-        $("#textarea-" + id).hide();
+    var textareas = $("#laws textarea");
+    for (var i = 0; i < textareas.length; i++) {
+        textareas.get(i).setAttribute("style", "display: none;height:100px;");
     }
 
+    var textarea = $("#textarea-" + id);
+    if (textarea.css('display') == "none") {
+        textarea.show();
+        if (textarea.value == null || textarea.value == "") {
+            textarea.val(queryLawContent($("#law-" + id).text()));
+        }
+    } else {
+        textarea.hide();
+    }
 }
 
 function lawAdviceEvent() {
@@ -540,9 +563,6 @@ function lawAdviceEvent() {
 
         // 将事实节点与结论节点连接起来
         linkTwoSingleNode(factNodeId, parentId);
-        // moveNode(factNodeId, parentId);
-        // factNode.parentId = parentId;
-        // editLink(factNodeId, null, factNodeId, parentId);
     }
 
     var checkboxes = $("#laws input[type=checkbox]:checked");
@@ -552,14 +572,14 @@ function lawAdviceEvent() {
         var lawA = $("#law-" + id);
         var topic = lawA.text();
         var detail = lawA.attr("title");
-        if (topic.length > 15) {
+        if (topic.length > 20) {
             topic = "法条";
             detail = lawA.text() + "\n" + lawA.attr("title");
         }
 
         // 不重复时添加节点
         if (!isLawRepeated(parentId, topic, detail)) {
-            drawNode(factNode.node.x, factNode.node.y + 50, null, topic, 2, detail, parentId);
+            drawNode(factNode.node.x, factNode.node.y + 50 * (i + 1), null, topic, 2, detail, parentId);
         }
     }
 
@@ -1027,8 +1047,10 @@ function conclusionSelectChangeEvent() {
     var selectVal = $("#conclusion-select").val();
     if (selectVal == 0) {
         $("#canvas-div").scrollTop(0);
+        $("#canvas-div").scrollLeft(0);
     } else {
         $("#canvas-div").scrollTop(findNodeById($("#conclusion-select").val()).node.y - 50);
+        $("#canvas-div").scrollLeft(findNodeById($("#conclusion-select").val()).node.x - 800);
     }
 }
 
@@ -1082,3 +1104,159 @@ function loadingDots() {
         $('#id_loading_dots').text($('#id_loading_dots').text() + ' ●');
     }
 }
+
+function typeSelectOnChange(select) {
+    $("#search-results").hide();
+    if (select.value == "法条") {
+        autoComParams.hints = ["中华"];
+        $('#node-add-topic-input').bind('input propertychange', function () {
+            if (this.value.length == 0) {
+                $("#search-results").hide();
+            } else {
+                queryVagueArticles($('#node-add-topic-input').val());
+                $("#search-results").show();
+            }
+        });
+    } else {
+        $('#node-add-topic-input').unbind('input propertychange')
+    }
+}
+
+(function ($) {
+    $.fn.autocomplete = function (params) {
+        //Selections
+        var currentSelection = -1;
+        var currentProposals = [];
+
+        //Default parameters
+        autoComParams = $.extend({
+            hints: [],
+            placeholder: '',
+            width: 200,
+            height: 30,
+            onSubmit: function (text) {
+                $("#node-add-detail-input").val(queryLawContent(text));
+            },
+            onBlur: function () {
+            }
+        }, params);
+
+        //Build messagess
+        this.each(function () {
+            //Container
+            var searchContainer = $('<div></div>')
+                .addClass('autocomplete-container')
+                .css('height', autoComParams.height);
+
+            //Text input
+            var input = $('<input type="text" autocomplete="off" name="query">')
+                .attr('placeholder', autoComParams.placeholder)
+                .attr('id', "node-add-topic-input")
+                .addClass('autocomplete-input')
+                .addClass('form-control');
+
+            //Proposals
+            var proposals = $('<div></div>')
+                .addClass('proposal-box')
+                .addClass('form-control')
+                .attr('id', 'search-results')
+                .css('display', 'none')
+                .css('padding', 0)
+                .css('top', 35);
+            var proposalList = $('<ul></ul>')
+                .addClass('proposal-list');
+
+            proposals.append(proposalList);
+
+            input.keydown(function (e) {
+                switch (e.which) {
+                    case 38: // Up arrow
+                        e.preventDefault();
+                        $('ul.proposal-list li').removeClass('selected');
+                        if ((currentSelection - 1) >= 0) {
+                            currentSelection--;
+                            $("ul.proposal-list li:eq(" + currentSelection + ")")
+                                .addClass('selected');
+                        } else {
+                            currentSelection = -1;
+                        }
+                        break;
+                    case 40: // Down arrow
+                        e.preventDefault();
+                        if ((currentSelection + 1) < currentProposals.length) {
+                            $('ul.proposal-list li').removeClass('selected');
+                            currentSelection++;
+                            $("ul.proposal-list li:eq(" + currentSelection + ")")
+                                .addClass('selected');
+                        }
+                        break;
+                    case 13: // Enter
+                        if (currentSelection > -1) {
+                            var text = $("ul.proposal-list li:eq(" + currentSelection + ")").html();
+                            input.val(text);
+                        }
+                        currentSelection = -1;
+                        proposalList.empty();
+                        autoComParams.onSubmit(input.val());
+                        break;
+                    case 27: // Esc button
+                        currentSelection = -1;
+                        proposalList.empty();
+                        input.val('');
+                        break;
+                }
+            });
+
+            input.bind("change paste keyup", function (e) {
+                if (e.which != 13 && e.which != 27
+                    && e.which != 38 && e.which != 40) {
+                    currentProposals = [];
+                    currentSelection = -1;
+                    proposalList.empty();
+                    if (input.val() != '') {
+                        proposalList.empty();
+                        for (var i = 0; i < autoComParams.hints.length; i++) {
+                            var hint = autoComParams.hints[i];
+                            var inputLoc = hint.indexOf(input.val());
+                            // 加粗输入值
+                            hint = hint.substring(0, inputLoc) + "<strong>" + input.val() + "</strong>" + hint.substring(inputLoc + input.val().length);
+                            currentProposals.push(hint);
+
+                            var element = $('<li></li>')
+                                .html(hint)
+                                .addClass('proposal')
+                                .click(function () {
+                                    input.val($(this).text());
+                                    proposalList.empty();
+                                    autoComParams.onSubmit(input.val());
+                                })
+                                .mouseenter(function () {
+                                    $(this).addClass('selected');
+                                })
+                                .mouseleave(function () {
+                                    $(this).removeClass('selected');
+                                });
+                            proposalList.append(element);
+                        }
+                    }
+                }
+            });
+
+            input.blur(function (e) {
+                currentSelection = -1;
+                //proposalList.empty();
+                autoComParams.onBlur();
+            });
+
+            searchContainer.append(input);
+            searchContainer.append(proposals);
+
+            $(this).append(searchContainer);
+        });
+
+        typeSelectOnChange(document.getElementById("node-add-type-select"));
+
+        return this;
+    };
+
+})(jQuery);
