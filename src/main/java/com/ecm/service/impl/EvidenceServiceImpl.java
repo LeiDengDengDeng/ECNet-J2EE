@@ -295,6 +295,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     public List<Evidence_Body> importEviByExcel(String filepath, int caseId, List<Evidence_Document> doculist) {
         deleteBodyAllByCaseId(caseId);
         deleteHeadAllByCaseId(caseId);
+        logicService.deleteAllNodesByCaseID(caseId);
 
         List<Evidence_Body> bodylist = new ArrayList<>();
 
@@ -459,7 +460,6 @@ public class EvidenceServiceImpl implements EvidenceService {
     public void importLogicByExcel(String filepath, int caseId, List<Evidence_Body> bodyList) {
 
 
-        logicService.deleteAllNodesByCaseID(caseId);
         Workbook book = null;
         try {
             book = ExcelUtil.getExcelWorkbook(filepath);
