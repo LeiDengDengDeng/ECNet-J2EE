@@ -139,97 +139,10 @@ public class ModelController {
             int eid = modelManageService.getLogicNodeIDofBody(bid);
             List<Integer> arr = list.get(bid);
             for(int i = 0;i<arr.size();i++){
-                int fid = arr.get(i);//System.out.println("##"+fid);
+                int fid = arr.get(i);
                 int factID = modelManageService.getFactByID(fid).getLogicNodeID();
+                System.out.println("cid:"+cid+";eid:"+"fid:"+factID);
                 logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
-            }
-        }
-    }
-
-    @RequestMapping(value="/saveHeaders")
-    public void saveHeaders(@RequestBody List<Evidence_Head> headers){
-
-        for(int i = 0;i<headers.size();i++){
-            modelManageService.saveHeader(headers.get(i));
-        }
-    }
-
-    @RequestMapping(value="/deleteHeaders")
-    public void deleteHeaders(@RequestBody List<Integer> hids){
-
-        for(int i = 0;i<hids.size();i++){
-            modelManageService.deleteHeaderById(hids.get(i));
-        }
-    }
-
-    @RequestMapping(value="/saveBodies")
-    public void saveBodies(@RequestBody List<Evidence_Body> bodies){
-        for(int i = 0;i<bodies.size();i++) {
-            Evidence_Body body = bodies.get(i);
-
-            if(body.getLogicNodeID()>=0){
-                logicService.modEvidenceOrFactNode(body.getLogicNodeID(),body.getBody());
-            }else{
-                int lid = logicService.addEvidenceOrFactNode(body.getCaseID(),body.getBody(),0);
-                body.setLogicNodeID(lid);
-            }
-            modelManageService.saveBody(bodies.get(i));
-        }
-    }
-
-    @RequestMapping(value="/deleteBodies")
-    public void deleteBodies(@RequestBody List<Integer> bids){
-
-        for(int i = 0;i<bids.size();i++){
-            int bid = bids.get(i);
-            modelManageService.deleteBodyById(bid);
-            int lid = modelManageService.getLogicNodeIDofBody(bid);
-            if(lid>=0)
-                logicService.deleteNode(lid);
-        }
-    }
-
-    @RequestMapping(value="/saveJoints")
-    public void saveJoints(@RequestBody List<MOD_Joint> joints){
-        for(int i = 0;i<joints.size();i++) {
-            modelManageService.saveJoint(joints.get(i));
-        }
-    }
-
-    @RequestMapping(value="/deleteJoints")
-    public void deleteJoints(@RequestParam("jids") List<Integer> jids,@RequestParam("cid") int cid){
-
-        for(int i = 0;i<jids.size();i++){
-//            modelManageService.deleteJointById(jids.get(i),cid);
-        }
-    }
-
-    @RequestMapping(value="/saveFacts")
-    public void saveFacts(@RequestBody List<MOD_Fact> facts){
-        for(int i = 0;i<facts.size();i++) {
-            MOD_Fact fact = facts.get(i);
-
-            if(fact.getLogicNodeID()>=0){
-                logicService.modEvidenceOrFactNode(fact.getLogicNodeID(),fact.getContent());
-            }else{
-                int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
-                fact.setLogicNodeID(lid);
-            }
-            modelManageService.saveFact(fact);
-        }
-    }
-
-    @RequestMapping(value="/deleteFacts")
-    public void deleteFacts(@RequestParam("fids") List<Integer> fids,@RequestParam("cid") int cid){
-
-        for(int i = 0;i<fids.size();i++){
-            int fid = fids.get(i);
-//            modelManageService.deleteFactById(fid,cid);
-            MOD_Fact fact = modelManageService.getFactByID(fid);
-            if(fact!=null){
-                if(fact.getLogicNodeID()>=0){
-                    logicService.deleteNode(fact.getLogicNodeID());
-                }
             }
         }
     }

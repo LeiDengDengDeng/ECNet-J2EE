@@ -2562,7 +2562,7 @@ function typeSetting() {
     var y = 10 + header_radius;
     var headerGap_x = 250;
     var headerGap_y = 40;
-    var jointGap = 250;
+    var jointGap = 300;
 
     for(var bid in bodyList){
         if(bodyList[bid]!=null){

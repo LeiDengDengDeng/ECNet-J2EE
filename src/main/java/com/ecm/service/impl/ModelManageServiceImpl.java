@@ -140,8 +140,10 @@ public class ModelManageServiceImpl implements ModelManageService {
             Evidence_Body body = bodies.get(i);
             if(body.getLogicNodeID()>=0){
                 LogicNode node = logicNodeDao.findById(body.getLogicNodeID());
-                node.setDetail(body.getBody());
-                logicNodeDao.save(node);
+                if(node!=null){
+                    node.setDetail(body.getBody());
+                    logicNodeDao.save(node);
+                }
             }
             evidenceBodyDao.save(body);
         }
@@ -201,8 +203,10 @@ public class ModelManageServiceImpl implements ModelManageService {
             MOD_Fact fact = facts.get(i);
             if(fact.getLogicNodeID()>=0){
                 LogicNode node = logicNodeDao.findById(fact.getLogicNodeID());
-                node.setDetail(fact.getContent());
-                logicNodeDao.save(node);
+                if(node!=null){
+                    node.setDetail(fact.getContent());
+                    logicNodeDao.save(node);
+                }
             }
             factDao.save(fact);
         }
