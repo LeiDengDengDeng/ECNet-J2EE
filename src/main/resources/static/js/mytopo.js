@@ -59,6 +59,7 @@ $(document).ready(function(){
     scene = new JTopo.Scene(stage); // 创建一个场景对象
     stage.mode = "normal";
     oContext = canvas.getContext("2d");
+    stage.wheelZoom = null;
 
     stage.addEventListener("mouseover", function(event){
         console.log("鼠标进入");
@@ -211,34 +212,42 @@ $(document).ready(function(){
     bindMenuClick();
     bindRightPanel();
 
+    $('#zoomOut-btn').click(function () {
+        stage.zoomOut(0.85);
+        scene.translateToCenter();
+        $("#canvasDiv").scrollLeft((canvas.width-$("#canvasDiv").width())/2);
+        $("#canvasDiv").scrollTop((canvas.height-$("#canvasDiv").height())/2);
+    });
+    $('#zoomIn-btn').click(function () {
+        stage.zoomIn(0.85);
+        scene.translateToCenter();
+        $("#canvasDiv").scrollLeft((canvas.width-$("#canvasDiv").width())/2);
+        $("#canvasDiv").scrollTop((canvas.height-$("#canvasDiv").height())/2);
+    });
+    $("#zoomSelection").change(function () {
+        if($(this).is(':checked')==true){
+            stage.wheelZoom = 0.85; //缩放比例为0.85
+            scene.translateToCenter();
+            $("#canvasDiv").scrollLeft((canvas.width-$("#canvasDiv").width())/2);
+            $("#canvasDiv").scrollTop((canvas.height-$("#canvasDiv").height())/2);
+        }else{
+            stage.wheelZoom = null;
+        }
+    });
 
     $('#save-btn').click(function () {
-        // saveBodies();
-        // saveHeaders();
-        // saveJoints();
-        // saveArrows();
-        // saveFacts();
-        // alert('保存成功！')
         saveAll(false);
     });
     $('#saveImg-btn').click(function () {
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        // saveBodies();
-        // saveHeaders();
-        // saveJoints();
-        // saveArrows();
-        // saveFacts();
+        saveAll();
         window.location.href="/model/exportExcel?cid="+cid;
 
     });
     $('#saveXML-btn').click(function () {
-        // saveBodies();
-        // saveHeaders();
-        // saveJoints();
-        // saveArrows();
-        // saveFacts();
+        saveAll();
         window.location.href="/model/exportXML?cid="+cid;
 
     });
@@ -450,12 +459,15 @@ function saveAll(isAsync) {
                         smallLoading:false,
                         titleColor:'#388E7A',
                         loadingBg:'#312923',
-                        loadingMaskBg:'rgba(22,22,22,0.2)',
-                        mustRelative: true
+                        loadingMaskBg:'rgba(22,22,22,0.2)'
+                        // mustRelative: true
                     });
                 }
             },
             success: function (data) {
+                var cpt = $(".cpt-loading-mask[data-name='save']");
+                cpt.find('.loading .origin').html("<span><i class='fa fa-check'></i></span>");
+                cpt.find('.loading-title .txt-textOneRow').html("保存成功");
                 removeLoading('save');
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("save all");
@@ -892,7 +904,7 @@ function deleteBodyData(id) {
         success: function (data) {
             // removeLoading("链头删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save head");
+            alert("delete body");
             alert(XMLHttpRequest.status);
             alert(XMLHttpRequest.readyState);
             alert(textStatus);
@@ -2304,8 +2316,10 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
         id = bodyIndex++;
 
     if(name==null||name.length==0){
-        if(content==null||content.length==0||content.length>10)
+        if(content==null||content.length==0)
             name = '链体'+(id+1);
+        else if(content.length>10)
+            name = content.substring(0,10);
         else
             name = content;
     }
@@ -2323,7 +2337,7 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
     if(detail!=null){
         documentID = detail.documentid;
         isDefendant = detail.isDefendant;
-        conclusion = detail.conclusion;
+        conclusion = detail.trust;
         logicNodeID = detail.logicNodeID;
         type = detail.type;
         committer = detail.committer;
@@ -2809,7 +2823,6 @@ function typeSetting() {
     var headerGap_x = 250;
     var headerGap_y = 40;
     var jointGap = 250;
-    var t = 0;
 
     for(var bid in bodyList){
         if(bodyList[bid]!=null){
@@ -2840,7 +2853,6 @@ function typeSetting() {
                     nodes.push({'node': header, 'x': hox, 'y': hoy});
                 }
             }
-            t++;
         }
     }
 
@@ -2860,72 +2872,121 @@ function typeSetting() {
         }
     }
 
-    t = 0;
     y = 10 + header_radius;
-    for(var jid in jointList){
-        if(jointList[jid]!=null){
-            var joint = jointList[jid]['node'];
-            var ox = joint.x;
-            var oy = joint.y;
-            joint.x = x + header_radius + jointGap + joint_width/2;
-            var y_max = 0;
-            var y_min = 10000000;
-            var inLinks = joint.inLinks;
-
-            if(inLinks!=null&&inLinks.length>0){
-                for(var i = 0;i<inLinks.length;i++){
-                    var header = inLinks[i].nodeA;
-                    if(header.y>y_max){
-                        y_max = header.y;
-                    }
-                    if(header.y<y_min){
-                        y_min = header.y;
-                    }
-                }
-                joint.y = (y_min + y_max)/2;
-                y = joint.y;
-            }else{
-                y += joint_width + headerGap_y;
-                joint.y = y;
-            }
-            t++;
-            nodes.push({'node':joint,'x':ox,'y':oy});
-        }
-    }
-
-    t = 0;
-    y = 10 + header_radius;
-    x+=header_radius + jointGap + joint_width/2;
     for(var fid in factList){
         if(factList[fid]!=null){
             var fact = factList[fid]['node'];
             var ox = fact.x;
             var oy = fact.y;
-            fact.x = x + body_width/2 + headerGap_x + (joint_width/2);
-            var y_max = 0;
-            var y_min = 10000000;
+            fact.x = x + header_radius + jointGap + joint_width/2 + body_width/2 + headerGap_x + (joint_width/2);
+
             var inLinks = fact.inLinks;
+            if(inLinks!=null)
+                fact.y = y+((inLinks.length-1)*(joint_width + headerGap_y)/2);
+            else{
+                y+=body_height + headerGap_y;
+                fact.y = y;
+            }
+
+            nodes.push({'node':fact,'x':ox,'y':oy});
 
             if(inLinks!=null&&inLinks.length>0){
                 for(var i = 0;i<inLinks.length;i++){
                     var joint = inLinks[i].nodeA;
-                    if(joint.y>y_max){
-                        y_max = joint.y;
-                    }
-                    if(joint.y<y_min){
-                        y_min = joint.y;
-                    }
+                    var jox = joint.x;
+                    var joy = joint.y;
+                    joint.x = x + header_radius + jointGap + joint_width/2;
+                    joint.y = y;
+                    y += headerGap_y + joint_width;
+
+                    nodes.push({'node':joint,'x':jox,'y':joy});
                 }
-                fact.y = (y_min + y_max)/2;
-                y = fact.y;
-            }else{
-                y+=body_height + headerGap_y;
-                fact.y = y;
             }
-            t++;
-            nodes.push({'node':fact,'x':ox,'y':oy});
         }
     }
+
+    x += header_radius + jointGap + joint_width/2;
+    for(var jid in jointList){
+        if(jointList[jid]!=null) {
+            var joint = jointList[jid]['node'];
+            if (joint.inLinks == null || inLinks.length == 0) {
+                var jox = joint.x;
+                var joy = joint.y;
+                joint.x = x;
+                joint.y = y;
+                y += headerGap_y + joint_width;
+
+                nodes.push({'node': joint, 'x': jox, 'y': joy});
+            }
+        }
+    }
+
+    // t = 0;
+    // y = 10 + header_radius;
+    // for(var jid in jointList){
+    //     if(jointList[jid]!=null){
+    //         var joint = jointList[jid]['node'];
+    //         var ox = joint.x;
+    //         var oy = joint.y;
+    //         joint.x = x + header_radius + jointGap + joint_width/2;
+    //         var y_max = 0;
+    //         var y_min = 10000000;
+    //         var inLinks = joint.inLinks;
+    //
+    //         if(inLinks!=null&&inLinks.length>0){
+    //             for(var i = 0;i<inLinks.length;i++){
+    //                 var header = inLinks[i].nodeA;
+    //                 if(header.y>y_max){
+    //                     y_max = header.y;
+    //                 }
+    //                 if(header.y<y_min){
+    //                     y_min = header.y;
+    //                 }
+    //             }
+    //             joint.y = (y_min + y_max)/2;
+    //             y = joint.y;
+    //         }else{
+    //             y += joint_width + headerGap_y;
+    //             joint.y = y;
+    //         }
+    //         t++;
+    //         nodes.push({'node':joint,'x':ox,'y':oy});
+    //     }
+    // }
+    //
+    // t = 0;
+    // y = 10 + header_radius;
+    // x+=header_radius + jointGap + joint_width/2;
+    // for(var fid in factList){
+    //     if(factList[fid]!=null){
+    //         var fact = factList[fid]['node'];
+    //         var ox = fact.x;
+    //         var oy = fact.y;
+    //         fact.x = x + body_width/2 + headerGap_x + (joint_width/2);
+    //         var y_max = 0;
+    //         var y_min = 10000000;
+    //         var inLinks = fact.inLinks;
+    //
+    //         if(inLinks!=null&&inLinks.length>0){
+    //             for(var i = 0;i<inLinks.length;i++){
+    //                 var joint = inLinks[i].nodeA;
+    //                 if(joint.y>y_max){
+    //                     y_max = joint.y;
+    //                 }
+    //                 if(joint.y<y_min){
+    //                     y_min = joint.y;
+    //                 }
+    //             }
+    //             fact.y = (y_min + y_max)/2;
+    //             y = fact.y;
+    //         }else{
+    //             y+=body_height + headerGap_y;
+    //             fact.y = y;
+    //         }
+    //         t++;
+    //         nodes.push({'node':fact,'x':ox,'y':oy});
+    //     }
+    // }
 
     operationList.push({'type':'typesetting','nodes':nodes});
 }
