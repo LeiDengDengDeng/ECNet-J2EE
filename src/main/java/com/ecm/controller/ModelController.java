@@ -109,18 +109,6 @@ public class ModelController {
     @RequestMapping(value="/saveAll")
     public void saveAll(@RequestBody Evidence_Data all){
 
-//        JSONArray headsArr =  JSONArray.fromObject(all.get("headers"));
-//        List<Evidence_Head> heads = JSONArray.toList(headsArr,Evidence_Head.class,new JsonConfig());
-//        JSONArray bodiesArr =  JSONArray.fromObject(all.get("bodies"));
-//        List<Evidence_Body> bodies = JSONArray.toList(bodiesArr,Evidence_Body.class,new JsonConfig());
-//        JSONArray jointsArr =  JSONArray.fromObject(all.get("joints"));
-//        List<MOD_Joint> joints = JSONArray.toList(jointsArr,MOD_Joint.class,new JsonConfig());
-//        JSONArray factsArr =  JSONArray.fromObject(all.get("facts"));
-//        List<MOD_Fact> facts = JSONArray.toList(factsArr,MOD_Fact.class,new JsonConfig());
-//        JSONArray arrowsArr =  JSONArray.fromObject(all.get("arrows"));
-//        List<MOD_Arrow> arrows = JSONArray.toList(arrowsArr,MOD_Arrow.class,new JsonConfig());
-
-//        System.out.println("*************");
         modelManageService.saveHeaders(all.getHeaders());
         modelManageService.saveBodies(all.getBodies());
         modelManageService.saveJoints(all.getJoints());
@@ -130,34 +118,17 @@ public class ModelController {
         saveInLogic(all.getLinks(),all.getCaseID());
     }
 
-//    @RequestMapping(value="/saveInLogic")
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
-//        System.out.println("&&&&&&&&&&&");
         logicService.deleteAllLinksBetweenEvidenceAndFactNode(cid);
         for(int bid : list.keySet()){
-//            System.out.println("%%"+bid);
             int eid = modelManageService.getLogicNodeIDofBody(bid);
             List<Integer> arr = list.get(bid);
             for(int i = 0;i<arr.size();i++){
                 int fid = arr.get(i);
                 int factID = modelManageService.getFactByID(fid).getLogicNodeID();
-                System.out.println("cid:"+cid+";eid:"+eid+";fid:"+factID);
                 logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
             }
         }
-    }
-
-    @RequestMapping(value="/saveArrows")
-    public void saveArrows(@RequestBody List<MOD_Arrow> arrows){
-        for(int i = 0;i<arrows.size();i++) {
-            modelManageService.saveArrow(arrows.get(i));
-        }
-    }
-
-    @RequestMapping(value="/deleteArrows")
-    public void deleteArrows(@RequestParam("cid") int cid){
-
-        modelManageService.deleteArrowsByCid(cid);
     }
 
     @RequestMapping(value="/exportExcel")
