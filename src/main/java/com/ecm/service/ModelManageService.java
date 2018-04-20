@@ -58,6 +58,8 @@ public interface ModelManageService {
 
     public void deleteAll(int cid);
 
+    public void deleteByDocumentID(int did);
+
     public void writeToExcel(int cid,String filePath);
 
     public void writeToXML(int cid,String filePath);

@@ -27,4 +27,7 @@ public interface MOD_ArrowDao extends JpaRepository<MOD_Arrow, Integer> {
 
     @Query(value = "select a.nodeFrom_hid from MOD_Arrow a where a.nodeTo_jid=?1 and a.caseID=?2")
     public List<Integer> getHeaderIdByJointIdAndCaseID(int jid,int cid);
+
+    @Query(value = "select a from MOD_Arrow a where a.nodeFrom_hid=?1")
+    public List<MOD_Arrow> findAllByHeaderID(int hid);
 }

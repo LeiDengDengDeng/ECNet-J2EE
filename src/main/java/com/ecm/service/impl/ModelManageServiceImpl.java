@@ -258,6 +258,25 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+    public void deleteByDocumentID(int did) {
+        List<Evidence_Head> heads = evidenceHeadDao.getEvidenceHead(did);
+        for(int i = 0;i<heads.size();i++){
+            int hid = heads.get(i).getId();
+            List<MOD_Arrow> arrows = arrowDao.findAllByHeaderID(hid);
+            for(int j = 0;j<arrows.size();j++){
+                MOD_Arrow arrow = arrows.get(i);
+                int aid = arrow.getId();
+                int jid = arrow.getNodeTo_jid();
+                MOD_Joint joint = jointDao.findById(jid);
+                int fid = joint.getFactID();
+                factDao.deleteById(fid);
+                jointDao.deleteById(jid);
+                arrowDao.deleteById(aid);
+            }
+        }
+    }
+
+    @Override
     public void writeToExcel(int cid,String filePath) {
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
