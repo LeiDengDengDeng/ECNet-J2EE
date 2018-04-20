@@ -646,8 +646,6 @@ public class ModelManageServiceImpl implements ModelManageService {
             fname.setText(fact.getName());
             Element fcontent = element.addElement("content");
             fcontent.setText(fact.getContent());
-            Element ftype = element.addElement("type");
-            ftype.setText(fact.getType());
 
             List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fact.getId(),cid);
             if(joints.size()>=1){
@@ -798,7 +796,6 @@ public class ModelManageServiceImpl implements ModelManageService {
 //                f.setLogicNodeId(new BigInteger(fact.getLogicNodeID()+""));
                 f.getContent().add(of.createFactName(transNull(fact.getName())));
                 f.getContent().add(of.createFactContent(transNull(fact.getContent())));
-                f.getContent().add(of.createFactType(transNull(fact.getType())));
 
                 List<MOD_Joint> joints = jointDao.findAllByFactIDAndCaseID(fact.getId(),cid);
                 Fact.Joints fjs = of.createFactJoints();

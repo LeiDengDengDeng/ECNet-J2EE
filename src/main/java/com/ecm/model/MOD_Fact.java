@@ -18,7 +18,6 @@ public class MOD_Fact {
     private String content;
     private int x;
     private int y;
-    private String type;
 
     private int logicNodeID = -1; // 关联LogicNode中的id
 
@@ -86,14 +85,6 @@ public class MOD_Fact {
         this.y = y;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getLogicNodeID() {
         return logicNodeID;
     }
@@ -111,7 +102,6 @@ public class MOD_Fact {
                 ", content='" + content + '\'' +
                 ", x=" + x +
                 ", y=" + y +
-                ", type='" + type + '\'' +
                 ", logicNodeID=" + logicNodeID +
                 '}';
     }

@@ -5,9 +5,9 @@ var bodyIndex = 0;//当前链体id
 var bodyList = {};//存储链体，{id:{'node':node,'type':'XXX','committer':'XXX','reason':'XXXXXX',
 // 'conclusion':'1/0','documentID':-1,'isDefendant':1,'logicNodeID':xx}}
 var jointIndex = 0;//当前连接点（事实）id
-var jointList = {};//存储连接点（事实），{id:{'node':node,'type':'XXX'}}
+var jointList = {};//存储连接点（事实），{id:node}
 var factIndex = 0;//当前事实节点id
-var factList = {};//存储事实节点，{id:{'node':node,'type':'XXX','logicNodeID':xx}}
+var factList = {};//存储事实节点，{id:{'node':node,'logicNodeID':xx}}
 var arrowIndex = 0;//当前箭头id
 var arrowList = {};//存储箭头，{id:node}
 var linkIndex = 0;//当前连线id
@@ -348,15 +348,15 @@ function saveAll(isAsync) {
 
     var jList = [];
     for(var jid in jointList){
-        var joint = jointList[jid];
+        var node = jointList[jid];
 
-        if(joint!=null){
-            var node = joint['node'];
+        if(node!=null){
+            // var node = joint['node'];
             var factID = -1;
             if(node.outLinks!=null&&node.outLinks.length>0){
                 factID = node.outLinks[0].nodeZ.id;
             }
-            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
+            var j = {"id":jid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID};
             jList.push(j);
         }
     }
@@ -368,7 +368,7 @@ function saveAll(isAsync) {
         if(fact!=null){
             var node = fact['node'];
             var f = {"id":fid,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
-                "type":fact['type'],"logicNodeID":fact['logicNodeID']};
+                "logicNodeID":fact['logicNodeID']};
             fList.push(f);
         }
     }
@@ -562,7 +562,7 @@ function saveBody(node) {
         type: "post",
         url: "/model/saveBody",
         data: JSON.stringify(bd),
-        // dataType:"json",
+        dataType:"json",
         contentType: "application/json; charset=utf-8",
         async: true,
         // beforeSend: function(data){
@@ -573,10 +573,10 @@ function saveBody(node) {
         // },
         success: function (data) {
             bodyList[node.id] = null;
-            node.id = data;
-            bodyList[node.id] = {'node':node,"documentid":bd['documentID'], "type":bd['type'],
-                "committer":bd['committer'],"reason":bd['reason'],"conclusion":bd['trust'],
-                "isDefendant":bd['isDefendant'],"logicNodeID":bd['logicNodeID']};
+            node.id = data.id;
+            bodyList[node.id] = {'node':node,"documentid":data['documentid'], "type":data['type'],
+                "committer":data['committer'],"reason":data['reason'],"conclusion":data['trust'],
+                "isDefendant":data['isDefendant'],"logicNodeID":data['logicNodeID']};
             bodyIndex = data+1;
             // removeLoading("链体保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -618,13 +618,12 @@ function deleteBodyData(id) {
 //存储单个连接点
 function saveJoint(node) {
 
-    var joint = jointList[node.id];
-    console.log(node.id);
+    // var joint = jointList[node.id];
     var factID = -1;
     if(node.outLinks!=null&&node.outLinks.length>0){
         factID = node.outLinks[0].nodeZ.id;
     }
-    var j = {"id":node.id,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID,"type":joint['type']};
+    var j = {"id":node.id,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,'factID':factID};
 
     $.ajax({
         type: "post",
@@ -640,10 +639,10 @@ function saveJoint(node) {
         //     }
         // },
         success: function (data) {
-            console.log("jointID:"+data);
+            // console.log("jointID:"+data);
             jointList[node.id] = null;
             node.id = data;
-            jointList[node.id] = {'node':node, "type":j['type']};
+            jointList[node.id] = node;
             jointIndex = data+1;
             // removeLoading("链体保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -686,7 +685,7 @@ function deleteJointData(id) {
 function saveFact(node) {
     var fact = factList[node.id];
     var f = {"id":node.id,"caseID":cid,"name":node.text,"content":node.content,"x":node.x,"y":node.y,
-        "type":fact['type'],"logicNodeID":fact['logicNodeID']};
+        "logicNodeID":fact['logicNodeID']};
 
     $.ajax({
         type: "post",
@@ -703,8 +702,8 @@ function saveFact(node) {
         // },
         success: function (data) {
             factList[node.id] = null;
-            node.id = data;
-            factList[node.id] = {'node':node, "type":f['type']};
+            node.id = data.id;
+            factList[node.id] = {'node':node,'logicNodeID':data['logicNodeID']};
             factIndex = data+1;
             updateFactListofGraph();
             // removeLoading("事实节点保存成功");
@@ -812,11 +811,11 @@ function undo() {
                 body_delete.splice($.inArray(node.id,body_delete),1);
 
             }else if(node.node_type=='joint'){
-                drawJoint(false,node.x,node.y,node.id,node.text,node.content,n['content']['type']);
+                drawJoint(false,node.x,node.y,node.id,node.text,node.content);
                 joint_delete.splice($.inArray(node.id,joint_delete),1);
 
             }else if(node.node_type=='fact'){
-                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['type'],n['content']['logicNodeID']);
+                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['logicNodeID']);
                 fact_delete.splice($.inArray(node.id,fact_delete),1);
 
             }else if(node.node_type=='arrow'){
@@ -1368,11 +1367,10 @@ function bindMenuClick() {
                 deleteBody(node.id);
 
             }else if(node.node_type=='joint'){
-                n['content'] = {'type':jointList[node.id]['type']};
                 deleteJoint(node.id);
 
             }else if(node.node_type=='fact'){
-                n['content'] = {'type':factList[node.id]['type'],'logicNodeID':factList[node.id]['logicNodeID']};
+                n['content'] = {'logicNodeID':factList[node.id]['logicNodeID']};
                 deleteFact(node.id);
 
             }else if(node.node_type=='arrow'){
@@ -1562,7 +1560,7 @@ function paste(mouse_x,mouse_y) {
                 if(js[snode.id]!=null&&js[snode.id]!=-1){
                     snew = jointList[js[snode.id]];
                 }else{
-                    snew = drawJoint(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content,jointList[snode.id]['type']);
+                    snew = drawJoint(false,snode.x+mouse_x-middleX,snode.y+mouse_y-middleY,null,snode.text,snode.content);
                     nodes.push(snew);
                     js[snode.id] = snew.id;
                 }
@@ -1570,7 +1568,7 @@ function paste(mouse_x,mouse_y) {
                 if(fs[enode.id]!=null&&fs[enode.id]!=-1){
                     enew = factList[fs[enode.id]]['node'];
                 }else{
-                    enew = drawFact(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,factList[enode.id]['type'],factList[enode.id]['logicNodeID']);
+                    enew = drawFact(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,factList[enode.id]['logicNodeID']);
                     nodes.push(enew);
                     fs[enode.id] = enew.id;
                 }
@@ -1584,7 +1582,7 @@ function paste(mouse_x,mouse_y) {
             var enode = node.nodeZ
             var snew;
 
-            var enew = drawJoint(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content,jointList[enode.id]['type']);
+            var enew = drawJoint(false,enode.x+mouse_x-middleX,enode.y+mouse_y-middleY,null,enode.text,enode.content);
 
             if(hs[snode.id]!=null&&hs[snode.id]!=-1){
                 snew = headerList[hs[snode.id]];
@@ -1611,12 +1609,12 @@ function paste(mouse_x,mouse_y) {
 
         }else if(node.node_type=='joint'){
 
-            var node_new = drawJoint(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,jointList[node.id]['type']);
+            var node_new = drawJoint(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content);
             nodes.push(node_new);
 
         }else if(node.node_type=='fact'){
 
-            var node_new = drawFact(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,factList[node.id]['type'],factList[node.id]['logicNodeID']);
+            var node_new = drawFact(false,node.x+mouse_x-middleX,node.y+mouse_y-middleY,null,node.text,node.content,factList[node.id]['logicNodeID']);
             nodes.push(node_new);
         }
     }
@@ -1734,23 +1732,20 @@ function bindRightPanel() {
     //连接点
     $('#joint-save-btn').click(function () {
         var jid = $('#joint-panel').attr('data-jid');
-        jointList[jid]['node'].text = $('#joint-name').val();
-        jointList[jid]['type'] = $('#joint-type').val();
-        jointList[jid]['node'].content = $('#joint-content').val();
+        jointList[jid].text = $('#joint-name').val();
+        jointList[jid].content = $('#joint-content').val();
     });
 
     $('#joint-reset-btn').click(function () {
         var jid = $('#joint-panel').attr('data-jid');
-        $('#joint-name').val(jointList[jid]['node'].text);
-        $('#joint-type').val(jointList[jid]['type']);
-        $('#joint-content').val(jointList[jid]['node'].content);
+        $('#joint-name').val(jointList[jid].text);
+        $('#joint-content').val(jointList[jid].content);
     });
 
     $('#joint-del-btn').click(function () {
         var jid = $('#joint-panel').attr('data-jid');
         //添加操作至operationList
-        operationList.push({'type':'delete','nodes':[{'node':jointList[jid]['node'],
-                'content':{'type':jointList[jid]['type']}}]});
+        operationList.push({'type':'delete','nodes':[{'node':jointList[jid]}]});
         deleteJoint(jid);
     });
 
@@ -1758,14 +1753,12 @@ function bindRightPanel() {
     $('#fact-save-btn').click(function () {
         var fid = $('#fact-panel').attr('data-fid');
         factList[fid]['node'].text = $('#fact-name').val();
-        factList[fid]['type'] = $('#fact-type').val();
         factList[fid]['node'].content = $('#fact-content').val();
     });
 
     $('#fact-reset-btn').click(function () {
         var fid = $('#fact-panel').attr('data-fid');
         $('#fact-name').val(factList[fid]['node'].text);
-        $('#fact-type').val(factList[fid]['type']);
         $('#fact-content').val(factList[fid]['node'].content);
     });
 
@@ -1773,7 +1766,7 @@ function bindRightPanel() {
         var fid = $('#fact-panel').attr('data-fid');
         //添加操作至operationList
         operationList.push({'type':'delete','nodes':[{'node':factList[fid]['node'],
-                'content':{'type':factList[fid]['type'],'logicNodeID':factList[fid]['logicNodeID']}}]});
+                'content':{'logicNodeID':factList[fid]['logicNodeID']}}]});
         deleteFact(fid);
     });
 }
@@ -2163,7 +2156,7 @@ function deleteBody(bodyID) {
 }
 
 //绘制连接点，返回连接点节点
-function drawJoint(isNew,x,y,id,name,content,type,isinit){
+function drawJoint(isNew,x,y,id,name,content,isinit){
 
     if(id==null)
         id = jointIndex++;
@@ -2189,7 +2182,7 @@ function drawJoint(isNew,x,y,id,name,content,type,isinit){
     node.shadow = "true";
     node.node_type = 'joint';
 
-    jointList[node.id] = {'node':node,'type':type};
+    jointList[node.id] = node;
     scene.add(node);
     //添加操作至operationList
     if(isNew)
@@ -2204,7 +2197,6 @@ function drawJoint(isNew,x,y,id,name,content,type,isinit){
         $('#fact-panel').attr('hidden', 'hidden');
 
         $('#joint-name').val(node.text);
-        $('#joint-type').val(jointList[node.id]['type']);
         $('#joint-content').val(node.content);
         $('#joint-panel').removeAttr("hidden");
         $('#joint-panel').attr('data-jid',node.id);
@@ -2235,7 +2227,7 @@ function drawJoint(isNew,x,y,id,name,content,type,isinit){
 //删除连接点
 function deleteJoint(jointID) {
     joint_delete.push(jointID);
-    var joint = jointList[jointID]['node'];
+    var joint = jointList[jointID];
 
     if(joint.inLinks!=null){
         var inl = joint.inLinks;
@@ -2254,7 +2246,7 @@ function deleteJoint(jointID) {
 }
 
 //绘制事实，返回事实节点
-function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
+function drawFact(isNew,x,y,id,name,content,logicNodeID,isinit) {
     if(id==null)
         id = factIndex++;
 
@@ -2282,7 +2274,7 @@ function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
     node.shadow = "true";
     node.node_type = 'fact';
 
-    factList[node.id] = {'node':node,'type':type,'logicNodeID':logicNodeID};
+    factList[node.id] = {'node':node,'logicNodeID':logicNodeID};
     scene.add(node);
     //添加操作至operationList
     if(isNew)
@@ -2298,7 +2290,6 @@ function drawFact(isNew,x,y,id,name,content,type,logicNodeID,isinit) {
         $('#joint-panel').attr('hidden', 'hidden');
 
         $('#fact-name').val(node.text);
-        $('#fact-type').val(factList[node.id]['type']);
         $('#fact-content').val(node.content);
         $('#fact-panel').removeAttr("hidden");
         $('#fact-panel').attr('data-fid',node.id);
@@ -2508,7 +2499,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_fy = f_y;
 
-        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['type'],fact['logicNodeID'],true);
+        drawFact(false,f_x,f_y,fact['id'],fact['name'],fact['content'],fact['logicNodeID'],true);
         if(factIndex<fact['id']){
             factIndex = fact['id']+1;
         }
@@ -2539,7 +2530,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_jy = j_y;
 
-        var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],joint['type'],true);
+        var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],true);
         if(joint['factID']>=0)
             addLink(jnode,factList[joint['factID']]['node']);
         if(jointIndex<joint['id']){
@@ -2549,7 +2540,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
 
     for(var i = 0;i<arrows.length;i++){
         var arrow = arrows[i];
-        addArrow(headerList[arrow['nodeFrom_hid']],jointList[arrow['nodeTo_jid']]['node'],arrow['id'],arrow['name'],arrow['content']);
+        addArrow(headerList[arrow['nodeFrom_hid']],jointList[arrow['nodeTo_jid']],arrow['id'],arrow['name'],arrow['content']);
     }
 
     updateFactListofGraph();
@@ -2648,7 +2639,7 @@ function typeSetting() {
     x += header_radius + jointGap + joint_width/2;
     for(var jid in jointList){
         if(jointList[jid]!=null) {
-            var joint = jointList[jid]['node'];
+            var joint = jointList[jid];
             if (joint.inLinks == null || inLinks.length == 0) {
                 var jox = joint.x;
                 var joy = joint.y;

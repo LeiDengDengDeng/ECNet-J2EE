@@ -49,7 +49,7 @@ public class ModelController {
     }
 
     @RequestMapping(value="/saveBody")
-    public int saveBody(@RequestBody Evidence_Body body){
+    public Evidence_Body saveBody(@RequestBody Evidence_Body body){
 
         if(body.getLogicNodeID()>=0){
             logicService.modEvidenceOrFactNode(body.getLogicNodeID(),body.getBody());
@@ -58,7 +58,7 @@ public class ModelController {
             body.setLogicNodeID(lid);
         }
 
-        return modelManageService.saveBody(body).getId();
+        return modelManageService.saveBody(body);
     }
 
     @RequestMapping(value="/deleteBody")
@@ -82,7 +82,7 @@ public class ModelController {
     }
 
     @RequestMapping(value="/saveFact")
-    public int saveFact(@RequestBody MOD_Fact fact){
+    public MOD_Fact saveFact(@RequestBody MOD_Fact fact){
 
         if(fact.getLogicNodeID()>=0){
             logicService.modEvidenceOrFactNode(fact.getLogicNodeID(),fact.getContent());
@@ -90,7 +90,7 @@ public class ModelController {
             int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
             fact.setLogicNodeID(lid);
         }
-        return modelManageService.saveFact(fact).getId();
+        return modelManageService.saveFact(fact);
     }
 
     @RequestMapping(value="/deleteFact")
@@ -141,7 +141,7 @@ public class ModelController {
             for(int i = 0;i<arr.size();i++){
                 int fid = arr.get(i);
                 int factID = modelManageService.getFactByID(fid).getLogicNodeID();
-                System.out.println("cid:"+cid+";eid:"+"fid:"+factID);
+                System.out.println("cid:"+cid+";eid:"+eid+";fid:"+factID);
                 logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
             }
         }

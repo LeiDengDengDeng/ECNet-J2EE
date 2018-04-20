@@ -17,7 +17,6 @@ public class MOD_Joint {
     private int x;
     private int y;
     private int factID = -1;
-    private String type;
 
     public int getId() {
         return id;
@@ -67,14 +66,6 @@ public class MOD_Joint {
         this.y = y;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getFactID() {
         return factID;
     }
@@ -94,7 +85,6 @@ public class MOD_Joint {
                 ", x=" + x +
                 ", y=" + y +
                 ", factID=" + factID +
-                ", type='" + type + '\'' +
                 '}';
     }
 }
