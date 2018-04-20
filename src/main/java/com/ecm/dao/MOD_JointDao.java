@@ -25,4 +25,6 @@ public interface MOD_JointDao extends JpaRepository<MOD_Joint, Integer> {
     public List<MOD_Joint> findAllByFactIDAndCaseID(int factID,int cid);
 
     public MOD_Joint findByIdAndCaseID(int id,int cid);
+
+    public MOD_Joint findById(int id);
 }

@@ -242,13 +242,13 @@ $(document).ready(function(){
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        saveAll();
-        window.location.href="/model/exportExcel?cid="+cid;
+        saveAll(true,"/model/exportExcel?cid="+cid);
+        // window.location.href="/model/exportExcel?cid="+cid;
 
     });
     $('#saveXML-btn').click(function () {
-        saveAll();
-        window.location.href="/model/exportXML?cid="+cid;
+        saveAll(true,"/model/exportXML?cid="+cid);
+        // window.location.href="/model/exportXML?cid="+cid;
 
     });
     $('#revoke-btn').click(function () {
@@ -310,7 +310,7 @@ function updateFactListofGraph() {
 }
 
 //存储所有
-function saveAll(isAsync) {
+function saveAll(isAsync,url) {
     if(isAsync==null){
         isAsync = true;
     }
@@ -428,6 +428,7 @@ function saveAll(isAsync) {
             },
             success: function (data) {
                 removeNotify("保存成功");
+                window.location.href=url;
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("save all");
                 alert(XMLHttpRequest.status);
@@ -436,6 +437,26 @@ function saveAll(isAsync) {
             }
         });
     }else{
+        // console.log('***'+$(".cpt-loading-mask[data-name='save']").length);
+        $('body').loading({
+            loadingWidth:240,
+            title:'保存中',
+            name:'save',
+            animateIn:'none',
+            discription:'这是一个描述...',
+            direction:'row',
+            type:'origin',
+            originBg:'#71EA71',
+            originDivWidth:30,
+            originDivHeight:30,
+            originWidth:4,
+            originHeight:4,
+            smallLoading:false,
+            titleColor:'#388E7A',
+            loadingBg:'#312923',
+            loadingMaskBg:'rgba(22,22,22,0.2)'
+            // mustRelative: true
+        });
         $.ajax({
             type: "post",
             url: "/model/saveAll",
@@ -443,29 +464,6 @@ function saveAll(isAsync) {
             // dataType:"json",
             contentType: "application/json; charset=utf-8",
             async: false,
-            beforeSend: function(data){
-                //这里判断，如果没有加载数据，会显示loading
-                if(data.readyState == 0){
-                    $('body').loading({
-                        loadingWidth:240,
-                        title:'保存中',
-                        name:'save',
-                        discription:'这是一个描述...',
-                        direction:'row',
-                        type:'origin',
-                        originBg:'#71EA71',
-                        originDivWidth:30,
-                        originDivHeight:30,
-                        originWidth:4,
-                        originHeight:4,
-                        smallLoading:false,
-                        titleColor:'#388E7A',
-                        loadingBg:'#312923',
-                        loadingMaskBg:'rgba(22,22,22,0.2)'
-                        // mustRelative: true
-                    });
-                }
-            },
             success: function (data) {
                 var cpt = $(".cpt-loading-mask[data-name='save']");
                 cpt.find('.loading .origin').html("<span><i class='fa fa-check'></i></span>");
@@ -2531,8 +2529,9 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         pre_jy = j_y;
 
         var jnode = drawJoint(false,j_x,j_y,joint['id'],joint['name'],joint['content'],true);
-        if(joint['factID']>=0)
+        if(joint['factID']>=0){
             addLink(jnode,factList[joint['factID']]['node']);
+        }
         if(jointIndex<joint['id']){
             jointIndex = joint['id']+1;
         }
@@ -2640,7 +2639,7 @@ function typeSetting() {
     for(var jid in jointList){
         if(jointList[jid]!=null) {
             var joint = jointList[jid];
-            if (joint.inLinks == null || inLinks.length == 0) {
+            if (joint.inLinks == null || joint.inLinks.length == 0) {
                 var jox = joint.x;
                 var joy = joint.y;
                 joint.x = x;

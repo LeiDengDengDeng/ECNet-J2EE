@@ -3,6 +3,7 @@ package com.ecm.service.impl;
 import com.ecm.dao.*;
 import com.ecm.model.*;
 import com.ecm.model.xsd_evidence.*;
+import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -46,7 +47,9 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Autowired
     private MOD_FactDao factDao;
     @Autowired
-    private LogicNodeDao logicNodeDao;
+    private LogicService logicService;
+//    @Autowired
+//    private LogicNodeDao logicNodeDao;
 
     @Override
     public JSONObject getEvidences(int cid) {
@@ -62,17 +65,6 @@ public class ModelManageServiceImpl implements ModelManageService {
             if(body.getTrust()==1){
                 JSONObject jo = new JSONObject();
                 jo.put("body",body);
-//                jo.put("bid",bid);
-//                jo.put("documentID",body.getDocumentid());
-//                jo.put("name",body.getName());
-//                jo.put("content",body.getBody());
-//                jo.put("isDefendant",body.getIsDefendant());
-//                jo.put("type",body.getType());
-//                jo.put("committer",body.getCommitter());
-//                jo.put("reason",body.getReason());
-//                jo.put("conclusion",body.getConclusion());
-//                jo.put("x",body.getX());
-//                jo.put("y",body.getY());
 
                 List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
                 jo.put("headers",headers);
@@ -108,7 +100,6 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Async
     public void saveHeaders(List<Evidence_Head> headers) {
         for(int i = 0;i<headers.size();i++){
-//            System.out.println("head"+i);
             evidenceHeadDao.save(headers.get(i));
         }
     }
@@ -136,14 +127,12 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Async
     public void saveBodies(List<Evidence_Body> bodies) {
         for(int i = 0;i<bodies.size();i++){
-//            System.out.println("body"+i);
             Evidence_Body body = bodies.get(i);
             if(body.getLogicNodeID()>=0){
-                LogicNode node = logicNodeDao.findById(body.getLogicNodeID());
-                if(node!=null){
-                    node.setDetail(body.getBody());
-                    logicNodeDao.save(node);
-                }
+                logicService.modEvidenceOrFactNode(body.getLogicNodeID(),body.getBody());
+            }else{
+                int lid = logicService.addEvidenceOrFactNode(body.getCaseID(),body.getBody(),0);
+                body.setLogicNodeID(lid);
             }
             evidenceBodyDao.save(body);
         }
@@ -177,7 +166,6 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Async
     public void saveJoints(List<MOD_Joint> joints) {
         for(int i = 0;i<joints.size();i++){
-//            System.out.println("joint"+i);
             jointDao.save(joints.get(i));
         }
     }
@@ -199,23 +187,16 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Async
     public void saveFacts(List<MOD_Fact> facts) {
         for(int i = 0;i<facts.size();i++){
-//            System.out.println("fact"+i);
             MOD_Fact fact = facts.get(i);
             if(fact.getLogicNodeID()>=0){
-                LogicNode node = logicNodeDao.findById(fact.getLogicNodeID());
-                if(node!=null){
-                    node.setDetail(fact.getContent());
-                    logicNodeDao.save(node);
-                }
+                logicService.modEvidenceOrFactNode(fact.getLogicNodeID(),fact.getContent());
+            }else{
+                int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
+                fact.setLogicNodeID(lid);
             }
             factDao.save(fact);
         }
     }
-
-//    @Override
-//    public int getLogicNodeIDofFact(int fid,int cid) {
-//        return factDao.getLogicNodeIDByIDAndCaseID(fid,cid);
-//    }
 
     @Override
     public int getLogicNodeIDofFact(int fid) {
@@ -256,7 +237,6 @@ public class ModelManageServiceImpl implements ModelManageService {
 //    @Async
     public void saveArrows(List<MOD_Arrow> arrows) {
         for(int i = 0;i<arrows.size();i++){
-//            System.out.println("arrow"+i);
             arrowDao.save(arrows.get(i));
         }
     }
@@ -275,6 +255,25 @@ public class ModelManageServiceImpl implements ModelManageService {
         arrowDao.deleteAllByCaseID(cid);
         jointDao.deleteAllByCaseID(cid);
         factDao.deleteAllByCaseID(cid);
+    }
+
+    @Override
+    public void deleteByDocumentID(int did) {
+        List<Evidence_Head> heads = evidenceHeadDao.getEvidenceHead(did);
+        for(int i = 0;i<heads.size();i++){
+            int hid = heads.get(i).getId();
+            List<MOD_Arrow> arrows = arrowDao.findAllByHeaderID(hid);
+            for(int j = 0;j<arrows.size();j++){
+                MOD_Arrow arrow = arrows.get(i);
+                int aid = arrow.getId();
+                int jid = arrow.getNodeTo_jid();
+                MOD_Joint joint = jointDao.findById(jid);
+                int fid = joint.getFactID();
+                factDao.deleteById(fid);
+                jointDao.deleteById(jid);
+                arrowDao.deleteById(aid);
+            }
+        }
     }
 
     @Override
