@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.15 时间 03:07:06 PM CST
+// 生成时间: 2018.04.20 时间 10:36:44 AM CST
 //
 
 
@@ -427,8 +427,8 @@ public class Ecm {
         public static class Relation {
 
             @XmlElementRefs({
-                    @XmlElementRef(name = "joint", type = JAXBElement.class, required = false),
-                    @XmlElementRef(name = "arrows", type = JAXBElement.class, required = false)
+                    @XmlElementRef(name = "arrows", type = JAXBElement.class, required = false),
+                    @XmlElementRef(name = "joint", type = JAXBElement.class, required = false)
             })
             @XmlMixed
             protected List<Serializable> content;
@@ -451,8 +451,8 @@ public class Ecm {
              *
              * <p>
              * Objects of the following type(s) are allowed in the list
-             * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Joint }{@code >}
              * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Arrows }{@code >}
+             * {@link JAXBElement }{@code <}{@link Ecm.Relations.Relation.Joint }{@code >}
              * {@link String }
              *
              *
@@ -557,9 +557,9 @@ public class Ecm {
             public static class Joint {
 
                 @XmlElementRefs({
+                        @XmlElementRef(name = "name", type = JAXBElement.class),
                         @XmlElementRef(name = "factContent", type = JAXBElement.class),
-                        @XmlElementRef(name = "content", type = JAXBElement.class),
-                        @XmlElementRef(name = "name", type = JAXBElement.class)
+                        @XmlElementRef(name = "content", type = JAXBElement.class)
                 })
                 @XmlMixed
                 protected List<Serializable> content;

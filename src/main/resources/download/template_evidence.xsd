@@ -72,7 +72,6 @@
 		<xs:sequence>
 			<xs:element name="name" type="xs:string" nillable="true"/>
 			<xs:element name="content" type="xs:string" nillable="true"/>
-			<xs:element name="type" type="xs:string" nillable="true"/>
 			<xs:element name="joints" minOccurs="0">
 				<xs:complexType mixed="true">
 					<xs:sequence>

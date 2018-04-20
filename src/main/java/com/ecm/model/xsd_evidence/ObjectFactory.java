@@ -2,7 +2,7 @@
 // 此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.8-b130911.1802 生成的
 // 请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>
 // 在重新编译源模式时, 对此文件的所有修改都将丢失。
-// 生成时间: 2018.04.15 时间 03:07:06 PM CST
+// 生成时间: 2018.04.20 时间 10:36:44 AM CST
 //
 
 
@@ -32,14 +32,13 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _EvidenceHeadsHead_QNAME = new QName("", "head");
-    private final static QName _EcmRelationsRelationJointName_QNAME = new QName("", "name");
-    private final static QName _EcmRelationsRelationJointContent_QNAME = new QName("", "content");
-    private final static QName _EcmRelationsRelationJointFactContent_QNAME = new QName("", "factContent");
+    private final static QName _JointName_QNAME = new QName("", "name");
+    private final static QName _JointContent_QNAME = new QName("", "content");
     private final static QName _EcmRelationsRelation_QNAME = new QName("", "relation");
-    private final static QName _EcmRelationsRelationArrowsArrow_QNAME = new QName("", "arrow");
+    private final static QName _EcmRelationsRelationJointFactContent_QNAME = new QName("", "factContent");
+    private final static QName _EcmEvidencesEvidence_QNAME = new QName("", "evidence");
     private final static QName _EcmRelationsRelationJoint_QNAME = new QName("", "joint");
     private final static QName _EcmRelationsRelationArrows_QNAME = new QName("", "arrows");
-    private final static QName _EcmEvidencesEvidence_QNAME = new QName("", "evidence");
     private final static QName _EvidenceTrust_QNAME = new QName("", "trust");
     private final static QName _EvidenceReason_QNAME = new QName("", "reason");
     private final static QName _EvidenceCommitter_QNAME = new QName("", "committer");
@@ -48,6 +47,7 @@ public class ObjectFactory {
     private final static QName _EcmEvidences_QNAME = new QName("", "evidences");
     private final static QName _EcmRelations_QNAME = new QName("", "relations");
     private final static QName _EcmFacts_QNAME = new QName("", "facts");
+    private final static QName _EcmRelationsRelationArrowsArrow_QNAME = new QName("", "arrow");
     private final static QName _FactJoints_QNAME = new QName("", "joints");
     private final static QName _EcmFactsFact_QNAME = new QName("", "fact");
 
@@ -191,36 +191,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      *
      */
-    @XmlElementDecl(namespace = "", name = "name", scope = Ecm.Relations.Relation.Joint.class)
-    public JAXBElement<String> createEcmRelationsRelationJointName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "content", scope = Ecm.Relations.Relation.Joint.class)
-    public JAXBElement<String> createEcmRelationsRelationJointContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "factContent", scope = Ecm.Relations.Relation.Joint.class)
-    public JAXBElement<String> createEcmRelationsRelationJointFactContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointFactContent_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     *
-     */
     @XmlElementDecl(namespace = "", name = "name", scope = com.ecm.model.xsd_evidence.Joint.class)
     public JAXBElement<String> createJointName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, com.ecm.model.xsd_evidence.Joint.class, value);
+        return new JAXBElement<String>(_JointName_QNAME, String.class, com.ecm.model.xsd_evidence.Joint.class, value);
     }
 
     /**
@@ -229,7 +202,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "content", scope = com.ecm.model.xsd_evidence.Joint.class)
     public JAXBElement<String> createJointContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, com.ecm.model.xsd_evidence.Joint.class, value);
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, com.ecm.model.xsd_evidence.Joint.class, value);
     }
 
     /**
@@ -239,15 +212,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "", name = "relation", scope = Ecm.Relations.class)
     public JAXBElement<Ecm.Relations.Relation> createEcmRelationsRelation(Ecm.Relations.Relation value) {
         return new JAXBElement<Ecm.Relations.Relation>(_EcmRelationsRelation_QNAME, Ecm.Relations.Relation.class, Ecm.Relations.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Arrow }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "arrow", scope = Ecm.Relations.Relation.Arrows.class)
-    public JAXBElement<Arrow> createEcmRelationsRelationArrowsArrow(Arrow value) {
-        return new JAXBElement<Arrow>(_EcmRelationsRelationArrowsArrow_QNAME, Arrow.class, Ecm.Relations.Relation.Arrows.class, value);
     }
 
     /**
@@ -265,7 +229,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "name", scope = Arrow.class)
     public JAXBElement<String> createArrowName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, Arrow.class, value);
+        return new JAXBElement<String>(_JointName_QNAME, String.class, Arrow.class, value);
     }
 
     /**
@@ -274,7 +238,43 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "content", scope = Arrow.class)
     public JAXBElement<String> createArrowContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, Arrow.class, value);
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, Arrow.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "name", scope = Ecm.Relations.Relation.Joint.class)
+    public JAXBElement<String> createEcmRelationsRelationJointName(String value) {
+        return new JAXBElement<String>(_JointName_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "content", scope = Ecm.Relations.Relation.Joint.class)
+    public JAXBElement<String> createEcmRelationsRelationJointContent(String value) {
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "factContent", scope = Ecm.Relations.Relation.Joint.class)
+    public JAXBElement<String> createEcmRelationsRelationJointFactContent(String value) {
+        return new JAXBElement<String>(_EcmRelationsRelationJointFactContent_QNAME, String.class, Ecm.Relations.Relation.Joint.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Evidence }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "evidence", scope = Ecm.Evidences.class)
+    public JAXBElement<Evidence> createEcmEvidencesEvidence(Evidence value) {
+        return new JAXBElement<Evidence>(_EcmEvidencesEvidence_QNAME, Evidence.class, Ecm.Evidences.class, value);
     }
 
     /**
@@ -293,24 +293,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "", name = "arrows", scope = Ecm.Relations.Relation.class)
     public JAXBElement<Ecm.Relations.Relation.Arrows> createEcmRelationsRelationArrows(Ecm.Relations.Relation.Arrows value) {
         return new JAXBElement<Ecm.Relations.Relation.Arrows>(_EcmRelationsRelationArrows_QNAME, Ecm.Relations.Relation.Arrows.class, Ecm.Relations.Relation.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Evidence }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "evidence", scope = Ecm.Evidences.class)
-    public JAXBElement<Evidence> createEcmEvidencesEvidence(Evidence value) {
-        return new JAXBElement<Evidence>(_EcmEvidencesEvidence_QNAME, Evidence.class, Ecm.Evidences.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link com.ecm.model.xsd_evidence.Joint }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "joint", scope = Fact.Joints.class)
-    public JAXBElement<com.ecm.model.xsd_evidence.Joint> createFactJointsJoint(com.ecm.model.xsd_evidence.Joint value) {
-        return new JAXBElement<com.ecm.model.xsd_evidence.Joint>(_EcmRelationsRelationJoint_QNAME, com.ecm.model.xsd_evidence.Joint.class, Fact.Joints.class, value);
     }
 
     /**
@@ -346,7 +328,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "name", scope = Evidence.class)
     public JAXBElement<String> createEvidenceName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, Evidence.class, value);
+        return new JAXBElement<String>(_JointName_QNAME, String.class, Evidence.class, value);
     }
 
     /**
@@ -373,7 +355,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "content", scope = Evidence.class)
     public JAXBElement<String> createEvidenceContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, Evidence.class, value);
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, Evidence.class, value);
     }
 
     /**
@@ -404,12 +386,21 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Arrow }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "arrow", scope = Ecm.Relations.Relation.Arrows.class)
+    public JAXBElement<Arrow> createEcmRelationsRelationArrowsArrow(Arrow value) {
+        return new JAXBElement<Arrow>(_EcmRelationsRelationArrowsArrow_QNAME, Arrow.class, Ecm.Relations.Relation.Arrows.class, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      *
      */
     @XmlElementDecl(namespace = "", name = "name", scope = com.ecm.model.xsd_evidence.Head.class)
     public JAXBElement<String> createHeadName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, com.ecm.model.xsd_evidence.Head.class, value);
+        return new JAXBElement<String>(_JointName_QNAME, String.class, com.ecm.model.xsd_evidence.Head.class, value);
     }
 
     /**
@@ -418,7 +409,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "content", scope = com.ecm.model.xsd_evidence.Head.class)
     public JAXBElement<String> createHeadContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, com.ecm.model.xsd_evidence.Head.class, value);
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, com.ecm.model.xsd_evidence.Head.class, value);
     }
 
     /**
@@ -436,16 +427,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "name", scope = Fact.class)
     public JAXBElement<String> createFactName(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointName_QNAME, String.class, Fact.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     *
-     */
-    @XmlElementDecl(namespace = "", name = "type", scope = Fact.class)
-    public JAXBElement<String> createFactType(String value) {
-        return new JAXBElement<String>(_EvidenceType_QNAME, String.class, Fact.class, value);
+        return new JAXBElement<String>(_JointName_QNAME, String.class, Fact.class, value);
     }
 
     /**
@@ -454,7 +436,16 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "content", scope = Fact.class)
     public JAXBElement<String> createFactContent(String value) {
-        return new JAXBElement<String>(_EcmRelationsRelationJointContent_QNAME, String.class, Fact.class, value);
+        return new JAXBElement<String>(_JointContent_QNAME, String.class, Fact.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link com.ecm.model.xsd_evidence.Joint }{@code >}}
+     *
+     */
+    @XmlElementDecl(namespace = "", name = "joint", scope = Fact.Joints.class)
+    public JAXBElement<com.ecm.model.xsd_evidence.Joint> createFactJointsJoint(com.ecm.model.xsd_evidence.Joint value) {
+        return new JAXBElement<com.ecm.model.xsd_evidence.Joint>(_EcmRelationsRelationJoint_QNAME, com.ecm.model.xsd_evidence.Joint.class, Fact.Joints.class, value);
     }
 
     /**
