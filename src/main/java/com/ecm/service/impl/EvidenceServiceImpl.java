@@ -109,6 +109,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 ) {
 
             logicService.deleteNode(evidenceBodyDao.findLogicId(i));
+
         }
         evidenceBodyDao.deleteAllByDocumentid(document_id);
     }
@@ -266,7 +267,7 @@ public class EvidenceServiceImpl implements EvidenceService {
             Row row = null;
             row = sheet.getRow(i);
             if (row.getCell(3).getStringCellValue() != null && row.getCell(3).getStringCellValue() != "") {
-                // System.out.println("reading line is " + i);
+                 System.out.println("reading line is " + i);
                 if (row.getCell(5).getStringCellValue().contains("被告")) {
                     text2 += xh + "、" + row.getCell(3).getStringCellValue();
                 } else {
@@ -321,13 +322,13 @@ public class EvidenceServiceImpl implements EvidenceService {
                     //System.out.println(evidenceBody.toString());
                     evidenceBody = new Evidence_Body();
 
-                    int logicNodeId = logicService.addEvidenceOrFactNode(caseId, text, 0);
+                   // int logicNodeId = logicService.addEvidenceOrFactNode(caseId, text, 0);
                     evidenceBody.setCaseID(caseId);
                     evidenceBody.setBody(text);
                     evidenceBody.setTypeByString(row.getCell(4).getStringCellValue());
                     evidenceBody.setTrustByString(row.getCell(8).getStringCellValue());
                     evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(), doculist));
-                    evidenceBody.setLogicNodeID(logicNodeId);
+                    evidenceBody.setLogicNodeID(-1);
                     evidenceBody = save(evidenceBody);
                     bodylist.add(evidenceBody);
                     //  deleteHeadAllByBody(evidenceBody.getId());
@@ -501,7 +502,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 factMap.put("fact", row.getCell(2).getStringCellValue().substring(4));
 
                 String detail = row.getCell(2).getStringCellValue().substring(4);
-                int factId = logicService.addNode(caseId, resultId, detail, 1);
+                int factId = logicService.addNode(caseId, resultId, detail, 1);//事实
 
                 List<Integer> eviList = saveEviList(row.getCell(1).getStringCellValue(), factId, caseId, bodyList);
                 factMap.put("evi", eviList);
@@ -551,7 +552,10 @@ public class EvidenceServiceImpl implements EvidenceService {
             list.add(Integer.valueOf(str));
             // System.out.println(str);
             int i = Integer.valueOf(str);
-            logicService.addNode(caseId, factId, bodyList.get(i - 1).getBody(), 0);
+            Evidence_Body evidence_body=bodyList.get(i - 1);
+           int logic= logicService.addNode(caseId, factId,evidence_body.getBody(), 0);
+            evidence_body.setLogicNodeID(logic);
+           evidenceBodyDao.save(evidence_body);
         }
         return list;
     }
@@ -780,7 +784,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 mod_fact.setName(name);
                 mod_fact.setContent(content);
                 mod_fact.setLogicNodeID(logicNodeId);
-                mod_fact.setType(type);
+               // mod_fact.setType(type);
                 mod_fact.setX(x);
                 mod_fact.setY(y);
 

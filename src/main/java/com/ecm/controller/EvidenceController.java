@@ -56,6 +56,7 @@ public class EvidenceController {
       evidence_document=evidenceService.saveOrUpdate(evidence_document);
 
       evidenceService.deleteBodyAll(evidence_document.getId());
+
      // String test="1、test1。2、test2。3、test3";
       String[] tests=text.split(SplitType.getType(text).getRegex());
       for(String str:tests){
@@ -215,7 +216,6 @@ public class EvidenceController {
             evidenceService.importEviByXML(xmlUtil);
             evidenceService.importFactByXML(xmlUtil);
             evidenceService.importArrowByXML(xmlUtil);
-
 
         }
         if(fileName.contains("xls")){
