@@ -10,6 +10,7 @@ import com.ecm.model.Evidence_Document;
 import com.ecm.model.Evidence_Head;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
+import com.ecm.service.ModelManageService;
 import com.ecm.util.ImportXMLUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -42,6 +43,8 @@ public class EvidenceController {
     @Autowired
     private EvidenceService evidenceService;
     @Autowired
+    private ModelManageService modelManageService;
+    @Autowired
     private LogicService logicService;
 
     @PostMapping(value = "/document")
@@ -56,7 +59,7 @@ public class EvidenceController {
       evidence_document=evidenceService.saveOrUpdate(evidence_document);
 
       evidenceService.deleteBodyAll(evidence_document.getId());
-
+//      modelManageService.deleteByDocumentID(evidence_document.getId());
      // String test="1、test1。2、test2。3、test3";
       String[] tests=text.split(SplitType.getType(text).getRegex());
       for(String str:tests){

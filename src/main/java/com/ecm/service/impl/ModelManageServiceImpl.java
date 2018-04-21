@@ -257,6 +257,7 @@ public class ModelManageServiceImpl implements ModelManageService {
         factDao.deleteAllByCaseID(cid);
     }
 
+    @Transactional
     @Override
     public void deleteByDocumentID(int did) {
         List<Evidence_Head> heads = evidenceHeadDao.getEvidenceHead(did);

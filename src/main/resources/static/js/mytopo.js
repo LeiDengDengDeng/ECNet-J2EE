@@ -2400,7 +2400,7 @@ function initGraph(trusts,freeHeaders,joints,arrows,facts) {
         }
         pre_by = b_y;
 
-        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['content'],body,true);
+        var b = drawBody(false,b_x,b_y,body['id'],body['name'],body['body'],body,true);
 
         var headers = trusts[i]['headers'];
         for(var j = 0;j<headers.length;j++){
