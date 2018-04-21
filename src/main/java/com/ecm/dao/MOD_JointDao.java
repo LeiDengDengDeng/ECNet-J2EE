@@ -3,6 +3,8 @@ package com.ecm.dao;
 import com.ecm.model.MODPK;
 import com.ecm.model.MOD_Joint;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -24,7 +26,13 @@ public interface MOD_JointDao extends JpaRepository<MOD_Joint, Integer> {
 
     public List<MOD_Joint> findAllByFactIDAndCaseID(int factID,int cid);
 
+    public List<MOD_Joint> findAllByFactID(int fid);
+
     public MOD_Joint findByIdAndCaseID(int id,int cid);
 
     public MOD_Joint findById(int id);
+
+    @Modifying
+    @Query(value = "update MOD_Joint j set j.factID=-1 where j.factID=?1")
+    public void updateFactID(int fid);
 }

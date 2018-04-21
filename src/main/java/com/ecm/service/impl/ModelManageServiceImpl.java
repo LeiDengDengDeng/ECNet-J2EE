@@ -266,13 +266,21 @@ public class ModelManageServiceImpl implements ModelManageService {
             List<MOD_Arrow> arrows = arrowDao.findAllByHeaderID(hid);
             for(int j = 0;j<arrows.size();j++){
                 MOD_Arrow arrow = arrows.get(j);
-                int aid = arrow.getId();
+//                int aid = arrow.getId();
                 int jid = arrow.getNodeTo_jid();
                 MOD_Joint joint = jointDao.findById(jid);
-                int fid = joint.getFactID();
-                factDao.deleteById(fid);
-                jointDao.deleteById(jid);
-                arrowDao.deleteById(aid);
+                if(joint!=null){
+                    int fid = joint.getFactID();
+                    List<MOD_Joint> js = jointDao.findAllByFactID(fid);
+                    if(js.size()>1){
+                        jointDao.updateFactID(fid);
+                    }else{
+                        factDao.deleteById(fid);
+                    }
+                    jointDao.deleteById(jid);
+                }
+//                arrowDao.deleteById(aid);
+                arrowDao.deleteAllByJointID(jid);
             }
         }
     }
