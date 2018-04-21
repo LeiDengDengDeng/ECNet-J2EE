@@ -265,7 +265,7 @@ public class ModelManageServiceImpl implements ModelManageService {
             int hid = heads.get(i).getId();
             List<MOD_Arrow> arrows = arrowDao.findAllByHeaderID(hid);
             for(int j = 0;j<arrows.size();j++){
-                MOD_Arrow arrow = arrows.get(i);
+                MOD_Arrow arrow = arrows.get(j);
                 int aid = arrow.getId();
                 int jid = arrow.getNodeTo_jid();
                 MOD_Joint joint = jointDao.findById(jid);

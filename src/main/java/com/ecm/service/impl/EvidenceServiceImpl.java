@@ -109,6 +109,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                 ) {
 
             logicService.deleteNode(evidenceBodyDao.findLogicId(i));
+            evidenceHeadDao.deleteAllByBodyid(i);
 
         }
         evidenceBodyDao.deleteAllByDocumentid(document_id);

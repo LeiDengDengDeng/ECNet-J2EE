@@ -58,8 +58,10 @@ public class EvidenceController {
 
       evidence_document=evidenceService.saveOrUpdate(evidence_document);
 
+      modelManageService.deleteByDocumentID(evidence_document.getId());
       evidenceService.deleteBodyAll(evidence_document.getId());
-//      modelManageService.deleteByDocumentID(evidence_document.getId());
+
+
      // String test="1、test1。2、test2。3、test3";
       String[] tests=text.split(SplitType.getType(text).getRegex());
       for(String str:tests){
