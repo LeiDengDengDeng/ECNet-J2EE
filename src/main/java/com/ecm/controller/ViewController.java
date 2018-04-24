@@ -56,4 +56,8 @@ public class ViewController {
         return "case-document";
     }
 
+    @RequestMapping(value = "/text")
+    public String getTextview() {
+        return "picture";
+    }
 }
