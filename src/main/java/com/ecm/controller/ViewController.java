@@ -41,9 +41,19 @@ public class ViewController {
         return "model";
     }
     @RequestMapping(value = "/upload")
+
     public String getUploadView() {
         return "upload";
     }
 
+    @RequestMapping(value = "/case-decide")
+    public String getCaseDecideView() {
+        return "case-decide";
+    }
+
+    @RequestMapping(value = "/case-document")
+    public String getCaseDocumentView() {
+        return "case-document";
+    }
 
 }
