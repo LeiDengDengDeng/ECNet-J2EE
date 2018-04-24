@@ -58,6 +58,6 @@ public class ViewController {
 
     @RequestMapping(value = "/text")
     public String getTextview() {
-        return "picture";
+        return "text";
     }
 }
