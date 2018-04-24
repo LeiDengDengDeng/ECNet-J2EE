@@ -120,15 +120,16 @@ public class ModelController {
 
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
         logicService.deleteAllLinksBetweenEvidenceAndFactNode(cid);
-        for(int bid : list.keySet()){
-            int eid = modelManageService.getLogicNodeIDofBody(bid);
-            List<Integer> arr = list.get(bid);
-            for(int i = 0;i<arr.size();i++){
-                int fid = arr.get(i);
-                int factID = modelManageService.getFactByID(fid).getLogicNodeID();
-                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
-            }
-        }
+        modelManageService.saveLogicLinks(list,cid);
+//        for(int bid : list.keySet()){
+//            int eid = modelManageService.getLogicNodeIDofBody(bid);
+//            List<Integer> arr = list.get(bid);
+//            for(int i = 0;i<arr.size();i++){
+//                int fid = arr.get(i);
+//                int factID = modelManageService.getFactByID(fid).getLogicNodeID();
+//                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
+//            }
+//        }
     }
 
     @RequestMapping(value="/exportExcel")

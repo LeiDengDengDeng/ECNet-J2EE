@@ -430,15 +430,15 @@ function saveAll(isAsync,url) {
                 removeNotify("保存成功");
                 window.location.href=url;
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("save all");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
+                // alert("save all");
+                // alert(XMLHttpRequest.status);
+                // alert(XMLHttpRequest.readyState);
+                // alert(textStatus);
             }
         });
     }else{
         // console.log('***'+$(".cpt-loading-mask[data-name='save']").length);
-        $('body').loading({
+        $('#graph_div').loading({
             loadingWidth:240,
             title:'保存中',
             name:'save',
@@ -454,26 +454,30 @@ function saveAll(isAsync,url) {
             smallLoading:false,
             titleColor:'#388E7A',
             loadingBg:'#312923',
-            loadingMaskBg:'rgba(22,22,22,0.2)'
-            // mustRelative: true
+            loadingMaskBg:'rgba(22,22,22,0.2)',
+            mustRelative: true
         });
+
         $.ajax({
             type: "post",
             url: "/model/saveAll",
             data: JSON.stringify(dList),
             // dataType:"json",
             contentType: "application/json; charset=utf-8",
-            async: false,
+            async: true,
             success: function (data) {
                 var cpt = $(".cpt-loading-mask[data-name='save']");
-                cpt.find('.loading .origin').html("<span><i class='fa fa-check'></i></span>");
-                cpt.find('.loading-title .txt-textOneRow').html("保存成功");
-                removeLoading('save');
+                cpt.find('.loading').html("<span><i class='fa fa-check' style='font-size: 16px;'></i></span>");
+                cpt.find('.loading-title').html("保存成功");
+                setTimeout(function(){
+                    removeLoading('save');
+                },1000);
+                // removeLoading('save');
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("save all");
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
+                // alert("save all");
+                // alert(XMLHttpRequest.status);
+                // alert(XMLHttpRequest.readyState);
+                // alert(textStatus);
             }
         });
     }
@@ -513,10 +517,10 @@ function saveHead(node) {
             headerIndex = data+1;
             // removeLoading("链头保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save head");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("save head");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -540,10 +544,10 @@ function deleteHeadData(id) {
         success: function (data) {
             // removeLoading("链头删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save head");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("save head");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -578,10 +582,10 @@ function saveBody(node) {
             bodyIndex = data+1;
             // removeLoading("链体保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save body");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("save body");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -605,10 +609,10 @@ function deleteBodyData(id) {
         success: function (data) {
             // removeLoading("链头删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("delete body");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("delete body");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -644,10 +648,10 @@ function saveJoint(node) {
             jointIndex = data+1;
             // removeLoading("链体保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save joint");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("save joint");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -671,10 +675,10 @@ function deleteJointData(id) {
         success: function (data) {
             // removeLoading("连接点删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("delete Joint");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("delete Joint");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -706,10 +710,10 @@ function saveFact(node) {
             updateFactListofGraph();
             // removeLoading("事实节点保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("save fact");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("save fact");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -733,10 +737,10 @@ function deleteFactData(id) {
         success: function (data) {
             // removeLoading("事实节点删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("delete fact");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert("delete fact");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }

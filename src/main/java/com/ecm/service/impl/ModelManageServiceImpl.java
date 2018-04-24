@@ -286,6 +286,20 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+    @Async
+    public void saveLogicLinks(HashMap<Integer, List<Integer>> list, int cid) {
+        for(int bid : list.keySet()){
+            int eid = getLogicNodeIDofBody(bid);
+            List<Integer> arr = list.get(bid);
+            for(int i = 0;i<arr.size();i++){
+                int fid = arr.get(i);
+                int factID = getFactByID(fid).getLogicNodeID();
+                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
+            }
+        }
+    }
+
+    @Override
     public void writeToExcel(int cid,String filePath) {
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();

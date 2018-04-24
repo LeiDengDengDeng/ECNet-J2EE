@@ -4,6 +4,7 @@ import com.ecm.model.*;
 //import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ModelManageService {
@@ -65,4 +66,6 @@ public interface ModelManageService {
     public void writeToXML(int cid,String filePath);
 
     public void writeToXMLBySchema(int cid,String filePath);
+
+    public void saveLogicLinks(HashMap<Integer,List<Integer>> list, int cid);
 }
