@@ -148,6 +148,7 @@ public class LogicServiceImpl implements LogicService {
     @Override
     public void deleteAllNodesByCaseID(int caseID) {
         logicNodeDao.deleteByCaseID(caseID);
+        evidenceFactLinkDao.deleteByCaseID(caseID);
     }
 
     @Override
