@@ -170,6 +170,47 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" style="font-size: 16px;">
+                            <a data-toggle="collapse" href="#importFacts">
+                                载入事实
+                            </a>
+                        </h4>
+                    </div>
+
+
+                    <div id="importFacts" class="panel-collapse collapse in">
+                        <div class="panel-body" style="padding: 0;">
+                            <textarea id="factArea" class="form-control" rows="5"></textarea>
+                            <br/>
+
+                            <div class="btn-toolbar operation" role="toolbar">
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-default" onClick="splitFacts()">分解事实</a>
+                                    <a class="btn btn-default" onClick="getJoints()">提取连接点</a>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" name="checkbox_delete" onclick="addFactElmt()">新增</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" name="checkbox_delete" onclick="clearFactDiv()">清空</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" name="checkbox_delete" onclick="exportToModel()">导出图元</button>
+                                </div>
+                            </div>
+
+                            <div id="factListDiv">
+                                <br>
+                                <br>
+                                <br>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div style="display: inline-block;width: 70%;min-height: 300px;vertical-align: top;margin-top:10px;padding-bottom: 50px;" id="graph_div">
@@ -498,7 +539,7 @@
 
                                             <div class="form-group">
                                                 <label for="fact-content">事实内容</label>
-                                                <input class="form-control" id="fact-content"/>
+                                                <textarea class="form-control" rows="5" id="fact-content"></textarea>
                                             </div>
                                         </form>
 
@@ -512,75 +553,6 @@
                                 </div>
                             </div>
                         </section>
-
-                        <!--<section class="graph-info-wrapper col-md-12">-->
-                        <!--<div class="panel panel-default">-->
-                        <!--<div class="panel-heading">-->
-                        <!--<h4 class="panel-title">-->
-                        <!--<a data-toggle="collapse" data-parent="#accordion"-->
-                        <!--href="#collapseEvidenceList">-->
-                        <!--证据清单-->
-                        <!--</a>-->
-                        <!--</h4>-->
-                        <!--</div>-->
-                        <!--<div id="collapseEvidenceList" class="panel-collapse collapse">-->
-                        <!--<div class="table-responsive panel-body">-->
-                        <!--<table id="evidence-table" class="table table-bordered">-->
-                        <!--<tr class="table-header">-->
-                        <!--<td>证据序号</td>-->
-                        <!--<td>证据名称</td>-->
-                        <!--<td>证据明细</td>-->
-                        <!--<td>证据种类</td>-->
-                        <!--<td>提交人</td>-->
-                        <!--<td>质证理由</td>-->
-                        <!--<td>质证结论</td>-->
-                        <!--<td>链头信息</td>-->
-                        <!--&lt;!&ndash;<td>关键文本</td>&ndash;&gt;-->
-                        <!--<td>操作</td>-->
-                        <!--</tr>-->
-                        <!--</table>-->
-                        <!--<div id="evidence-table-operations" class="pull-right">-->
-                        <!--<a id="eList-add-btn" class="btn btn-success">新增</a>-->
-                        <!--&lt;!&ndash;<div class="pull-right">&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="panel panel-default">-->
-                        <!--<div class="panel-heading">-->
-                        <!--<h4 class="panel-title">-->
-                        <!--<a data-toggle="collapse" data-parent="#accordion"-->
-                        <!--href="#collapseFactList">-->
-                        <!--事实清单-->
-                        <!--</a>-->
-                        <!--</h4>-->
-                        <!--</div>-->
-                        <!--<div id="collapseFactList" class="panel-collapse collapse">-->
-                        <!--<div class="table-responsive panel-body">-->
-                        <!--<table id="fact-table" class="table table-bordered">-->
-                        <!--<tr class="table-header">-->
-                        <!--<td>事实序号</td>-->
-                        <!--<td>事实名称</td>-->
-                        <!--<td>事实明细</td>-->
-                        <!--<td>链头信息</td>-->
-                        <!--<td>证据序号</td>-->
-                        <!--<td>关键文本</td>-->
-                        <!--<td>操作</td>-->
-                        <!--</tr>-->
-                        <!--</table>-->
-                        <!--<div id="fact-table-operations" class="pull-right">-->
-                        <!--<a id="joint-add-btn" class="btn btn-success">新增联结</a>-->
-                        <!--<div class="pull-right">-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="pull-right">-->
-                        <!--<a id="export-btn" class="btn btn-warning">导出为Excel</a>-->
-                        <!--</div>-->
-                        <!--</section>-->
                     </div>
 
                 </div>

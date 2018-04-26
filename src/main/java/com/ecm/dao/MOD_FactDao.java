@@ -3,6 +3,7 @@ package com.ecm.dao;
 import com.ecm.model.MODPK;
 import com.ecm.model.MOD_Fact;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -26,6 +27,14 @@ public interface MOD_FactDao extends JpaRepository<MOD_Fact, Integer> {
 
     public MOD_Fact findById(int id);
 
-    @Query(value = "select f.logicNodeID from MOD_Fact f where f.id= ?1")
+    @Query(value = "select f.logicNodeID from MOD_Fact f where f.id=?1")
     public int getLogicNodeIDByID(int id);
+
+    @Modifying
+    @Query(value = "update MOD_Fact f set f.confirm=?2 where f.id=?1")
+    public void updateConfirmById(int fid,int confirm);
+
+    @Modifying
+    @Query(value = "update MOD_Fact f set f.content=?2 where f.id=?1")
+    public void updateContentById(int fid,String content);
 }

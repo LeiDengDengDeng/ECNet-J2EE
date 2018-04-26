@@ -47,6 +47,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Autowired
     private MOD_FactDao factDao;
     @Autowired
+    private MOD_FactDocDao factDocDao;
+    @Autowired
     private LogicService logicService;
 //    @Autowired
 //    private LogicNodeDao logicNodeDao;
@@ -83,9 +85,21 @@ public class ModelManageServiceImpl implements ModelManageService {
         res.put("trusts",trusts);
         res.put("untrusts",untrusts);
         res.put("freeHeaders",freeHeaders);
-        res.put("joints",jointDao.findAllByCaseID(cid));
+
+        JSONArray factArr = new JSONArray();
+        List<MOD_Fact> facts = factDao.findAllByCaseID(cid);
+        for(int i = 0;i<facts.size();i++){
+            MOD_Fact fact = facts.get(i);
+            JSONObject jo = new JSONObject();
+            jo.put("fact",fact);
+            List<MOD_Joint> joints = jointDao.findAllByFactID(fact.getId());
+            jo.put("joints",joints);
+            factArr.add(jo);
+        }
+        res.put("facts",factArr);
+        res.put("freeJoints",jointDao.findAllByFactIDAndCaseID(-1,cid));
         res.put("arrows",arrowDao.findAllByCaseID(cid));
-        res.put("facts",factDao.findAllByCaseID(cid));
+        res.put("factDoc",factDocDao.findByCaseID(cid));
 
         return res;
     }
@@ -111,11 +125,11 @@ public class ModelManageServiceImpl implements ModelManageService {
         evidenceHeadDao.deleteById(id);
     }
 
-    @Override
-    @Transactional
-    public void deleteHeadersByCid(int cid) {
-        evidenceHeadDao.deleteAllByCaseID(cid);
-    }
+//    @Override
+//    @Transactional
+//    public void deleteHeadersByCid(int cid) {
+//        evidenceHeadDao.deleteAllByCaseID(cid);
+//    }
 
     @Override
 //    @Async
@@ -150,11 +164,11 @@ public class ModelManageServiceImpl implements ModelManageService {
         evidenceBodyDao.deleteById(id);
     }
 
-    @Override
-    @Transactional
-    public void deleteBodiesByCid(int cid) {
-        evidenceBodyDao.deleteAllByCaseID(cid);
-    }
+//    @Override
+//    @Transactional
+//    public void deleteBodiesByCid(int cid) {
+//        evidenceBodyDao.deleteAllByCaseID(cid);
+//    }
 
     @Override
 //    @Async
@@ -215,8 +229,8 @@ public class ModelManageServiceImpl implements ModelManageService {
         factDao.deleteById(id);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteFactByCid(int cid) {
         factDao.deleteAllByCaseID(cid);
     }
@@ -298,6 +312,30 @@ public class ModelManageServiceImpl implements ModelManageService {
             }
         }
     }
+
+    @Override
+    public MOD_Fact_Doc saveFactDoc(MOD_Fact_Doc factDoc) {
+        MOD_Fact_Doc fd = factDocDao.findByCaseID(factDoc.getCaseID());
+        if(fd!=null&&fd.getId()>=0){
+            factDoc.setId(fd.getId());
+        }
+        return factDocDao.save(factDoc);
+    }
+
+//    @Override
+//    public void updateFactConfirm(int factID, int confirm) {
+//        factDao.updateConfirmById(factID,confirm);
+//    }
+//
+//    @Override
+//    public void updateFactContent(int factID, String content) {
+//        factDao.updateContentById(factID,content);
+//    }
+//
+//    @Override
+//    public void updateJointContent(int jointID, String content) {
+//        jointDao.updateContentById(jointID,content);
+//    }
 
     @Override
     public void writeToExcel(int cid,String filePath) {
