@@ -2,6 +2,7 @@ package com.ecm.service;
 
 import com.ecm.model.*;
 //import net.sf.json.JSONArray;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import java.util.HashMap;
@@ -70,6 +71,8 @@ public interface ModelManageService {
     public void saveLogicLinks(HashMap<Integer,List<Integer>> list, int cid);
 
     public MOD_Fact_Doc saveFactDoc(MOD_Fact_Doc factDoc);
+
+    public JSONObject getFactLinkpoints(int cid,JSONArray facts, JSONArray bodies);
 
 //    public void updateFactConfirm(int factID,int confirm);
 //

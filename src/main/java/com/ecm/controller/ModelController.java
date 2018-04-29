@@ -205,10 +205,16 @@ public class ModelController {
     }
 
     @RequestMapping(value="/deleteFactsAndJoints")
-    public void updateJointContent(@RequestParam("caseID") int caseID){
+    public void deleteFactsAndJoints(@RequestParam("caseID") int caseID){
         modelManageService.deleteArrowsByCid(caseID);
         modelManageService.deleteFactByCid(caseID);
         modelManageService.deleteJointsByCid(caseID);
+    }
+
+    @RequestMapping(value="/extractJoints")
+    public JSONObject extractJoints(@RequestBody JSONObject data){
+
+        return modelManageService.getFactLinkpoints(data.getInt("caseID"),data.getJSONArray("facts"),data.getJSONArray("bodies"));
     }
 
 //    @RequestMapping(value="/updateFactConfirm")

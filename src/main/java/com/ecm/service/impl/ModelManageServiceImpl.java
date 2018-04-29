@@ -1,6 +1,8 @@
 package com.ecm.service.impl;
 
 import com.ecm.dao.*;
+import com.ecm.keyword.manager.KeyWordCalculator;
+import com.ecm.keyword.manager.RelationCreator;
 import com.ecm.model.*;
 import com.ecm.model.xsd_evidence.*;
 import com.ecm.service.LogicService;
@@ -320,6 +322,154 @@ public class ModelManageServiceImpl implements ModelManageService {
             factDoc.setId(fd.getId());
         }
         return factDocDao.save(factDoc);
+    }
+
+    @Override
+    @Transactional
+    public JSONObject getFactLinkpoints(int cid,JSONArray facts,JSONArray bodies) {
+        deleteArrowsByCid(cid);
+        deleteJointsByCid(cid);
+        deleteFactByCid(cid);
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray unconfirmArr = new JSONArray();
+
+        JSONObject data = new JSONObject();
+        HashMap<Integer,Integer> factIndexArr = new HashMap<>();
+        JSONArray farr = new JSONArray();
+        for(Object factobj:facts){
+            JSONObject factjobj = (JSONObject) factobj;
+            MOD_Fact fact = new MOD_Fact();
+            fact.setTextID(factjobj.getInt("textID"));
+            fact.setContent(factjobj.getString("content"));
+            fact.setCaseID(factjobj.getInt("caseID"));
+            fact.setConfirm(factjobj.getInt("confirm"));
+
+            if(fact.getConfirm()==1){
+                int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
+                fact.setLogicNodeID(lid);
+                fact = factDao.save(fact);
+
+                KeyWordCalculator keyWordCalculator = new KeyWordCalculator();
+                HashMap<String, List<String>> res = keyWordCalculator.calcKeyWord(fact.getContent());
+                JSONObject fobj = new JSONObject();
+                fobj.put("id", fact.getId());
+                fobj.put("content", fact.getContent());
+                fobj.put("keyWordMap", res);
+                farr.add(fobj);
+            }else{
+                fact = factDao.save(fact);
+                JSONObject unconfirmjo = new JSONObject();
+                unconfirmjo.put("originID",factjobj.getInt("id"));
+                unconfirmjo.put("newID",fact.getId());
+                unconfirmArr.add(unconfirmjo);
+            }
+            factIndexArr.put(fact.getId(),factjobj.getInt("id"));
+        }
+        data.put("factList",farr);
+        jsonObject.put("unconfirm",unconfirmArr);
+
+        String[] typeStr = {"证人证言","被告人供述和辩解","书证","鉴定结论","勘验","检查笔录","其他"};
+        int[] bodyIndexArr = new int[bodies.size()];
+
+        JSONArray earr = new JSONArray();
+        int index = 0;
+        for (Object bodyobj : bodies) {
+            JSONObject bodyjobj = (JSONObject) bodyobj;
+            JSONObject bobj = new JSONObject();
+            int bid = bodyjobj.getInt("id");
+            bobj.put("id", bid);
+            bobj.put("content", bodyjobj.getString("body"));
+            bobj.put("type", typeStr[bodyjobj.getInt("type")]);
+
+            JSONArray headArr = bodyjobj.getJSONArray("headList");
+            JSONArray headList = new JSONArray();
+            for(Object headobj:headArr){
+                JSONObject headjo = (JSONObject) headobj;
+                int hid = headjo.getInt("id");
+                String head = headjo.getString("head");
+                evidenceHeadDao.updateBodyIdById(hid,bid);
+                headList.add(head);
+            }
+            bobj.put("headList", headList);
+            earr.add(bobj);
+            bodyIndexArr[index++] = bid;
+        }
+        data.put("evidenceList",earr);
+
+        JSONObject res = new JSONObject();
+        try {
+            res = RelationCreator.getJoints(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("网络传输错误");
+            return null;
+        }
+
+        if (res == null) {
+            System.out.println("提取连接点失败");
+            return null;
+        } else {
+//            System.out.println("res:"+res.toString());
+            JSONArray confirmArr = new JSONArray();
+
+            JSONArray factList = (JSONArray) res.get("factList");
+            for (Object fobject : factList) {
+                JSONObject factobj = new JSONObject();
+
+                JSONObject fjo = (JSONObject) fobject;
+                int factID = fjo.getInt("id");
+                MOD_Fact fact = factDao.findById(factID);
+
+                factobj.put("originID",factIndexArr.get(factID));
+                factobj.put("newID",factID);
+                factobj.put("content",fjo.getString("content"));
+                factobj.put("logicNodeID",fact.getLogicNodeID());
+                factobj.put("textID",fact.getTextID());
+                JSONArray relArr = new JSONArray();
+
+                JSONArray linksArray = fjo.getJSONArray("factLinkPointList");
+
+                for (Object relation : linksArray) {
+                    JSONObject jointjo = new JSONObject();
+
+                    JSONObject relationjo = (JSONObject) relation;
+                    String jointContent = relationjo.getString("factValue");
+                    MOD_Joint joint = new MOD_Joint();
+                    joint.setCaseID(cid);
+                    joint.setContent(jointContent);
+                    joint.setFactID(factID);
+                    int jointID = jointDao.save(joint).getId();
+
+                    jointjo.put("id",jointID);
+                    jointjo.put("content",jointContent);
+                    JSONArray headArr = new JSONArray();
+
+                    JSONArray arrowArr = relationjo.getJSONArray("evidenceList");
+                    for(Object arrowobj:arrowArr){
+                        JSONObject arrowjo = (JSONObject) arrowobj;
+                        int bodyID = bodyIndexArr[arrowjo.getInt("evidenceIndex")];
+                        int headID = evidenceHeadDao.findIdByBodyidAndHead(bodyID,arrowjo.getString("value"));
+                        MOD_Arrow arrow = new MOD_Arrow();
+                        arrow.setCaseID(cid);
+                        arrow.setNodeFrom_hid(headID);
+                        arrow.setNodeTo_jid(jointID);
+                        arrow = arrowDao.save(arrow);
+
+                        JSONObject ajson = new JSONObject();
+                        ajson.put("headID",headID);
+                        ajson.put("arrowID",arrow.getId());
+                        headArr.add(ajson);
+                    }
+                    jointjo.put("headList",headArr);
+                    relArr.add(jointjo);
+                }
+                factobj.put("linkpoints",relArr);
+                confirmArr.add(factobj);
+            }
+            jsonObject.put("confirm",confirmArr);
+            return jsonObject;
+        }
     }
 
 //    @Override

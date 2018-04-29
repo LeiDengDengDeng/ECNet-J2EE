@@ -431,7 +431,8 @@ function saveAll(isAsync,url) {
             },
             success: function (data) {
                 removeNotify("保存成功");
-                window.location.href=url;
+                if(url!=null)
+                    window.location.href=url;
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 // alert("save all");
                 // alert(XMLHttpRequest.status);
@@ -1882,7 +1883,6 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
 
     if(nodeFrom!=null)
     if(nodeFrom.outLinks==null||nodeFrom.outLinks.length==0){
-
         if(name==null)
             name = '新箭头'+(arrowIndex+1);
         if(id==null)
@@ -2617,6 +2617,7 @@ function typeSetting() {
             if(outLinks!=null&&outLinks.length>0)
                 body.y = y+((outLinks.length-1)*(2*header_radius + headerGap_y)/2);
             else{
+                y+=body_height + headerGap_y;
                 body.y = y;
             }
 
@@ -2633,8 +2634,6 @@ function typeSetting() {
 
                     nodes.push({'node': header, 'x': hox, 'y': hoy});
                 }
-            }else{
-                y+=body_height + headerGap_y;
             }
         }
     }
@@ -2667,6 +2666,7 @@ function typeSetting() {
             if(inLinks!=null&&inLinks.length>0)
                 fact.y = y+((inLinks.length-1)*(joint_width + headerGap_y)/2);
             else{
+                y+=body_height + headerGap_y;
                 fact.y = y;
             }
             nodes.push({'node':fact,'x':ox,'y':oy});
@@ -2682,8 +2682,6 @@ function typeSetting() {
 
                     nodes.push({'node':joint,'x':jox,'y':joy});
                 }
-            }else{
-                y+=body_height + headerGap_y;
             }
         }
     }

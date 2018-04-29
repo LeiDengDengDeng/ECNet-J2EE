@@ -166,7 +166,7 @@ function addFactTxtField(id,content,confirm,joints) {
     }
 
     var html="<div data-factID='"+id+"' class='evibody form-group row'><br><div class='col-md-8'>" +
-        "<input type='text' class='form-control myinfo1' value='"+content+"' data-factID='"+id+"'>" +
+        "<input type='text' class='form-control myinfo1' value='"+content+"'>" +
         "<a class=\"glyphicon myRemove glyphicon-remove btn form-control-feedback\"style=\"pointer-events:auto;padding-left: 1%\" " +
         "data-factID='"+id+"'  onclick='removeFactDiv(this)'></a></div>" +
         "<div class='col-md-2'>";
@@ -187,26 +187,137 @@ function addFactElmt() {
 }
 
 function getJoints() {
-    // $.ajax({
-    //     url: "/model/extractJoints",
-    //     type: 'POST',
-    //     data: {"caseID": cid, "text": str},
-    //     beforeSend: function (data) {
-    //         //这里判断，如果没有加载数据，会显示loading
-    //         if (data.readyState == 0) {
-    //
-    //         }
-    //     },
-    //     success: function (data) {
-    //
-    //         for(var i = 0;i<data.length;i++){
-    //
-    //         }
-    //
-    //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-    //
-    //     }
-    // });
+    var bList = [];
+    for(var bid in bodyList){
+        var body = bodyList[bid];
+
+        if(body!=null){
+            var node = body['node'];
+            if(body['conclusion']==1){
+
+                var outL = node.outLinks;
+                var hList = [];
+                if(outL!=null&&outL.length>0){
+                    for(var i = 0;i<outL.length;i++){
+                        var head = outL[i].nodeZ;
+                        if(head!=null){
+                            hList.push({"id":head.id,"head":head.content});
+                        }
+                    }
+                    var b = {"id":bid,"caseID":cid,"body":node.content,"type":body['type'],'headList':hList};
+                    bList.push(b);
+                }
+            }
+        }
+    }
+
+    var fList = [];
+    $(".evibody").each(function () {
+
+        var factID = $(this).attr("data-factID");
+        var content = $(this).find('input').eq(0).val();
+        var confirm = $(this).find('button').eq(0).val();
+        fList.push({"id":factID,'caseID':cid,'content':content,'textID':textID,'confirm':confirm});
+    });
+
+    $('body').loading({
+        loadingWidth:240,
+        title:'请稍候...',
+        name:'extractJoints',
+        animateIn:'none',
+        discription:'这是一个描述...',
+        direction:'row',
+        type:'origin',
+        originBg:'#71EA71',
+        originDivWidth:30,
+        originDivHeight:30,
+        originWidth:4,
+        originHeight:4,
+        smallLoading:false,
+        titleColor:'#388E7A',
+        loadingBg:'#312923',
+        loadingMaskBg:'rgba(22,22,22,0.2)',
+        mustRelative: true
+    });
+
+    $.ajax({
+        url: "/model/extractJoints",
+        type: 'POST',
+        data: JSON.stringify({'facts':fList,'bodies':bList,'caseID':cid}),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            factIndex = 0;
+            jointIndex = 0;
+            removeAllFactsInGraph();
+
+            var joint_x = 10 + (body_width/2) + body_width/2 + headerGap_x + header_radius + header_radius + headerGap_x + joint_width/2;
+            var fact_x = joint_x + body_width/2 + jointGap + (joint_width/2);
+            var y = 10 + header_radius;
+            factList = {};
+            jointList = {};
+
+            var unconfirm = data['unconfirm'];
+            var confirm = data['confirm'];
+
+            for(var i = 0;i<unconfirm.length;i++){
+                var originID = unconfirm[i]['originID'];
+                var newID = unconfirm[i]['newID'];
+                var fdiv = $(".evibody[data-factID='"+originID+"']");
+                fdiv.attr("data-factID",newID);
+                fdiv.find('button').attr("data-factID",newID);
+                fdiv.find('a').attr("data-factID",newID);
+                $(".headList[data-factID='"+originID+"']").attr("data-factID",newID);
+                $(".headList[data-factID='"+newID+"']").html("");
+            }
+
+            for(var i = 0;i<confirm.length;i++){
+                var jnode,fnode;
+
+                var originID = confirm[i]['originID'];
+                var newID = confirm[i]['newID'];
+                var fdiv = $(".evibody[data-factID='"+originID+"']");
+                fdiv.attr("data-factID",newID);
+                fdiv.find('button').attr("data-factID",newID);
+                fdiv.find('a').attr("data-factID",newID);
+                $(".headList[data-factID='"+originID+"']").attr("data-factID",newID);
+                $(".headList[data-factID='"+newID+"']").html("");
+                var relArr = confirm[i]['linkpoints'];
+
+                var fy = 0;
+                if(relArr==null||relArr.length==0){
+                    y+=body_height + headerGap_y;
+                    fy = y;
+                }else{
+                    fy = y+((relArr.length-1)*(joint_width + headerGap_y)/2);
+                }
+
+                fnode = drawFact(false,fact_x,fy,newID,"",confirm[i]['content'],confirm[i]['logicNodeID'],confirm[i]['textID'],1,true);
+
+                for(var j = 0;j<relArr.length;j++){
+                    var jointID = relArr[j]['id'];
+                    var jcontent = relArr[j]['content'];
+                    jnode = drawJoint(false,joint_x,y,jointID,"",jcontent,true);
+                    y += headerGap_y + joint_width;
+                    addLink(jnode,fnode);
+                    addJointDiv(jointID,jcontent,newID);
+
+                    var arrowList = relArr[j]['headList'];
+                    for(var k = 0;k<arrowList.length;k++){
+                        var arrowId = arrowList[k]['arrowID'];
+                        var headID = arrowList[k]['headID'];
+                        addArrow(headerList[headID],jnode,arrowId);
+                    }
+                }
+            }
+            updateFactListofGraph();
+            removeLoading('extractJoints');
+            saveAll(true,null);
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // console.log(XMLHttpRequest.status);
+            // console.log(XMLHttpRequest.readyState);
+            // console.log(textStatus);
+        }
+    });
 
 }
 
@@ -257,30 +368,26 @@ function createJointHtml(factID,joints){
     var html="<div class='headList text-left' data-factID='"+factID+"'>";
     if(joints!=null)
     for(var j=0;j<joints.length;j++){
-        html+="<span data-jointID='"+joints[j].id+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'>"
-            +joints[j].content+"</label><span data-jointID='"+joints[j].id
-            +"' class='glyphicon glyphicon-remove  headRemove' onclick='removeJointDiv(this)'></span></span>";
-        if(joints[j].id>divIndex2){
-            divIndex2 = joints[j].id+1;
-        }
+        html+="<span data-jointID='"+joints[j].id+"' class='head_chain'><label style='font:inherit;min-width: 25px;'>"
+            +joints[j].content+"</label></span>";
     }
 
-    html+="<span data-factID='"+factID+"' class='glyphicon glyphicon-plus headRemove addHead' onclick='addJointDiv(this)'></span></div>";
+    html+="</div>";
     $(".evibody[data-factID='"+factID+"']").after(html);
 
 }
 
-function removeJointDiv(remove) {
-    var id=$(remove).attr("data-jointID");
-    console.log("jointid"+id);
-    // deleteJoint(id);
-    $(".head_chain[data-jointID='"+id+"']").remove();
-}
+// function removeJointDiv(remove) {
+//     var id=$(remove).attr("data-jointID");
+//     console.log("jointid"+id);
+//     // deleteJoint(id);
+//     $(".head_chain[data-jointID='"+id+"']").remove();
+// }
 
-function addJointDiv(span) {
-    var id=divIndex2++;
-    var  html="<span data-jointID='"+id+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'></label><span data-jointID='"+id+"' class='glyphicon glyphicon-remove  headRemove' onclick='removeJointDiv(this)'></span></span>";
-    $(span).before(html);
+function addJointDiv(jointID,jcontent,factID) {
+    // var id=divIndex2++;
+    var  html="<span data-jointID='"+jointID+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'>"+jcontent+"</label></span>";
+    $(".headList[data-factID='"+factID+"']").append(html);
 }
 
 function clearFactDiv() {
