@@ -1,5 +1,6 @@
 package com.ecm.controller;
 
+import com.ecm.keyword.model.SplitType;
 import com.ecm.model.*;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,15 +122,16 @@ public class ModelController {
 
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
         logicService.deleteAllLinksBetweenEvidenceAndFactNode(cid);
-        for(int bid : list.keySet()){
-            int eid = modelManageService.getLogicNodeIDofBody(bid);
-            List<Integer> arr = list.get(bid);
-            for(int i = 0;i<arr.size();i++){
-                int fid = arr.get(i);
-                int factID = modelManageService.getFactByID(fid).getLogicNodeID();
-                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
-            }
-        }
+        modelManageService.saveLogicLinks(list,cid);
+//        for(int bid : list.keySet()){
+//            int eid = modelManageService.getLogicNodeIDofBody(bid);
+//            List<Integer> arr = list.get(bid);
+//            for(int i = 0;i<arr.size();i++){
+//                int fid = arr.get(i);
+//                int factID = modelManageService.getFactByID(fid).getLogicNodeID();
+//                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
+//            }
+//        }
     }
 
     @RequestMapping(value="/exportExcel")
@@ -167,4 +170,65 @@ public class ModelController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new InputStreamResource(fileSystemResource.getInputStream()));
     }
+
+    @RequestMapping(value="/splitFact")
+    public List<MOD_Fact> splitFact(@RequestParam("caseID") int caseID,@RequestParam("text") String text){
+//        System.out.println("***************************"+text);
+        MOD_Fact_Doc factDoc = new MOD_Fact_Doc();
+        factDoc.setCaseID(caseID);
+        factDoc.setText(text);
+        factDoc = modelManageService.saveFactDoc(factDoc);
+        int factDocID = factDoc.getId();
+
+        List<MOD_Fact> facts = new ArrayList<MOD_Fact>();
+//        modelManageService.deleteFactByCid(caseID);
+//        modelManageService.deleteJointsByCid(caseID);
+//        modelManageService.deleteArrowsByCid(caseID);
+
+        int index = 0;
+        String[] tests=text.split(SplitType.getType(text).getRegex());
+        for(String str:tests) {
+            if (!str.isEmpty()) {
+//                int logicNodeId=logicService.addEvidenceOrFactNode(caseID,str,1);
+                MOD_Fact fact = new MOD_Fact();
+                fact.setId(index);
+                fact.setCaseID(caseID);
+                fact.setContent(str);
+//                fact.setLogicNodeID(logicNodeId);
+                fact.setTextID(factDocID);
+//                fact = modelManageService.saveFact(fact);
+                facts.add(fact);
+                index++;
+            }
+        }
+        return facts;
+    }
+
+    @RequestMapping(value="/deleteFactsAndJoints")
+    public void deleteFactsAndJoints(@RequestParam("caseID") int caseID){
+        modelManageService.deleteArrowsByCid(caseID);
+        modelManageService.deleteFactByCid(caseID);
+        modelManageService.deleteJointsByCid(caseID);
+    }
+
+    @RequestMapping(value="/extractJoints")
+    public JSONObject extractJoints(@RequestBody JSONObject data){
+
+        return modelManageService.getFactLinkpoints(data.getInt("caseID"),data.getJSONArray("facts"),data.getJSONArray("bodies"));
+    }
+
+//    @RequestMapping(value="/updateFactConfirm")
+//    public void updateFactConfirm(@RequestParam("factID") int factID,@RequestParam("confirm") int confirm){
+//        modelManageService.updateFactConfirm(factID,confirm);
+//    }
+//
+//    @RequestMapping(value="/updateFactContent")
+//    public void updateFactContent(@RequestParam("factID") int factID,@RequestParam("content") String content){
+//        modelManageService.updateFactContent(factID,content);
+//    }
+//
+//    @RequestMapping(value="/updateJointContent")
+//    public void updateJointContent(@RequestParam("jointID") int jointID,@RequestParam("content") String content){
+//        modelManageService.updateJointContent(jointID,content);
+//    }
 }

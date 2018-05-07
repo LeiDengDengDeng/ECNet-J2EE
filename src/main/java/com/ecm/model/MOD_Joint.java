@@ -14,8 +14,8 @@ public class MOD_Joint {
     private int caseID;
     private String name;
     private String content;
-    private int x;
-    private int y;
+    private int x = -1;
+    private int y = -1;
     private int factID = -1;
 
     public int getId() {

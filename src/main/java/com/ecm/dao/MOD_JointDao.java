@@ -35,4 +35,8 @@ public interface MOD_JointDao extends JpaRepository<MOD_Joint, Integer> {
     @Modifying
     @Query(value = "update MOD_Joint j set j.factID=-1 where j.factID=?1")
     public void updateFactID(int fid);
+
+    @Modifying
+    @Query(value = "update MOD_Joint j set j.content=?2 where j.id=?1")
+    public void updateContentById(int id,String content);
 }

@@ -16,10 +16,12 @@ public class MOD_Fact {
     private int caseID;
     private String name;
     private String content;
-    private int x;
-    private int y;
+    private int x = -1;
+    private int y = -1;
 
     private int logicNodeID = -1; // 关联LogicNode中的id
+    private int textID = -1;
+    private int confirm = 1;//0-不认定 1-认定
 
     @Transient
     private List<MOD_Joint> jointList=new ArrayList<>();//持有的joint
@@ -91,6 +93,22 @@ public class MOD_Fact {
 
     public void setLogicNodeID(int logicNodeID) {
         this.logicNodeID = logicNodeID;
+    }
+
+    public int getTextID() {
+        return textID;
+    }
+
+    public void setTextID(int textID) {
+        this.textID = textID;
+    }
+
+    public int getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(int confirm) {
+        this.confirm = confirm;
     }
 
     @Override

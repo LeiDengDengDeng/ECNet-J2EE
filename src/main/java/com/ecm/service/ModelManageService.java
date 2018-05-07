@@ -2,8 +2,10 @@ package com.ecm.service;
 
 import com.ecm.model.*;
 //import net.sf.json.JSONArray;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ModelManageService {
@@ -16,7 +18,7 @@ public interface ModelManageService {
 
     public void deleteHeaderById(int id);
 
-    public void deleteHeadersByCid(int cid);
+//    public void deleteHeadersByCid(int cid);
 
     public Evidence_Body saveBody(Evidence_Body body);
 
@@ -26,7 +28,7 @@ public interface ModelManageService {
 
     public void deleteBodyById(int id);
 
-    public void deleteBodiesByCid(int cid);
+//    public void deleteBodiesByCid(int cid);
 
     public MOD_Joint saveJoint(MOD_Joint joint);
 
@@ -65,4 +67,16 @@ public interface ModelManageService {
     public void writeToXML(int cid,String filePath);
 
     public void writeToXMLBySchema(int cid,String filePath);
+
+    public void saveLogicLinks(HashMap<Integer,List<Integer>> list, int cid);
+
+    public MOD_Fact_Doc saveFactDoc(MOD_Fact_Doc factDoc);
+
+    public JSONObject getFactLinkpoints(int cid,JSONArray facts, JSONArray bodies);
+
+//    public void updateFactConfirm(int factID,int confirm);
+//
+//    public void updateFactContent(int factID,String content);
+//
+//    public void updateJointContent(int jointID,String content);
 }
