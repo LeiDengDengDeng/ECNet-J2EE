@@ -2,7 +2,6 @@ package com.ecm.controller;
 
 import com.ecm.keyword.manager.TypeCalculator;
 import com.ecm.keyword.model.SplitType;
-import com.ecm.keyword.reader.ExcelUtil;
 import com.ecm.keyword.reader.FileUtil;
 import com.ecm.model.Evidence_Body;
 import com.ecm.model.Evidence_Document;
@@ -14,12 +13,6 @@ import com.ecm.service.ModelManageService;
 import com.ecm.util.ImportXMLUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.ecm.keyword.reader.ExcelUtil.getExcelWorkbook;
-import static com.ecm.keyword.reader.ExcelUtil.getSheetByNum;
 
 
 @RestController
@@ -59,7 +48,7 @@ public class EvidenceController {
       evidence_document=evidenceService.saveOrUpdate(evidence_document);
 
       modelManageService.deleteByDocumentID(evidence_document.getId());
-      evidenceService.deleteBodyAll(evidence_document.getId());
+      evidenceService.deleteBodyAllByDocuId(evidence_document.getId());
 
 
      // String test="1、test1。2、test2。3、test3";
@@ -73,7 +62,7 @@ public class EvidenceController {
                 evidence_body.setBody(str);
                 evidence_body.setType(typeCalculator.calType(str));
                 evidence_body.setLogicNodeID(logicNodeId);
-                evidence_body=evidenceService.save(evidence_body);
+                evidence_body=evidenceService.saveBody(evidence_body);
 
 
                 JSONObject jsonObject = new JSONObject();
@@ -114,7 +103,7 @@ public class EvidenceController {
         evidence_body.setType(type);
         evidence_body.setBody(body);
         evidence_body.setLogicNodeID(logicNodeId);
-        evidenceService.save(evidence_body);
+        evidenceService.saveBody(evidence_body);
 
         return evidence_body;
     }
@@ -189,7 +178,7 @@ public class EvidenceController {
         evidence_head.setDocumentid(document_id);
         evidence_head.setCaseID(ajxh);
         evidence_head.setBodyid(bodyid);
-        evidence_head=evidenceService.save(evidence_head);
+        evidence_head=evidenceService.saveHead(evidence_head);
         return evidence_head;
     }
     @PostMapping(value = "/updateHead")
