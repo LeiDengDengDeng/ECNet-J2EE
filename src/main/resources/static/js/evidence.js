@@ -1,7 +1,7 @@
 var textID = -1;
-var factList_div = {};
+// var factList_div = {};
 var divIndex1 = 0;
-var divIndex2 = 0;
+// var divIndex2 = 0;
 $(function(){
     var caseInfoStr = $.session.get("caseInfo");
     var caseInfo = JSON.parse(caseInfoStr);
@@ -13,6 +13,38 @@ $(function(){
     $("#caseDate").text(caseInfo.fillingDate);
 
     initEvidences();
+    $('#addToAcceptance').click(function () {
+        var checkboxs = $('#recycleBin').find('.checkbox');
+        $('body').loading({
+            loadingWidth:240,
+            title:'请稍候...',
+            name:'updateBodyTrust',
+            animateIn:'none',
+            discription:'这是一个描述...',
+            direction:'row',
+            type:'origin',
+            originBg:'#71EA71',
+            originDivWidth:30,
+            originDivHeight:30,
+            originWidth:4,
+            originHeight:4,
+            smallLoading:false,
+            titleColor:'#388E7A',
+            loadingBg:'#312923',
+            loadingMaskBg:'rgba(22,22,22,0.2)',
+            mustRelative: true
+        });
+        for(var i = 0;i<checkboxs.length;i++){
+            var checkbox = $(checkboxs[i]).find('input');
+            // console.log(checkbox.is(':checked'));
+            if(checkbox.is(':checked')){
+                var bid = $(checkboxs[i]).attr("data-bodyID");
+                updateBodyTrust(bid);
+            }
+        }
+        $('#recycleBin').modal('hide');
+        removeLoading('updateBodyTrust');
+    });
 });
 
 function initEvidences() {
@@ -41,26 +73,106 @@ function initEvidences() {
 //初始化未采信列表
 function initRejection(evidences) {
     var content = "";
+    var binContent = "";
 
     for(var i = 0;i<evidences.length;i++){
-        var evidenceTemp = evidences[i];
+        var evidenceTemp = evidences[i]['body'];
         var classTemp = "evidence evidence_splitLine";
         var idTemp = "heads_chain_";
         if(evidenceTemp['isDefendant']==0)//原告
             classTemp += " evidence_plaintiff";
 
-        content+="<div class=\""+classTemp+"\">\n" +
-            "                            <a data-toggle=\"collapse\" href=\"#"+idTemp+i+"\" class=\"evidence_a\">\n" +
-            evidenceTemp['content']+"</a>" +
-            "                            <div id=\""+idTemp+i+"\" class=\"panel-collapse collapse in\">\n" +
+        content+="<div class=\""+classTemp+"\" data-id='"+evidenceTemp['id']+"'>" +
+            "                            <a data-toggle=\"collapse\" href=\"#"+idTemp+evidenceTemp['id']+"\" class=\"evidence_a\">\n" +
+            evidenceTemp['body']+"</a>" +
+            "                            <div id=\""+idTemp+evidenceTemp['id']+"\" class=\"panel-collapse collapse in\">\n" +
             "                                <div class=\"head_div\">";
 
-        for(var j = 0;j<evidenceTemp['headers'].length;j++){
-            content+="<span class=\"head_chain\">"+evidenceTemp['headers'][j]+"</span>";
+        binContent += "<div class='checkbox' data-bodyID='"+evidenceTemp['id']+"'><label>" +
+            "<input type=\"checkbox\">" + evidenceTemp['body'] +
+            "</label></div>";
+
+        for(var j = 0;j<evidences[i]['headers'].length;j++){
+            content+="<span class=\"head_chain\">"+evidences[i]['headers'][j]['head']+"</span>";
         }
         content+="</div></div></div>";
     }
     $("#rejection").find(".panel-body").html(content);
+    $("#recycleBin_body").html(binContent);
+}
+
+//更新单个链体采信
+function updateBodyTrust(bid) {
+
+    $.ajax({
+        type: "post",
+        url: "/model/updateBodyTrust",
+        data: {"bid":bid},
+        // dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链体");
+        //     }
+        // },
+        success: function (data) {
+            addToAcceptance(bid);
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // alert("save body");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
+        }
+    });
+}
+
+function addToAcceptance(bid) {
+    var filter_content = '.evidence[data-id='+bid+']';
+    var p_div = $(filter_content);
+    if(p_div!=null&&p_div.length>0){
+        p_div.remove();
+    }
+
+    filter_content = '.checkbox[data-bodyID='+bid+']';
+    p_div = $(filter_content);
+    if(p_div!=null&&p_div.length>0){
+        p_div.remove();
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/model/getHeaders",
+        data: {"bid":bid},
+        dataType:"json",
+        // contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链体");
+        //     }
+        // },
+        success: function (data) {
+            var body = data['body'];
+            var bnode = drawBody(false,body.x,body.y,bid,body.name,body.body,body,true);
+            addEvidence(bid,body.body,body.isDefendant);
+
+            var headers = data['headers'];
+            for(var i = 0;i<headers.length;i++){
+                var head = headers[i];
+                var hnode = drawHeader(false,head['x'],head['y'],head['id'],head['name'],head['head'],head['keyText'],true);
+                addLink(bnode,hnode);
+                addHeaderofChain(head['head'],head['id'],bid);
+            }
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // alert("save body");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
+        }
+    });
 }
 
 //添加采信证据，id:链体id，evidence_content:证据内容

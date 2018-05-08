@@ -12,6 +12,8 @@ public interface ModelManageService {
 
     public JSONObject getEvidences(int cid);
 
+    public JSONObject getHeadersByBodyID(int bid);
+
     public Evidence_Head saveHeader(Evidence_Head header);
 
     public void saveHeaders(List<Evidence_Head> headers);
@@ -73,6 +75,8 @@ public interface ModelManageService {
     public MOD_Fact_Doc saveFactDoc(MOD_Fact_Doc factDoc);
 
     public JSONObject getFactLinkpoints(int cid,JSONArray facts, JSONArray bodies);
+
+    public void updateBodyTrustById(int bid);
 
 //    public void updateFactConfirm(int factID,int confirm);
 //

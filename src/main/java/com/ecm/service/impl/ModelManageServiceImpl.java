@@ -66,19 +66,27 @@ public class ModelManageServiceImpl implements ModelManageService {
             Evidence_Body body = bodies.get(i);
             int bid = body.getId();
 
-            if(body.getTrust()==1){
-                JSONObject jo = new JSONObject();
-                jo.put("body",body);
+            JSONObject jo = new JSONObject();
+            jo.put("body",body);
 
-                List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
-                jo.put("headers",headers);
+            List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
+            jo.put("headers",headers);
+
+            if(body.getTrust()==1){
+//                JSONObject jo = new JSONObject();
+//                jo.put("body",body);
+//
+//                List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
+//                jo.put("headers",headers);
                 trusts.add(jo);
             }else{
-                JSONObject jo = new JSONObject();
-                jo.put("content",body.getBody());
-                jo.put("isDefendant",body.getIsDefendant());
-                List<String> headers = evidenceHeadDao.findContentsByCaseIDAndBodyid(cid,bid);
-                jo.put("headers",headers);
+//                JSONObject jo = new JSONObject();
+//
+//                jo.put("content",body.getBody());
+//                jo.put("isDefendant",body.getIsDefendant());
+////                List<Evidence_Head> headers = evidenceHeadDao.findAllByCaseIDAndBodyid(cid,bid);
+//                List<String> headers = evidenceHeadDao.findContentsByCaseIDAndBodyid(cid,bid);
+//                jo.put("headers",headers);
                 untrusts.add(jo);
             }
         }
@@ -106,7 +114,15 @@ public class ModelManageServiceImpl implements ModelManageService {
         return res;
     }
 
-//    @Async
+    @Override
+    public JSONObject getHeadersByBodyID(int bid) {
+        JSONObject obj = new JSONObject();
+        obj.put("body",evidenceBodyDao.findById(bid));
+        obj.put("headers",evidenceHeadDao.findAllByBodyid(bid));
+        return obj;
+    }
+
+    //    @Async
     @Override
     public Evidence_Head saveHeader(Evidence_Head header) {
         return evidenceHeadDao.save(header);
@@ -470,6 +486,12 @@ public class ModelManageServiceImpl implements ModelManageService {
             jsonObject.put("confirm",confirmArr);
             return jsonObject;
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateBodyTrustById(int bid) {
+        evidenceBodyDao.updateTrustById(1,bid);
     }
 
 //    @Override
