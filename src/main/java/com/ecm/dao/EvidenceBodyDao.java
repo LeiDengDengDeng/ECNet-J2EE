@@ -56,3 +56,4 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
     public List<Integer> findAllByDocumentid(int id);
 
 }
+

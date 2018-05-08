@@ -11,13 +11,13 @@ public interface EvidenceService{
 
     Evidence_Document saveOrUpdate(Evidence_Document evidence_document);
 
-    int findIdByAjxhAndType(int ajxh, int type);
+    int findDocuIdByAjxhAndType(int ajxh, int type);
     Evidence_Document findDocuByAjxhAndType(int ajxh, int type);
     List<Evidence_Body> findBodyByDocu(int documentid);
-    Evidence_Body save(Evidence_Body evidence_body);
-    Evidence_Head save(Evidence_Head evidence_head);
+    Evidence_Body saveBody(Evidence_Body evidence_body);
+    Evidence_Head saveHead(Evidence_Head evidence_head);
     void deleteBodyById(int id);
-    void deleteBodyAll(int document_id);
+    void deleteBodyAllByDocuId(int document_id);
     void deleteBodyAllByCaseId(int caseId);
     void updateBodyById(String body, int id);
     void updateTypeById(int type, int id);

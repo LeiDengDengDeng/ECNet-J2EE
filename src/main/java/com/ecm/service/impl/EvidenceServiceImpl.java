@@ -54,7 +54,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Override
     public Evidence_Document saveOrUpdate(Evidence_Document evidence_document) {
-        int id = findIdByAjxhAndType(evidence_document.getCaseID(), evidence_document.getType());
+        int id = findDocuIdByAjxhAndType(evidence_document.getCaseID(), evidence_document.getType());
         if (id != -1) {
             evidence_document.setId(id);
         }
@@ -62,7 +62,7 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
     @Override
-    public int findIdByAjxhAndType(int ajxh, int type) {
+    public int findDocuIdByAjxhAndType(int ajxh, int type) {
         Evidence_Document evidence_document = evidenceDocuDao.getEvidenceDocument(ajxh, type);
         if (evidence_document == null) {
             return -1;
@@ -82,13 +82,13 @@ public class EvidenceServiceImpl implements EvidenceService {
     }
 
     @Override
-    public Evidence_Body save(Evidence_Body evidence_body) {
+    public Evidence_Body saveBody(Evidence_Body evidence_body) {
         return evidenceBodyDao.save(evidence_body);
     }
 
     @Transactional
     @Override
-    public Evidence_Head save(Evidence_Head evidence_head) {
+    public Evidence_Head saveHead(Evidence_Head evidence_head) {
         return evidenceHeadDao.save(evidence_head);
     }
 
@@ -101,7 +101,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 
     @Transactional
     @Override
-    public void deleteBodyAll(int document_id) {
+    public void deleteBodyAllByDocuId(int document_id) {
         List<Integer> bodyIdList = evidenceBodyDao.findAllByDocumentid(document_id);
 
 
@@ -330,7 +330,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                     evidenceBody.setTrustByString(row.getCell(8).getStringCellValue());
                     evidenceBody.setDocumentid(getDocuIdByDocuList(row.getCell(5).getStringCellValue(), doculist));
                     evidenceBody.setLogicNodeID(-1);
-                    evidenceBody = save(evidenceBody);
+                    evidenceBody = saveBody(evidenceBody);
                     bodylist.add(evidenceBody);
                     //  deleteHeadAllByBody(evidenceBody.getId());
                 }
@@ -345,7 +345,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                     evidence_head.setBodyid(evidenceBody.getId());
                     evidence_head.setDocumentid(evidenceBody.getDocumentid());
                     System.out.println(evidence_head.toString());
-                    evidence_head = save(evidence_head);
+                    evidence_head = saveHead(evidence_head);
                     evidenceBody.addHead(evidence_head);
                 }
 
@@ -715,8 +715,8 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence_body.setCommitter(committer);
                 evidence_body.setReason(reason);
                 evidence_body.setCaseID(xmlUtil.getCaseId());
-                //save body
-                evidence_body= save(evidence_body);
+                //saveBody body
+                evidence_body= saveBody(evidence_body);
 
 
                 NodeList heads = evi.getElementsByTagName("heads").item(0).getChildNodes();
@@ -739,7 +739,7 @@ public class EvidenceServiceImpl implements EvidenceService {
                         head.setX(headx);
                         head.setY(heady);
                         System.out.println(head.toString());
-                        head=save(head);
+                        head= saveHead(head);
                         evidence_body.addHead(head);
                     }
                 }

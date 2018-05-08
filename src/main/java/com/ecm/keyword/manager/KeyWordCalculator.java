@@ -15,14 +15,14 @@ import java.util.regex.Pattern;
 
 
 public class KeyWordCalculator {
-
+    //wordfilter为停用词列表
     WordFilter wordFilter = new WordFilter();
-
+    //计算事实列表和证据列表的关键要素，结果保存在传入的参数中
     public void calcKeyWord(ArrayList<FactModel> fList, ArrayList<EvidenceModel> eList){
         calcFactKeyWord(fList);
         calcEviKeyWord(eList);
     }
-
+    //计算事实列表的关键要素
     public void calcFactKeyWord(ArrayList<FactModel> fList){
         for(FactModel fact : fList){
             fact.setKeyWordMap(calcKeyWord(fact.getContent()));
@@ -35,7 +35,7 @@ public class KeyWordCalculator {
             evi.setKeyWordMap(calcKeyWord(evi.getContent()));
         }
     }
-
+    //计算五种关键要素
     public HashMap<String, List<String>> calcKeyWord(String content){
         HashMap<String, List<String>> keyWordMap = new HashMap<String, List<String>>();
 
@@ -63,6 +63,7 @@ public class KeyWordCalculator {
         return keyWordMap;
     }
 
+    //当what中包含where中的关键元素，则将它过滤掉
     private List<String> filterWhere(List<String> where, List<String> what) {
         List<String> result = new ArrayList<String>();
         if (what!=null && what.size()>0 && where != null && where.size() > 0) {
@@ -75,6 +76,7 @@ public class KeyWordCalculator {
         return result;
     }
 
+    //根据正则匹配计算与钱有关的关键要素
     private List<String> calcHowMuch(String content){
         List<String> list = new ArrayList<String>();
         Pattern pattern = Pattern.compile("\\d+([\\u4e00-\\u9fa5]{0,1}元)"); //|\\d+英镑
@@ -88,6 +90,7 @@ public class KeyWordCalculator {
         return list;
     }
 
+    //根据正则匹配计算跟时间有关的关键元素
     private List<String> calcWhen(String content){
         List<String> list = new ArrayList<String>();
         Pattern pattern = Pattern.compile(
@@ -112,6 +115,7 @@ public class KeyWordCalculator {
     //表示地点前的介词
     private ArrayList<String> preps = new ArrayList<String>(Arrays.asList("在","于","至","往","从","沿"));
 
+    //ansj寻找地点词
     private List<String> calcWhere(String content){
         List<String> list = new ArrayList<String>();
         //使用ansj进行分析
@@ -163,7 +167,7 @@ public class KeyWordCalculator {
         List<String> resultList = wordFilter.filterStopWords(list);
         return resultList;
     }
-
+    //ansj寻找人名
     private List<String> calcWho(String content){
         List<String> list = new ArrayList<String>();
 
@@ -181,19 +185,15 @@ public class KeyWordCalculator {
 
         return list;
     }
-
+    //使用HanLP遍历依存关系寻找what
     private List<String> calcWhat(String content){
         List<String> list = new ArrayList<String>();
-
-
-        System.out.println("parse ss: "+content);
         //用只提取书名的方式先试一下
         Pattern pattern = Pattern.compile("\\《(.*?)\\》");
         Matcher match = pattern.matcher(content);
         while(match.find()) {
             list.add(match.group(1));//m.group(1)不包括这两个字符
         }
-
         if(content.contains("(")||content.contains("（")){
             content.replace('(',' ');
             content.replace('（',' ');
