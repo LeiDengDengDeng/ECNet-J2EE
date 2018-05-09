@@ -38,6 +38,12 @@ public class ModelController {
         return modelManageService.getEvidences(cid);
     }
 
+    @RequestMapping(value="/getHeaders")
+    public JSONObject getHeaders(@RequestParam("bid") int bid){
+
+        return modelManageService.getHeadersByBodyID(bid);
+    }
+
     @RequestMapping(value="/saveHead")
     public int saveHead(@RequestBody Evidence_Head head){
 
@@ -48,6 +54,12 @@ public class ModelController {
     public void deleteHead(@RequestParam("id") int id){
 
         modelManageService.deleteHeaderById(id);
+    }
+
+    @RequestMapping(value="/saveHeaders")
+    public void saveHeaders(@RequestBody List<Evidence_Head> heads){
+
+        modelManageService.saveHeaders(heads);
     }
 
     @RequestMapping(value="/saveBody")
@@ -70,6 +82,12 @@ public class ModelController {
         int lid = modelManageService.getLogicNodeIDofBody(id);
         if(lid>=0)
             logicService.deleteNode(lid);
+    }
+
+    @RequestMapping(value="/updateBodyTrust")
+    public void updateBodyTrust(@RequestParam("bid") int bid){
+
+       modelManageService.updateBodyTrustById(bid);
     }
 
     @RequestMapping(value="/saveJoint")
@@ -123,15 +141,6 @@ public class ModelController {
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
         logicService.deleteAllLinksBetweenEvidenceAndFactNode(cid);
         modelManageService.saveLogicLinks(list,cid);
-//        for(int bid : list.keySet()){
-//            int eid = modelManageService.getLogicNodeIDofBody(bid);
-//            List<Integer> arr = list.get(bid);
-//            for(int i = 0;i<arr.size();i++){
-//                int fid = arr.get(i);
-//                int factID = modelManageService.getFactByID(fid).getLogicNodeID();
-//                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
-//            }
-//        }
     }
 
     @RequestMapping(value="/exportExcel")
@@ -173,7 +182,6 @@ public class ModelController {
 
     @RequestMapping(value="/splitFact")
     public List<MOD_Fact> splitFact(@RequestParam("caseID") int caseID,@RequestParam("text") String text){
-//        System.out.println("***************************"+text);
         MOD_Fact_Doc factDoc = new MOD_Fact_Doc();
         factDoc.setCaseID(caseID);
         factDoc.setText(text);
@@ -181,9 +189,6 @@ public class ModelController {
         int factDocID = factDoc.getId();
 
         List<MOD_Fact> facts = new ArrayList<MOD_Fact>();
-//        modelManageService.deleteFactByCid(caseID);
-//        modelManageService.deleteJointsByCid(caseID);
-//        modelManageService.deleteArrowsByCid(caseID);
 
         int index = 0;
         String[] tests=text.split(SplitType.getType(text).getRegex());
@@ -204,31 +209,9 @@ public class ModelController {
         return facts;
     }
 
-    @RequestMapping(value="/deleteFactsAndJoints")
-    public void deleteFactsAndJoints(@RequestParam("caseID") int caseID){
-        modelManageService.deleteArrowsByCid(caseID);
-        modelManageService.deleteFactByCid(caseID);
-        modelManageService.deleteJointsByCid(caseID);
-    }
-
     @RequestMapping(value="/extractJoints")
     public JSONObject extractJoints(@RequestBody JSONObject data){
 
         return modelManageService.getFactLinkpoints(data.getInt("caseID"),data.getJSONArray("facts"),data.getJSONArray("bodies"));
     }
-
-//    @RequestMapping(value="/updateFactConfirm")
-//    public void updateFactConfirm(@RequestParam("factID") int factID,@RequestParam("confirm") int confirm){
-//        modelManageService.updateFactConfirm(factID,confirm);
-//    }
-//
-//    @RequestMapping(value="/updateFactContent")
-//    public void updateFactContent(@RequestParam("factID") int factID,@RequestParam("content") String content){
-//        modelManageService.updateFactContent(factID,content);
-//    }
-//
-//    @RequestMapping(value="/updateJointContent")
-//    public void updateJointContent(@RequestParam("jointID") int jointID,@RequestParam("content") String content){
-//        modelManageService.updateJointContent(jointID,content);
-//    }
 }

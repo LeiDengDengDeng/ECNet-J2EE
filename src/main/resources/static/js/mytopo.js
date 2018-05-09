@@ -556,6 +556,57 @@ function deleteHeadData(id) {
     });
 }
 
+//更新多个链头
+function updateHeads(hList) {
+    $.ajax({
+        type: "post",
+        url: "/model/saveHeaders",
+        data: JSON.stringify(hList),
+        // dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链头");
+        //     }
+        // },
+        success: function (data) {
+
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // alert("save head");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
+        }
+    });
+}
+
+//更新单个链体
+function updateBody(data) {
+    $.ajax({
+        type: "post",
+        url: "/model/saveBody",
+        data: JSON.stringify(data),
+        dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        async: true,
+        // beforeSend: function(data){
+        //     //这里判断，如果没有加载数据，会显示loading
+        //     if(data.readyState == 0){
+        //         loading("正在保存链体");
+        //     }
+        // },
+        success: function (data) {
+
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // alert("save body");
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
+        }
+    });
+}
 //存储单个链体
 function saveBody(node) {
 
@@ -1658,6 +1709,57 @@ function bindRightPanel() {
             if(con==null||con.length==0)
                 con = $('#body-name').val();
             p_div.find('.evidence_a').html(con);
+        }
+
+        if($('#body-evidenceConclusion').val()==0){
+            var binContent = "<div class='checkbox' data-bodyID='"+bid+"'><label>" +
+                "<input type=\"checkbox\">" + $('#body-content').val() +
+                "</label></div>";
+            $("#recycleBin_body").append(binContent);
+            updateBody({"id":bid,"caseID":cid,"documentid":bodyList[bid]['documentID'],"name":$('#body-name').val(),
+                "body":con,"x":bodyList[bid]['node'].x,"y":bodyList[bid]['node'].y, "type":$('#body-evidenceType').val(),
+                "committer":$('#body-committer').val(),"reason":$('#body-evidenceReason').val(),"trust":$('#body-evidenceConclusion').val(),
+                "isDefendant":bodyList[bid]['isDefendant'],"logicNodeID":bodyList[bid]['logicNodeID']});
+
+            var divContent = "<div class=\"evidence evidence_splitLine\" data-id='"+bid+"'>" +
+                "                            <a data-toggle=\"collapse\" href=\"#heads_chain_"+bid+"\" class=\"evidence_a\">\n" +
+                con+"</a>" +
+                "                            <div id=\"heads_chain_"+bid+"\" class=\"panel-collapse collapse in\">\n" +
+                "                                <div class=\"head_div\">";
+
+            var headLi = [];
+            var bnode = bodyList[bid]['node'];
+            var boutL = bnode.outLinks;
+            if(boutL!=null){
+                for(var k = 0;k<boutL.length;k++){
+                    var hnode = boutL[k].nodeZ;
+                    var hT = {"id":hnode.id,"caseID":cid,"documentid":bodyList[bid]['documentID'],"bodyid":bid,
+                        "name":hnode.text,"head":hnode.content,"x":hnode.x,"y":hnode.y};
+                    headLi.push(hT);
+                    divContent+="<span class=\"head_chain\">"+hnode.content+"</span>";
+
+                    if(hnode.outLinks!=null){
+                        var outl = hnode.outLinks;
+                        for(var i = 0;i<outl.length;i++){
+                            deleteArrow(outl[i]);
+                        }
+                    }
+                    scene.remove(hnode);
+                }
+            }
+            divContent+="</div></div></div>";
+
+            scene.remove(bnode);
+            $('#body-panel').attr('hidden', 'hidden');
+
+            var filter_content = '.evidence[data-id='+bid+']';
+            var p_div = $(filter_content);
+
+            if(p_div!=null&&p_div.length>0){
+                p_div.remove();
+            }
+            $("#rejection").find(".panel-body").append(divContent);
+            updateHeads(headLi);
         }
     });
 
