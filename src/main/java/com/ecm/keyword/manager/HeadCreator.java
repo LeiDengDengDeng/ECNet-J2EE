@@ -9,7 +9,7 @@ import java.net.URL;
 public class HeadCreator {
     public static JSONObject getHead(JSONObject evidenceList) throws IOException {
         JSONObject jsonObject=evidenceList;
-        URL url = new URL("http://114.212.247.123:5000/getHeadOfEvidence");
+        URL url = new URL("http://114.212.240.199:5000/getHeadOfEvidence");
         // 建立http连接
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         // 设置允许输出
