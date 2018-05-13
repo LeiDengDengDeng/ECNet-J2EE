@@ -40,9 +40,9 @@ public class CaseManageServiceImpl implements CaseManageService {
 //            if(j.getHasJudge().equals('0')){
 //                jsonObject.put("courtClerk",j.getRealName());
 //            }else
-            if (j.getIsJudge().equals('0')||j.getIsUndertaker().equals('Y')){
+//            if (j.getIsJudge().equals('0')||j.getIsUndertaker().equals('Y')){
                 jsonObject.put("manageJudge",j.getRealName());
-            }
+//            }
 
             res.add(jsonObject);
         }
