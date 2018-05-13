@@ -14,10 +14,10 @@ var linkIndex = 0;//当前连线id
 // var linkList = {};//存储连线，{id:node}
 var operationList = [];//存储每一步操作，[{'type':'add/copy','nodes':[]},{'type':'move','nodes':[],'position_origin':[x,y]},
 // {'type':'delete','nodes':[{'node':node,'content':{'',''}}]},{'type':'typesetting','nodes':[{'node':node,'x':x,'y':y}]}]
-var header_delete = [];//删除的链头id
-var body_delete = [];//删除的链体id
-var joint_delete = [];//删除的连接点id
-var fact_delete = [];//删除的事实节点id
+// var header_delete = [];//删除的链头id
+// var body_delete = [];//删除的链体id
+// var joint_delete = [];//删除的连接点id
+// var fact_delete = [];//删除的事实节点id
 
 var isNodeClicked_right = false;//节点（链头、链体、连接点、连线、箭头）右键点击
 var isNodeClicked_left = false;//节点（链头、链体、连接点、连线、箭头）左键点击
@@ -607,6 +607,7 @@ function updateBody(data) {
         }
     });
 }
+
 //存储单个链体
 function saveBody(node) {
 
@@ -861,21 +862,65 @@ function undo() {
             var node = n['node'];
 
             if(node.node_type=='header'){
-                drawHeader(false,node.x,node.y,node.id,node.text,node.content,node.keyText);
-                header_delete.splice($.inArray(node.id,header_delete),1);
+                headerList[node.id] = node;
+                scene.add(node);
+                saveHead(node);
+                // drawHeader(false,node.x,node.y,node.id,node.text,node.content,node.keyText);
 
             }else if(node.node_type=='body'){
-                drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']);
-                body_delete.splice($.inArray(node.id,body_delete),1);
+                var documentID = -1;
+                var isDefendant = -1;
+                var conclusion = 1;
+                var logicNodeID = -1;
+                var type = 5;
+                var committer = "";
+                var reason = "";
+                if(n['content']!=null){
+                    documentID = n['content'].documentid;
+                    isDefendant = n['content'].isDefendant;
+                    conclusion = n['content'].trust;
+                    logicNodeID = n['content'].logicNodeID;
+                    type = n['content'].type;
+                    committer = n['content'].committer;
+                    reason = n['content'].reason;
+                }
+                if(documentID==null)
+                    documentID = -1;
+                if(isDefendant==null)
+                    isDefendant = 1;
+                if(conclusion==null)
+                    conclusion = 1;
+                if(logicNodeID==null)
+                    logicNodeID = -1;
+                bodyList[node.id] = {'node':node,'type':type,'committer':committer,'reason':reason,
+                    'conclusion':conclusion, 'documentID':documentID,'isDefendant':isDefendant,'logicNodeID':logicNodeID};
+                scene.add(node);
+                saveBody(node);
+                // drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']);
 
             }else if(node.node_type=='joint'){
-                drawJoint(false,node.x,node.y,node.id,node.text,node.content);
-                joint_delete.splice($.inArray(node.id,joint_delete),1);
+                jointList[node.id] = node;
+                scene.add(node);
+                saveJoint(node);
+                // drawJoint(false,node.x,node.y,node.id,node.text,node.content);
 
             }else if(node.node_type=='fact'){
-                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['logicNodeID'],
-                    n['content']['textID'],n['content']['confirm']);
-                fact_delete.splice($.inArray(node.id,fact_delete),1);
+                var confirm = -1;
+                var textID = 1;
+                var logicNodeID = -1;
+                if(logicNodeID==null)
+                    logicNodeID = -1;
+                if(textID==null)
+                    textID = -1;
+                if(confirm==null)
+                    confirm = 1;
+
+                factList[node.id] = {'node':node,'logicNodeID':logicNodeID,'textID':textID,
+                    'confirm':confirm};
+                scene.add(node);
+                saveFact(node);
+                // drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['logicNodeID'],
+                //     n['content']['textID'],n['content']['confirm']);
 
             }else if(node.node_type=='arrow'){
                 addArrow(node.nodeA,node.nodeZ,node.id,node.text,node.content);
@@ -990,7 +1035,11 @@ function dragHandle() {
         // console.log('drag mouse up');
         if(!hasDragged){
             $("#draggableDiv").html("");
-            $(this).css({ "height": "0" });
+            $(this).css({ "height": "0",
+                "width": "0",
+                "border": '0px',
+                "border-radius":'0px',
+                "background-color":'transparent' });
         }
     });
 
@@ -1417,18 +1466,67 @@ function bindMenuClick() {
             n['node'] = node;
 
             if(node.node_type=='header'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+
                 deleteHeader(node.id);
 
             }else if(node.node_type=='body'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 var body = bodyList[node.id];
                 n['content'] = {'type':body['type'],'committer':body['committer'],'reason':body['reason'],
                     'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant']};
                 deleteBody(node.id);
 
             }else if(node.node_type=='joint'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 deleteJoint(node.id);
 
             }else if(node.node_type=='fact'){
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 n['content'] = {'logicNodeID':factList[node.id]['logicNodeID'],'textID':factList[node.id]['textID'],
                     'confirm':factList[node.id]['confirm']};
                 deleteFact(node.id);
@@ -1817,7 +1915,25 @@ function bindRightPanel() {
         var hid = $('#head-panel').attr('data-hid');
         if(headerList[hid]!=null){
             //添加操作至operationList
-            operationList.push({'type':'delete','nodes':[{'node':headerList[hid]}]});
+            var nodes = [];
+            var node = headerList[hid];
+            if(node.outLinks!=null){
+                var outl = node.outLinks;
+                for(var i = 0;i<outl.length;i++){
+                    var tmp = {'node':outl[i]};
+                    if($.inArray(tmp,nodes)==-1)
+                        nodes.push({'node':outl[i]});
+                }
+            }
+            if(node.inLinks!=null){
+                var inl = node.inLinks;
+                for(var i = 0;i<inl.length;i++){
+                    var tmp = {'node':inl[i]};
+                    if($.inArray(inl,nodes)==-1)
+                        nodes.push({'node':inl[i]});
+                }
+            }
+            operationList.push({'type':'delete','nodes':nodes});
             deleteHeader(hid);
         }
     });
@@ -1985,12 +2101,12 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
 
     if(nodeFrom!=null)
     if(nodeFrom.outLinks==null||nodeFrom.outLinks.length==0){
-        if(name==null)
-            name = '新箭头'+(arrowIndex+1);
+        // if(name==null)
+        //     name = '新箭头'+(arrowIndex+1);
         if(id==null)
             id = arrowIndex++;
 
-        var arrow = new JTopo.Link(nodeFrom, nodeTo, name);
+        var arrow = new JTopo.Link(nodeFrom, nodeTo);
         arrow.id = id;
         arrow.content = content;
         arrow.lineWidth = 0.7; // 线宽
@@ -2122,7 +2238,7 @@ function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
 
 //删除链头
 function deleteHeader(headerID) {
-    header_delete.push(headerID);
+    // header_delete.push(headerID);
     var header = headerList[headerID];
 
     if(header.outLinks!=null){
@@ -2255,7 +2371,7 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
 
 //删除链体
 function deleteBody(bodyID) {
-    body_delete.push(bodyID);
+    // body_delete.push(bodyID);
     deleteBodyData(bodyID);
     scene.remove(bodyList[bodyID]['node']);
     bodyList[bodyID] = null;
@@ -2343,7 +2459,7 @@ function drawJoint(isNew,x,y,id,name,content,isinit){
 
 //删除连接点
 function deleteJoint(jointID) {
-    joint_delete.push(jointID);
+    // joint_delete.push(jointID);
     var joint = jointList[jointID];
 
     if(joint.inLinks!=null){
@@ -2352,9 +2468,6 @@ function deleteJoint(jointID) {
             deleteArrow(inl[i]);
         }
     }
-    // if(joint.outLinks!=null&&joint.outLinks.length>0){
-    //     deleteLink(joint.outLinks[0]);
-    // }
 
     deleteJointData(jointID);
     scene.remove(joint);
@@ -2443,7 +2556,7 @@ function drawFact(isNew,x,y,id,name,content,logicNodeID,textID,confirm,isinit) {
 
 //删除事实节点
 function deleteFact(factID) {
-    fact_delete.push(factID);
+    // fact_delete.push(factID);
     var fact = factList[factID]['node'];
 
     deleteFactData(factID);

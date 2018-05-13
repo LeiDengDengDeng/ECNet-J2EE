@@ -1,7 +1,6 @@
 package com.ecm.service;
 
 import com.ecm.model.*;
-//import net.sf.json.JSONArray;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -77,10 +76,4 @@ public interface ModelManageService {
     public JSONObject getFactLinkpoints(int cid,JSONArray facts, JSONArray bodies);
 
     public void updateBodyTrustById(int bid);
-
-//    public void updateFactConfirm(int factID,int confirm);
-//
-//    public void updateFactContent(int factID,String content);
-//
-//    public void updateJointContent(int jointID,String content);
 }
