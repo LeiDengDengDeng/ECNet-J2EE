@@ -115,7 +115,7 @@
                     <a href="/upload">质证与采信</a>
                 </li>
                 <li><strong>
-                    <a class="active" href="/#">证据链建模</a></strong>
+                    <a class="active" href="/model">证据链建模</a></strong>
                 </li>
                 <li >
                     <a href="/logic-new">说理逻辑</a>
@@ -189,7 +189,7 @@
                             <div class="btn-toolbar operation" role="toolbar">
                                 <div class="btn-group" role="group">
                                     <a class="btn btn-default" onClick="splitFacts()">分解事实</a>
-                                    <a class="btn btn-default" onClick="getJoints()">提取连接点</a>
+                                    <a class="btn btn-default" onClick="getJoints()">提取联结点</a>
                                 </div>
                                 <div class="btn-group" role="group">
                                     <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="" name="checkbox_delete" onclick="addFactElmt()">新增</button>
@@ -336,7 +336,7 @@
                                 <ul class="dropdown-menu">
                                     <li id="add-header-li"><a>链头</a></li>
                                     <li id="add-body-li"><a>链体</a></li>
-                                    <li id="add-joint-li"><a>连接点</a></li>
+                                    <li id="add-joint-li"><a>联结点</a></li>
                                     <li id="add-fact-li"><a>事实</a></li>
                                 </ul>
                             </li>
@@ -513,7 +513,7 @@
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion"
                                            href="#collapseJoint">
-                                            连接点
+                                            联结点
                                         </a>
                                     </h4>
                                 </div>
@@ -521,12 +521,12 @@
                                     <div class="panel-body">
                                         <form id="jointForm">
                                             <div class="form-group">
-                                                <label for="joint-name">连接点名称</label>
+                                                <label for="joint-name">联结点名称</label>
                                                 <input class="form-control" id="joint-name"/>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="joint-content">连接点内容</label>
+                                                <label for="joint-content">联结点内容</label>
                                                 <input class="form-control" id="joint-content"/>
                                             </div>
                                         </form>

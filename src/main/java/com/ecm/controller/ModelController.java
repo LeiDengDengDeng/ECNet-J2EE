@@ -1,12 +1,10 @@
 package com.ecm.controller;
 
-import com.ecm.keyword.model.SplitType;
+import com.ecm.keyword.model.SplitType_Fact;
 import com.ecm.model.*;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -78,10 +76,10 @@ public class ModelController {
     @RequestMapping(value="/deleteBody")
     public void deleteBody(@RequestParam("id") int id){
 
-        modelManageService.deleteBodyById(id);
         int lid = modelManageService.getLogicNodeIDofBody(id);
         if(lid>=0)
             logicService.deleteNode(lid);
+        modelManageService.deleteBodyById(id);
     }
 
     @RequestMapping(value="/updateBodyTrust")
@@ -116,13 +114,13 @@ public class ModelController {
     @RequestMapping(value="/deleteFact")
     public void deleteFact(@RequestParam("id") int id){
 
-        modelManageService.deleteFactById(id);
         MOD_Fact fact = modelManageService.getFactByID(id);
         if(fact!=null){
             if(fact.getLogicNodeID()>=0){
                 logicService.deleteNode(fact.getLogicNodeID());
             }
         }
+        modelManageService.deleteFactById(id);
 
     }
 
@@ -158,7 +156,6 @@ public class ModelController {
             throws IOException {
         String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\download\\证据链.xml";
         int cid = Integer.parseInt(request.getParameter("cid"));
-//        modelManageService.writeToXML(cid,filePath);
         modelManageService.writeToXMLBySchema(cid,filePath);
         return exportFile(filePath);
     }
@@ -191,17 +188,14 @@ public class ModelController {
         List<MOD_Fact> facts = new ArrayList<MOD_Fact>();
 
         int index = 0;
-        String[] tests=text.split(SplitType.getType(text).getRegex());
+        String[] tests=text.split(SplitType_Fact.getType(text).getRegex());
         for(String str:tests) {
             if (!str.isEmpty()) {
-//                int logicNodeId=logicService.addEvidenceOrFactNode(caseID,str,1);
                 MOD_Fact fact = new MOD_Fact();
                 fact.setId(index);
                 fact.setCaseID(caseID);
                 fact.setContent(str);
-//                fact.setLogicNodeID(logicNodeId);
                 fact.setTextID(factDocID);
-//                fact = modelManageService.saveFact(fact);
                 facts.add(fact);
                 index++;
             }

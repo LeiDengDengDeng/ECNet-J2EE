@@ -4,8 +4,8 @@ var headerList = {};//存储链头，{id:node}
 var bodyIndex = 0;//当前链体id
 var bodyList = {};//存储链体，{id:{'node':node,'type':'XXX','committer':'XXX','reason':'XXXXXX',
 // 'conclusion':'1/0','documentID':-1,'isDefendant':1,'logicNodeID':xx}}
-var jointIndex = 0;//当前连接点（事实）id
-var jointList = {};//存储连接点（事实），{id:node}
+var jointIndex = 0;//当前联结点（事实）id
+var jointList = {};//存储联结点（事实），{id:node}
 var factIndex = 0;//当前事实节点id
 var factList = {};//存储事实节点，{id:{'node':node,'logicNodeID':xx,'textID':-1,'confirm':1}}
 var arrowIndex = 0;//当前箭头id
@@ -14,33 +14,33 @@ var linkIndex = 0;//当前连线id
 // var linkList = {};//存储连线，{id:node}
 var operationList = [];//存储每一步操作，[{'type':'add/copy','nodes':[]},{'type':'move','nodes':[],'position_origin':[x,y]},
 // {'type':'delete','nodes':[{'node':node,'content':{'',''}}]},{'type':'typesetting','nodes':[{'node':node,'x':x,'y':y}]}]
-var header_delete = [];//删除的链头id
-var body_delete = [];//删除的链体id
-var joint_delete = [];//删除的连接点id
-var fact_delete = [];//删除的事实节点id
+// var header_delete = [];//删除的链头id
+// var body_delete = [];//删除的链体id
+// var joint_delete = [];//删除的联结点id
+// var fact_delete = [];//删除的事实节点id
 
-var isNodeClicked_right = false;//节点（链头、链体、连接点、连线、箭头）右键点击
-var isNodeClicked_left = false;//节点（链头、链体、连接点、连线、箭头）左键点击
-// var nodeList_selected = [];//已选中的节点（链头、链体、连接点、连线、箭头），[node]
+var isNodeClicked_right = false;//节点（链头、链体、联结点、连线、箭头）右键点击
+var isNodeClicked_left = false;//节点（链头、链体、联结点、连线、箭头）左键点击
+// var nodeList_selected = [];//已选中的节点（链头、链体、联结点、连线、箭头），[node]
 // var isCtrlPressed = false;//ctrl键是否按下
 var nodeFroms = [];//连线or箭头链头节点（允许同时创建多个连线或箭头），存储在nodeList_selected中的index
-var nodeTo;//连线链体节点or箭头连接点节点
+var nodeTo;//连线链体节点or箭头联结点节点
 var header_radius = 17;//链头节点半径
 var body_width = 65;//链体节点长
 var body_height = 25;//链体节点宽
-var joint_width = 25;//连接点边长
+var joint_width = 25;//联结点边长
 var fact_borderRadius = 6;//事实节点borderRadius
 var header_color = 'rgba(127,185,136,0.8)';//链头边框颜色
 var header_color_num = '127,185,136';
 var body_color = 'rgba(97,158,255,0.8)';//链体边框颜色
 var body_color_num = '97,158,255';
-var joint_color = 'rgba(101,43,105,0.8)';//连接点边框颜色
+var joint_color = 'rgba(101,43,105,0.8)';//联结点边框颜色
 var joint_color_num = '101,43,105';
-var fact_color = 'rgba(253, 185, 51,0.8)';//连接点边框颜色
+var fact_color = 'rgba(253, 185, 51,0.8)';//联结点边框颜色
 var fact_color_num = '253, 185, 51';
 var continuous_header = false;//是否连续绘制链头
 var continuous_body = false;//是否连续绘制链体
-var continuous_joint = false;//是否连续绘制连接点
+var continuous_joint = false;//是否连续绘制联结点
 var continuous_fact = false;//是否连续绘制事实
 var isCopied = false;//是否点击复制图元
 var nodeList_copied = [];//已选中复制的节点
@@ -607,6 +607,7 @@ function updateBody(data) {
         }
     });
 }
+
 //存储单个链体
 function saveBody(node) {
 
@@ -672,7 +673,7 @@ function deleteBodyData(id) {
     });
 }
 
-//存储单个连接点
+//存储单个联结点
 function saveJoint(node) {
 
     // var joint = jointList[node.id];
@@ -692,7 +693,7 @@ function saveJoint(node) {
         // beforeSend: function(data){
         //     //这里判断，如果没有加载数据，会显示loading
         //     if(data.readyState == 0){
-        //         loading("正在保存连接点");
+        //         loading("正在保存联结点");
         //     }
         // },
         success: function (data) {
@@ -711,7 +712,7 @@ function saveJoint(node) {
     });
 }
 
-//删除单个连接点
+//删除单个联结点
 function deleteJointData(id) {
 
     $.ajax({
@@ -724,11 +725,11 @@ function deleteJointData(id) {
         // beforeSend: function(data){
         //     //这里判断，如果没有加载数据，会显示loading
         //     if(data.readyState == 0){
-        //         loading("正在删除连接点");
+        //         loading("正在删除联结点");
         //     }
         // },
         success: function (data) {
-            // removeLoading("连接点删除成功");
+            // removeLoading("联结点删除成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             // alert("delete Joint");
             // alert(XMLHttpRequest.status);
@@ -861,21 +862,65 @@ function undo() {
             var node = n['node'];
 
             if(node.node_type=='header'){
-                drawHeader(false,node.x,node.y,node.id,node.text,node.content,node.keyText);
-                header_delete.splice($.inArray(node.id,header_delete),1);
+                headerList[node.id] = node;
+                scene.add(node);
+                saveHead(node);
+                // drawHeader(false,node.x,node.y,node.id,node.text,node.content,node.keyText);
 
             }else if(node.node_type=='body'){
-                drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']);
-                body_delete.splice($.inArray(node.id,body_delete),1);
+                var documentID = -1;
+                var isDefendant = -1;
+                var conclusion = 1;
+                var logicNodeID = -1;
+                var type = 5;
+                var committer = "";
+                var reason = "";
+                if(n['content']!=null){
+                    documentID = n['content'].documentid;
+                    isDefendant = n['content'].isDefendant;
+                    conclusion = n['content'].trust;
+                    logicNodeID = n['content'].logicNodeID;
+                    type = n['content'].type;
+                    committer = n['content'].committer;
+                    reason = n['content'].reason;
+                }
+                if(documentID==null)
+                    documentID = -1;
+                if(isDefendant==null)
+                    isDefendant = 1;
+                if(conclusion==null)
+                    conclusion = 1;
+                if(logicNodeID==null)
+                    logicNodeID = -1;
+                bodyList[node.id] = {'node':node,'type':type,'committer':committer,'reason':reason,
+                    'conclusion':conclusion, 'documentID':documentID,'isDefendant':isDefendant,'logicNodeID':logicNodeID};
+                scene.add(node);
+                saveBody(node);
+                // drawBody(false,node.x,node.y,node.id,node.text,node.content,n['content']);
 
             }else if(node.node_type=='joint'){
-                drawJoint(false,node.x,node.y,node.id,node.text,node.content);
-                joint_delete.splice($.inArray(node.id,joint_delete),1);
+                jointList[node.id] = node;
+                scene.add(node);
+                saveJoint(node);
+                // drawJoint(false,node.x,node.y,node.id,node.text,node.content);
 
             }else if(node.node_type=='fact'){
-                drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['logicNodeID'],
-                    n['content']['textID'],n['content']['confirm']);
-                fact_delete.splice($.inArray(node.id,fact_delete),1);
+                var confirm = -1;
+                var textID = 1;
+                var logicNodeID = -1;
+                if(logicNodeID==null)
+                    logicNodeID = -1;
+                if(textID==null)
+                    textID = -1;
+                if(confirm==null)
+                    confirm = 1;
+
+                factList[node.id] = {'node':node,'logicNodeID':logicNodeID,'textID':textID,
+                    'confirm':confirm};
+                scene.add(node);
+                saveFact(node);
+                // drawFact(false,node.x,node.y,node.id,node.text,node.content,n['content']['logicNodeID'],
+                //     n['content']['textID'],n['content']['confirm']);
 
             }else if(node.node_type=='arrow'){
                 addArrow(node.nodeA,node.nodeZ,node.id,node.text,node.content);
@@ -990,7 +1035,11 @@ function dragHandle() {
         // console.log('drag mouse up');
         if(!hasDragged){
             $("#draggableDiv").html("");
-            $(this).css({ "height": "0" });
+            $(this).css({ "height": "0",
+                "width": "0",
+                "border": '0px',
+                "border-radius":'0px',
+                "background-color":'transparent' });
         }
     });
 
@@ -1225,7 +1274,7 @@ function handleMultipleSelected(event) {
         nodeTo = nodeList_selected[body_index[0]];
         return 1;
 
-    }else if(header_num>=1&&body_num==0&&link_num==0&&arrow_num==0&&joint_num==1&&fact_num==0){//多个链头一个连接点可以创建箭头
+    }else if(header_num>=1&&body_num==0&&link_num==0&&arrow_num==0&&joint_num==1&&fact_num==0){//多个链头一个联结点可以创建箭头
         $("#nodeMenu3").css({
             top: getMousePosition_rdiv(event).y,
             left: getMousePosition_rdiv(event).x
@@ -1235,7 +1284,7 @@ function handleMultipleSelected(event) {
         nodeTo = nodeList_selected[joint_index[0]];
         return 2;
 
-    }else if(header_num==0&&body_num==0&&link_num==0&&arrow_num==0&&joint_num>=1&&fact_num==1) {//多个连接点一个事实节点可以创建连线
+    }else if(header_num==0&&body_num==0&&link_num==0&&arrow_num==0&&joint_num>=1&&fact_num==1) {//多个联结点一个事实节点可以创建连线
         $("#nodeMenu2").css({
             top: getMousePosition_rdiv(event).y,
             left: getMousePosition_rdiv(event).x
@@ -1313,7 +1362,7 @@ function bindMenuClick() {
         drawBody(true,nodePosition.x,nodePosition.y);
     });
 
-    //新增图元-连接点
+    //新增图元-联结点
     $('#add-joint-li').click(function (event) {
         $('#stageMenu').hide();
         var nodePosition = getNodePosition(event);
@@ -1417,18 +1466,67 @@ function bindMenuClick() {
             n['node'] = node;
 
             if(node.node_type=='header'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+
                 deleteHeader(node.id);
 
             }else if(node.node_type=='body'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 var body = bodyList[node.id];
                 n['content'] = {'type':body['type'],'committer':body['committer'],'reason':body['reason'],
                     'conclusion':body['conclusion'], 'documentID':body['documentID'],'isDefendant':body['isDefendant']};
                 deleteBody(node.id);
 
             }else if(node.node_type=='joint'){
+                if(node.outLinks!=null){
+                    var outl = node.outLinks;
+                    for(var i = 0;i<outl.length;i++){
+                        var tmp = {'node':outl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 deleteJoint(node.id);
 
             }else if(node.node_type=='fact'){
+                if(node.inLinks!=null){
+                    var inl = node.inLinks;
+                    for(var i = 0;i<inl.length;i++){
+                        var tmp = {'node':inl[i]};
+                        if($.inArray(tmp,nodes)==-1)
+                            nodes.push(tmp);
+                    }
+                }
                 n['content'] = {'logicNodeID':factList[node.id]['logicNodeID'],'textID':factList[node.id]['textID'],
                     'confirm':factList[node.id]['confirm']};
                 deleteFact(node.id);
@@ -1685,7 +1783,7 @@ function paste(mouse_x,mouse_y) {
     operationList.push({'type':'copy','nodes':nodes});
 }
 
-//右侧链体、链头、箭头、连接点button绑定
+//右侧链体、链头、箭头、联结点button绑定
 function bindRightPanel() {
     //链体
     $('#body-save-btn').click(function () {
@@ -1817,7 +1915,25 @@ function bindRightPanel() {
         var hid = $('#head-panel').attr('data-hid');
         if(headerList[hid]!=null){
             //添加操作至operationList
-            operationList.push({'type':'delete','nodes':[{'node':headerList[hid]}]});
+            var nodes = [];
+            var node = headerList[hid];
+            if(node.outLinks!=null){
+                var outl = node.outLinks;
+                for(var i = 0;i<outl.length;i++){
+                    var tmp = {'node':outl[i]};
+                    if($.inArray(tmp,nodes)==-1)
+                        nodes.push({'node':outl[i]});
+                }
+            }
+            if(node.inLinks!=null){
+                var inl = node.inLinks;
+                for(var i = 0;i<inl.length;i++){
+                    var tmp = {'node':inl[i]};
+                    if($.inArray(inl,nodes)==-1)
+                        nodes.push({'node':inl[i]});
+                }
+            }
+            operationList.push({'type':'delete','nodes':nodes});
             deleteHeader(hid);
         }
     });
@@ -1842,7 +1958,7 @@ function bindRightPanel() {
         deleteArrow(arrowList[aid]);
     });
 
-    //连接点
+    //联结点
     $('#joint-save-btn').click(function () {
         var jid = $('#joint-panel').attr('data-jid');
         jointList[jid].text = $('#joint-name').val();
@@ -1905,7 +2021,7 @@ function nodeMouseOver(node,isover) {
     }
 }
 
-//添加连线(链体，链头，id)/(连接点，事实，id)
+//添加连线(链体，链头，id)/(联结点，事实，id)
 function addLink(nodeFrom,nodeTo,id){
     var hasLink = false;
 
@@ -1969,7 +2085,7 @@ function deleteLink(link) {
     scene.remove(link);
 }
 
-//添加箭头(链头，连接点)，返回箭头节点，未创建返回-1
+//添加箭头(链头，联结点)，返回箭头节点，未创建返回-1
 function addArrow(nodeFrom,nodeTo,id,name,content) {
 
     // var hasArrow = false;
@@ -1985,12 +2101,12 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
 
     if(nodeFrom!=null)
     if(nodeFrom.outLinks==null||nodeFrom.outLinks.length==0){
-        if(name==null)
-            name = '新箭头'+(arrowIndex+1);
+        // if(name==null)
+        //     name = '新箭头'+(arrowIndex+1);
         if(id==null)
             id = arrowIndex++;
 
-        var arrow = new JTopo.Link(nodeFrom, nodeTo, name);
+        var arrow = new JTopo.Link(nodeFrom, nodeTo);
         arrow.id = id;
         arrow.content = content;
         arrow.lineWidth = 0.7; // 线宽
@@ -2122,7 +2238,7 @@ function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
 
 //删除链头
 function deleteHeader(headerID) {
-    header_delete.push(headerID);
+    // header_delete.push(headerID);
     var header = headerList[headerID];
 
     if(header.outLinks!=null){
@@ -2248,14 +2364,14 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
 
     if(content==null)
         content = name;
-    addEvidence(node.id,content);
+    addEvidence(node.id,content,isDefendant);
 
     return node;
 }
 
 //删除链体
 function deleteBody(bodyID) {
-    body_delete.push(bodyID);
+    // body_delete.push(bodyID);
     deleteBodyData(bodyID);
     scene.remove(bodyList[bodyID]['node']);
     bodyList[bodyID] = null;
@@ -2270,7 +2386,7 @@ function deleteBody(bodyID) {
     }
 }
 
-//绘制连接点，返回连接点节点
+//绘制联结点，返回联结点节点
 function drawJoint(isNew,x,y,id,name,content,isinit){
 
     if(id==null)
@@ -2278,7 +2394,7 @@ function drawJoint(isNew,x,y,id,name,content,isinit){
 
     if(name==null||name.length==0){
         if(content==null||content.length==0)
-            name = '连接点'+(id+1);
+            name = '联结点'+(id+1);
         else if(content.length>10)
             name = content.substring(0,10);
         else
@@ -2341,9 +2457,9 @@ function drawJoint(isNew,x,y,id,name,content,isinit){
     return node;
 }
 
-//删除连接点
+//删除联结点
 function deleteJoint(jointID) {
-    joint_delete.push(jointID);
+    // joint_delete.push(jointID);
     var joint = jointList[jointID];
 
     if(joint.inLinks!=null){
@@ -2352,9 +2468,6 @@ function deleteJoint(jointID) {
             deleteArrow(inl[i]);
         }
     }
-    // if(joint.outLinks!=null&&joint.outLinks.length>0){
-    //     deleteLink(joint.outLinks[0]);
-    // }
 
     deleteJointData(jointID);
     scene.remove(joint);
@@ -2443,7 +2556,7 @@ function drawFact(isNew,x,y,id,name,content,logicNodeID,textID,confirm,isinit) {
 
 //删除事实节点
 function deleteFact(factID) {
-    fact_delete.push(factID);
+    // fact_delete.push(factID);
     var fact = factList[factID]['node'];
 
     deleteFactData(factID);

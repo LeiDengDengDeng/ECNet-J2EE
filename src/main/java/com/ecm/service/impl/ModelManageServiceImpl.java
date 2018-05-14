@@ -73,20 +73,8 @@ public class ModelManageServiceImpl implements ModelManageService {
             jo.put("headers",headers);
 
             if(body.getTrust()==1){
-//                JSONObject jo = new JSONObject();
-//                jo.put("body",body);
-//
-//                List<Evidence_Head> headers = evidenceHeadDao.findAllByBodyid(bid);
-//                jo.put("headers",headers);
                 trusts.add(jo);
             }else{
-//                JSONObject jo = new JSONObject();
-//
-//                jo.put("content",body.getBody());
-//                jo.put("isDefendant",body.getIsDefendant());
-////                List<Evidence_Head> headers = evidenceHeadDao.findAllByCaseIDAndBodyid(cid,bid);
-//                List<String> headers = evidenceHeadDao.findContentsByCaseIDAndBodyid(cid,bid);
-//                jo.put("headers",headers);
                 untrusts.add(jo);
             }
         }
@@ -143,12 +131,6 @@ public class ModelManageServiceImpl implements ModelManageService {
         evidenceHeadDao.deleteById(id);
     }
 
-//    @Override
-//    @Transactional
-//    public void deleteHeadersByCid(int cid) {
-//        evidenceHeadDao.deleteAllByCaseID(cid);
-//    }
-
     @Override
 //    @Async
     public Evidence_Body saveBody(Evidence_Body body) {
@@ -181,12 +163,6 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void deleteBodyById(int id) {
         evidenceBodyDao.deleteById(id);
     }
-
-//    @Override
-//    @Transactional
-//    public void deleteBodiesByCid(int cid) {
-//        evidenceBodyDao.deleteAllByCaseID(cid);
-//    }
 
     @Override
 //    @Async
@@ -298,7 +274,6 @@ public class ModelManageServiceImpl implements ModelManageService {
             List<MOD_Arrow> arrows = arrowDao.findAllByHeaderID(hid);
             for(int j = 0;j<arrows.size();j++){
                 MOD_Arrow arrow = arrows.get(j);
-//                int aid = arrow.getId();
                 int jid = arrow.getNodeTo_jid();
                 MOD_Joint joint = jointDao.findById(jid);
                 if(joint!=null){
@@ -311,7 +286,6 @@ public class ModelManageServiceImpl implements ModelManageService {
                     }
                     jointDao.deleteById(jid);
                 }
-//                arrowDao.deleteById(aid);
                 arrowDao.deleteAllByJointID(jid);
             }
         }
@@ -423,10 +397,10 @@ public class ModelManageServiceImpl implements ModelManageService {
         }
 
         if (res == null) {
-            System.out.println("提取连接点失败");
+            System.out.println("提取联结点失败");
             return null;
         } else {
-//            System.out.println("res:"+res.toString());
+            System.out.println("res:"+res.toString());
             JSONArray confirmArr = new JSONArray();
 
             JSONArray factList = (JSONArray) res.get("factList");
@@ -493,21 +467,6 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void updateBodyTrustById(int bid) {
         evidenceBodyDao.updateTrustById(1,bid);
     }
-
-//    @Override
-//    public void updateFactConfirm(int factID, int confirm) {
-//        factDao.updateConfirmById(factID,confirm);
-//    }
-//
-//    @Override
-//    public void updateFactContent(int factID, String content) {
-//        factDao.updateContentById(factID,content);
-//    }
-//
-//    @Override
-//    public void updateJointContent(int jointID, String content) {
-//        jointDao.updateContentById(jointID,content);
-//    }
 
     @Override
     public void writeToExcel(int cid,String filePath) {
