@@ -397,7 +397,7 @@ public class ModelManageServiceImpl implements ModelManageService {
         }
 
         if (res == null) {
-            System.out.println("提取连接点失败");
+            System.out.println("提取联结点失败");
             return null;
         } else {
             System.out.println("res:"+res.toString());

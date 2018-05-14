@@ -1,6 +1,6 @@
 package com.ecm.controller;
 
-import com.ecm.keyword.model.SplitType;
+import com.ecm.keyword.model.SplitType_Fact;
 import com.ecm.model.*;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
@@ -188,7 +188,7 @@ public class ModelController {
         List<MOD_Fact> facts = new ArrayList<MOD_Fact>();
 
         int index = 0;
-        String[] tests=text.split(SplitType.getType(text).getRegex());
+        String[] tests=text.split(SplitType_Fact.getType(text).getRegex());
         for(String str:tests) {
             if (!str.isEmpty()) {
                 MOD_Fact fact = new MOD_Fact();
