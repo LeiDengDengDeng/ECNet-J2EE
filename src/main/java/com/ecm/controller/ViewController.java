@@ -46,18 +46,9 @@ public class ViewController {
         return "upload";
     }
 
-    @RequestMapping(value = "/case-decide")
+    @RequestMapping(value = "/reason-evaluate")
     public String getCaseDecideView() {
-        return "case-decide";
+        return "reason-evaluate";
     }
 
-    @RequestMapping(value = "/case-document")
-    public String getCaseDocumentView() {
-        return "case-document";
-    }
-
-    @RequestMapping(value = "/text")
-    public String getTextview() {
-        return "text";
-    }
 }
