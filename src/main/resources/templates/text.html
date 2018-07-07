@@ -16,12 +16,24 @@
     <link rel="shortcut icon" th:href="@{img/favicon.ico}">
     <script th:src="@{js/ref/jquery-2.1.4.min.js}"></script>
     <script th:src="@{js/ref/jquerysession.js}"></script>
-
+    <script th:src="@{js/ref/bootstrap.js}"></script>
+    <script th:src="@{js/text.js}"></script>
 
     <![endif]-->
     <!--[if lt IE 9]>
     <script>window.location.href='upgrade-browser.html';</script>
     <![endif]-->
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        if($.session.get('username')==null){
+            window.location.href="/login";
+        }else if($.session.get('cid')==null){
+            window.location.href="/manage";
+        }
+        /*]]>*/
+    </script>
+
     <style>
         body{ background:#ffffff}
     </style>
@@ -135,27 +147,9 @@
             <div class="text-center m-t-md">
 
                 <!--<textarea id="mystr" class="form-control" rows="5"></textarea>-->
-                <p style="color: black" class="pull-left">
+                <p style="color: black" class="pull-left" id="evidencePara">
                     上述事实，有公诉机关及被告人提供，并经法庭质证、认证的下列证据予以证明：
-                    （1）户籍证明，证明被告人罗某甲、胡某甲及被害人彭某乙的身份情况。
-                    （2）公安机关出具的到案经过，证明抓获被告人罗某甲的事实经过以及被告人胡某甲案发后在现场等候交警部门处理情况。
-                    （3）机动车驾驶证信息，证明被告人罗某甲、胡某甲办理了机动车驾驶证。机动车登记信息及行驶证（复印件），证明肇事车辆湘N×××××小型面包车所有人系包太全、肇事车辆湘N×××××小型出租车所有人系陈高兵。
-                    （4）怀化市公安局交通警察支队事故处理大队公安交通管理行政强制措施凭证，证明怀化市公安局交通警察支队事故处理大队对被告人罗某甲、胡某甲所驾驶的肇事车辆依法予以扣留的情况。
-                    （5）交通事故赔偿协议书、协议书、谅解书、收条，证明被告人罗某甲、湘N×××××小型面包车车主包太全、被告人胡某甲、湘N×××××小型出租车车主陈高兵等人与被害人近亲属已达成了赔偿协议，赔偿被害人近亲属经济损失共计63．5万元，取得了被害人近亲属谅解的情况。
-                    （6）证人胡某乙的证言，证明2015年3月10日20时许，其开车至怀化市鹤城区皇廷大酒店门前路段时，突然发现车前方一辆银灰色面包车将一位行人撞倒在靠近中心隔离墩右边第一根车道上，其立刻将车停下，发现肇事面包车将行人撞倒后继续往前行驶了6-7米远的距离踩了一脚刹车，但是车子没有停，而是加大油门飞快往前方驶去逃离了案发现场，于是其打了右转向灯避开行人后也走了。并证明行人是被面包车的左前方车头撞倒的，行人被撞后意识还比较清醒，双手还可以活动，但不能站起来。
-                    证人李某的证言，证明2015年3月10日19时50分许，其与丈夫从怀化市鹤城区盛世佳园往老市公安局方向散步，其二人走到怀化市四中大门口路段时，就发现一个老人半躺在马路中间，老人前方大约17米左右有一辆银灰色五菱面包车，面包车驾驶员好像知道发生了交通事故，但是没有停车，继续开车往市委方向走了，于是其丈夫拦下一辆私家车去追逃跑的面包车。当时行人意识比较清醒，还知道呼叫驾驶员停车。后老人被一辆黄色出租车撞击，拖离原案发地30米左右，被车辆压在车底下，后被人拖出车底。
-                    证人罗某乙的证言，证明2015年3月10日19时30分许，其和罗群在罗某甲家吃完饭，罗某甲说开车送其与罗群去河西，于是其和罗群坐上罗某甲驾驶的车牌为湘N×××××号面包车，当时其坐在副驾驶上一直玩手机，在回河西的路上罗某甲说要回乡下去接他亲戚，正好其也要回去带点腊肉上来，于是罗某甲就驾车去了辰溪县长田湾，快到家的时候罗某甲发现面包车左边的反光镜坏了，其没问什么情况。第二天早上8、9点钟，罗某甲给其打电话说交警队的民警要他把车开到交警队去看一下，其就要罗某甲开过去看看。
-                    证人彭某甲的证言，证明被害人彭某乙系其父亲，发生交通事故后，肇事司机等人已赔偿其和母亲经济损失63.5万元，并已取得其和母亲谅解的有关情况。
-                    （7）被告人罗某甲的供述，证明2015年3月10日20时许，其驾驶湘N×××××的小型面包车从鹤城区三眼桥小当家幼儿园旁的一楼出租房送罗某乙和罗群去河西建材市场，途径鹤城区迎丰路第四中学门口路段时，车子撞到了一名横过马路的行人，当时其发现了，车上的罗某乙就叫其开车快走，其心里害怕，没有停车继续往前面开走了。第二天其开车到怀化市市委门口，就被执勤的公安民警抓获了。
-                    被告人胡某甲的供述，证明2015年3月10日20时许，其驾驶一辆牌照为湘N×××××号黄色出租车搭乘一名乘客从城东市场往太平桥走，当时车速大概每小时50公里，途径鹤城区四中门前路段时，突然车正前方保险杆不知道撞到什么东西，直到行驶至鹤城区皇延大酒店门前路段时气囊爆了，其便下车走到车子右边看见地上有血，便蹲下来看，发现一个约40岁左右的男子睡在其车前面，才知道自己撞到行人了，当时其直行在隔离墩右边的第二根车道，于是其马上报警和喊救护车。并证明其在怀化市汽驾二校上班，此次出行是帮亲戚谭再发代班开的士车。
-                    （8）怀化市方正司法鉴定中心司法鉴定意见，证明被害人彭某乙系交通事故中车辆碰撞致颅脑损伤，颅内出血及胸腔脏器损伤导致呼吸循环衰竭而死亡。其骨骨折，颅脑损伤，颅内出血，颈椎骨折脱位，颈髓损伤死亡。右面部、右颈肩部及右胸腹外侧损伤系车辆碾压，挤压所形成。
-                    湖南明鉴司法鉴定所交通事故车辆技术状况检验意见，证明湘N×××××长安牌小型轿车，经检验该车符合《机动车运行安全技术条件（GB7258-2012）。湘N×××××五菱牌小型面包车，经检验该车照明、信号装置不符合《机动车运行安全技术条件（GB7258-2012）。
-                    湖南明鉴司法鉴定所交通事故车辆痕迹鉴定意见，证明湘N×××××长安牌小型轿车的车体痕迹、系该车正面碰撞可塑性物体（人体）所形成，在高度、位置、形态及受力方向上具有一一对应的痕迹对特征。
-                    湖南明鉴司法鉴定所交通事故车辆行驶速度检验意见，证明经检验，湘N×××××长安牌小型轿车的行驶速度约为62.95km／h。
-                    湖南明鉴司法鉴定所交通事故交通事故现场散落物比对分析鉴定意见，证明经检验，2015年3月10日发生在怀化市四中学校门前路段的交通事故现场遗留车辆散落物（左侧后视镜）与湘N×××××五菱牌小型面包车缺失的左侧后视镜相吻合。
-                    怀化市方正司法鉴定中心司法鉴定意见，证明送检的被告人胡某甲血样中检出乙醇成分，含量为5.4mg／100ml。
-                    （9）怀化市公安局交通警察支队事故处理大队道路交通事故认定书，证明被告人罗某甲、胡某甲承担事故的主要责任；被害人彭某乙承担事故的次要责任。
-                    （10）道路交通事故现场勘查笔录、交通事故情况记录、交通事故现场图及照片，证明案发现场位置、概貌。交通事故现场草图及照片经被告人罗某甲、胡某甲辨认属实。
+                    人罗某甲、胡某甲辨认属实。
                 </p>
                 <br>
                 <!--<button  class="col-md-2 btn-success btn-sm btn pull-right" onclick="myHead()">提取链头</button>-->
@@ -174,13 +168,7 @@
                     </div>
                 </div>
 
-                <div id="after">
 
-
-                    <br>
-
-
-                </div>
             </div>
 
         </div>
@@ -224,13 +212,7 @@
                     </div>
                 </div>
 
-                <div id="after">
 
-
-                    <br>
-
-
-                </div>
             </div>
 
         </div>
@@ -309,105 +291,7 @@
         </div>
     </div>
 </div>
-<script src="public/js/bootstrap.min.js"></script>
-<script src="public/js/admin-scripts.js"></script>
-<script>
-    //是否确认删除
-    var dat_restore = []
-    var dat_type = ''
-    var dat_page = {
-        'finished':1,
-        'processing':1,
-        'raw':1,
-        'all':1
-    }
-    const num_p_page = 10
-    $(function(){
-        $("#main table tbody tr td a").click(function(){
-            var name = $(this);
-            var id = name.attr("rel"); //对应id
-            if (event.srcElement.outerText == "删除")
-            {
-                if(window.confirm("此操作不可逆，是否确认？"))
-                {
-                    $.ajax({
-                        type: "POST",
-                        url: "/Article/delete",
-                        data: "id=" + id,
-                        cache: false, //不缓存此页面
-                        success: function (data) {
-                            window.location.reload();
-                        }
-                    });
-                };
-            };
-        });
-        $('#finished-tag').click(function () {
-            $(".type_switch").removeClass('active')
-            $("#finish_li").addClass('active')
-            getCase('finished',dat_page['finished'])
-
-        })
-        $('#all-tag').click(function () {
-            $(".type_switch").removeClass('active')
-            $("#all_li").addClass('active')
-            getCase('all',dat_page['all'])
-
-        })
-        $('#processing-tag').click(function () {
-            $(".type_switch").removeClass('active')
-            $("#processing_li").addClass('active')
-            getCase('processing',dat_page['processing'])
-        })
-        $('#raw-tag').click(function () {
-            $(".type_switch").removeClass('active')
-            $("#raw_li").addClass('active')
-            getCase('raw',dat_page['raw'])
-        })
-        $('#exist_click').click(function () {
-            if(confirm('是否确认退出？'))
-            {
-                $.ajax({
-                    url:'/logout',
-                    type:'GET',
-                    success:function () {
-                        window.location.href = '/login'
-                    }
-                })
-            }
-        })
 
 
-        function getCase(type,page) {
-            if(dat_type == type)
-            {
-                refresh_table(page)
-            }else {
-                $.ajax({
-                    url:'/case/'+type,
-                    type:'POST',
-                    success:function (data) {
-                        dat_restore = data
-                        dat_type = type
-                        refresh_table(page)
-                    }
-                })
-            }
-        }
-        getCase('raw',1)
-        $('#raw_li').addClass('active')
-    });
-</script>
-
-
-<script>
-
-
-
-
-
-
-
-</script>
 </body>
 </html>
