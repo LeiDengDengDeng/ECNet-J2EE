@@ -208,4 +208,9 @@ public class ModelController {
 
         return modelManageService.getFactLinkpoints(data.getInt("caseID"),data.getJSONArray("facts"),data.getJSONArray("bodies"));
     }
+
+    @RequestMapping(value="/getEvidenceContents")
+    public String getEvidenceContents(@RequestParam("caseID") int caseID){
+        return modelManageService.getEvidencesList(caseID);
+    }
 }

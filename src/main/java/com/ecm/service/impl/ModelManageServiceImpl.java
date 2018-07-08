@@ -103,6 +103,18 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+    public String getEvidencesList(int cid) {
+        List<String> list = evidenceBodyDao.findEvidencesByCaseIDAndTrust(cid,1);
+        String str = "";
+
+        for(int i = 0;i<list.size();i++){
+            str+="("+(i+1)+")"+list.get(i);
+        }
+
+        return str;
+    }
+
+    @Override
     public JSONObject getHeadersByBodyID(int bid) {
         JSONObject obj = new JSONObject();
         obj.put("body",evidenceBodyDao.findById(bid));

@@ -21,6 +21,9 @@ public interface EvidenceBodyDao extends JpaRepository<Evidence_Body, Integer> {
 
     public List<Evidence_Body> findAllByCaseIDAndTrust(int caseID,int trust);
 
+    @Query(value = "select b.body from Evidence_Body b where b.caseID= ?1 and b.trust=?2")
+    public List<String> findEvidencesByCaseIDAndTrust(int caseID,int trust);
+
     public List<Evidence_Body> findAllByCaseID(int caseID);
 
     public Evidence_Body save(Evidence_Body evi);

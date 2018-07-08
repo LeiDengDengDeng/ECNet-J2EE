@@ -11,6 +11,8 @@ public interface ModelManageService {
 
     public JSONObject getEvidences(int cid);
 
+    public String getEvidencesList(int cid);
+
     public JSONObject getHeadersByBodyID(int bid);
 
     public Evidence_Head saveHeader(Evidence_Head header);
