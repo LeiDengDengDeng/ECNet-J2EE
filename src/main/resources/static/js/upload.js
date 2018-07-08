@@ -15,7 +15,7 @@ $(function(){
     });
 
     $("#caseNum").text(caseInfo.cNum);
-    $("#caseBrief").text("受贿罪");
+    $("#caseBrief").text("交通肇事罪");
     $("#caseName").text(caseInfo.cname);
     $("#underTaker").text(username);
     $("#caseDate").text(caseInfo.fillingDate);
