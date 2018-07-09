@@ -32,7 +32,12 @@ function edit(){
     $('#resultPara').attr("contenteditable",true);
 }
 function download() {
-
+    var cid=$.session.get('cid');
+    var evidence=$("#evidencePara").text();
+    var fact=$("#factPara").text();
+    var result=$("#resultPara").text();
+    var url="/text/exportPDF?cid="+cid+"&evidence="+evidence+"&fact="+fact+"&result="+result;
+    window.location.href=url;
 }
 function update(){
     $('#evidencePara').attr("contenteditable",false);

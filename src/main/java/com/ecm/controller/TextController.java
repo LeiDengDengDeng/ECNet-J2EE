@@ -40,5 +40,34 @@ public class TextController {
 
         return textService.updateText(text);
     }
+    @RequestMapping(value="/exportPDF")
+    public ResponseEntity<InputStreamResource> exportExcel(HttpServletRequest request)
+            throws IOException {
+        String filePath = System.getProperty("user.dir")+"\\src\\main\\resources\\download\\说理语段.pdf";
+        int cid = Integer.parseInt(request.getParameter("cid"));
+        String evidence= request.getParameter("evidence");
+        String fact=request.getParameter("fact");
+        String result=request.getParameter("result");
+        Text text=new Text(cid,evidence,fact,result);
+        textService.writeToPDF(text,filePath);
+
+        return exportFile(filePath);
+    }
+    private ResponseEntity<InputStreamResource> exportFile(String filePath)
+            throws IOException{
+        FileSystemResource fileSystemResource = new FileSystemResource(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", new String( fileSystemResource.getFilename().getBytes("utf-8"), "ISO8859-1" )));
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(fileSystemResource.contentLength())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(fileSystemResource.getInputStream()));
+    }
 
 }

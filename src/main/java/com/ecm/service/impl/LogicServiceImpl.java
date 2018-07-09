@@ -177,8 +177,9 @@ public class LogicServiceImpl implements LogicService {
         String str = "";
 
         for(int i = 0;i<list.size();i++){
+            int count=1;
             if(list.get(i).getType()==3&&list.get(i).getParentNodeID()==-1){
-                str+="("+(i+1)+")"+list.get(i).getDetail();
+                str+="("+(count++)+")"+list.get(i).getDetail()+"\n";
             }
         }
         return str;
