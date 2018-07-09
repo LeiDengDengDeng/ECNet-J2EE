@@ -63,4 +63,29 @@ public class CaseManageServiceImpl implements CaseManageService {
     public JSONArray getRawCases(String username) {
         return null;
     }
+
+    @Override
+    public JSONArray findCasesByName(String username, String casename) {
+
+        JSONArray res = new JSONArray();
+        List<Case> cases = caseDao.findByNameLike(casename);
+
+        for(int i = 0;i<cases.size();i++){
+
+            Case c = cases.get(i);
+            List<String> jnames = judgmentDao.getNameByCid(c.getId()+"");
+
+            if(jnames.contains(username)){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("cid",c.getId());
+                jsonObject.put("caseNum",c.getCaseNum());
+                jsonObject.put("cname",c.getName());
+                jsonObject.put("type",c.getType());
+                jsonObject.put("fillingDate",c.getFillingDate().toString());
+                jsonObject.put("manageJudge",username);
+                res.add(jsonObject);
+            }
+        }
+        return res;
+    }
 }

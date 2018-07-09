@@ -10,4 +10,6 @@ public interface CaseManageService {
     public JSONArray getProcessingCases(String username);
 
     public JSONArray getRawCases(String username);
+
+    public JSONArray findCasesByName(String username,String casename);
 }

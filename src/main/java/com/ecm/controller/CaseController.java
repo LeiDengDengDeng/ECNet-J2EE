@@ -19,5 +19,8 @@ public class CaseController {
         return caseManageService.getAllCases(username);
     }
 
-    
+    @RequestMapping(value="/search")
+    public JSONArray searchCasesByName(@RequestParam("username") String username,@RequestParam("casename") String casename){
+        return caseManageService.findCasesByName(username, casename);
+    }
 }
