@@ -5,6 +5,7 @@ import com.ecm.dao.LogicNodeDao;
 import com.ecm.model.EvidenceFactLink;
 import com.ecm.model.LogicNode;
 import com.ecm.model.LogicNodeMaxValue;
+import com.ecm.model.MOD_Fact;
 import com.ecm.service.LogicService;
 import com.ecm.util.LogicExcelGenerator;
 import com.ecm.util.LogicXMLGenerator;
@@ -168,6 +169,19 @@ public class LogicServiceImpl implements LogicService {
         List<LogicNode> nodes = logicNodeDao.findByCaseID(caseID);
         new LogicExcelGenerator(downloadExcelPath, nodes).generateExcelFile();
         return downloadExcelPath;
+    }
+
+    @Override
+    public String getResultContents(int caseID) {
+        List<LogicNode> list = logicNodeDao.findByCaseID(caseID);
+        String str = "";
+
+        for(int i = 0;i<list.size();i++){
+            if(list.get(i).getType()==3&&list.get(i).getParentNodeID()==-1){
+                str+="("+(i+1)+")"+list.get(i).getDetail();
+            }
+        }
+        return str;
     }
 
     private LogicNode generateNode(int caseID, int parentNodeID, String detail, int type) {

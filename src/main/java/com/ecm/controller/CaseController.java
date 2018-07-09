@@ -18,4 +18,6 @@ public class CaseController {
     public JSONArray getAllCases(@RequestParam("username") String username){
         return caseManageService.getAllCases(username);
     }
+
+    
 }

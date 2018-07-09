@@ -213,4 +213,8 @@ public class ModelController {
     public String getEvidenceContents(@RequestParam("caseID") int caseID){
         return modelManageService.getEvidencesList(caseID);
     }
+    @RequestMapping(value="/getFactContents")
+    public String getFactContents(@RequestParam("caseID") int caseID){
+        return modelManageService.getEvidencesList(caseID);
+    }
 }

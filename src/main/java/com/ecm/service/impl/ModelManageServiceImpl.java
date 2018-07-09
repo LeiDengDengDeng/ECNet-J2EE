@@ -115,6 +115,18 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
+    public String getFactList(int cid) {
+        List<MOD_Fact> list = factDao.findAllByCaseID(cid);
+        String str = "";
+
+        for(int i = 0;i<list.size();i++){
+            str+="("+(i+1)+")"+list.get(i).getContent();
+        }
+
+        return str;
+    }
+
+    @Override
     public JSONObject getHeadersByBodyID(int bid) {
         JSONObject obj = new JSONObject();
         obj.put("body",evidenceBodyDao.findById(bid));

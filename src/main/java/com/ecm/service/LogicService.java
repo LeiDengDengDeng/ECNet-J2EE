@@ -58,4 +58,6 @@ public interface LogicService {
     String generateXMLFile(int caseID);
 
     String generateExcelFile(int caseID);
+
+    String getResultContents(int caseID);
 }

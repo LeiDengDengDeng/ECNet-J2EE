@@ -50,5 +50,8 @@ public class ViewController {
     public String getCaseDecideView() {
         return "reason-evaluate";
     }
-
+    @RequestMapping(value = "/text")
+    public String getTextView() {
+        return "text";
+    }
 }
