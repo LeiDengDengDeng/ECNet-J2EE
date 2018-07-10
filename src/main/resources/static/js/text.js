@@ -1,7 +1,7 @@
 $(function(){
     var cid = $.session.get('cid');
     $.ajax({
-        url: "/text/getTextContent",
+        url: "/ecm/text/getTextContent",
         type: 'POST',
         // dataType:"json",
         data: {"caseID": cid},
@@ -45,7 +45,7 @@ function update(){
 
     console.log("evidence"+evidence);
     $.ajax({
-        url: "/text/updateTextContent",
+        url: "/ecm/text/updateTextContent",
         type: 'POST',
         // dataType:"json",
         data: {"caseID": cid,"evidence":evidence,"fact":fact,"result":result},

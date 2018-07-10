@@ -219,7 +219,7 @@ public class EvidenceController {
             evidenceService.importFactByExcel(filePath+sepa+fileName,ajxh,bodylist);
             evidenceService.importLogicByExcel(filePath+sepa+fileName,ajxh,bodylist);
         }
-        response.sendRedirect("/upload");
+        response.sendRedirect("/ecm/upload");
 
     }
 

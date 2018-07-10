@@ -51,7 +51,7 @@ function initEvidences() {
 
     $.ajax({
         type: "post",
-        url: "/model/getEvidences",
+        url: "/ecm/model/getEvidences",
         data:{"cid":cid},
         async: false,
         success: function (data) {
@@ -106,7 +106,7 @@ function updateBodyTrust(bid) {
 
     $.ajax({
         type: "post",
-        url: "/model/updateBodyTrust",
+        url: "/ecm/model/updateBodyTrust",
         data: {"bid":bid},
         // dataType:"json",
         // contentType: "application/json; charset=utf-8",
@@ -143,7 +143,7 @@ function addToAcceptance(bid) {
 
     $.ajax({
         type: "post",
-        url: "/model/getHeaders",
+        url: "/ecm/model/getHeaders",
         data: {"bid":bid},
         dataType:"json",
         // contentType: "application/json; charset=utf-8",
@@ -239,7 +239,7 @@ function splitFacts() {
     str=$("#factArea").val();
 
     $.ajax({
-        url: "/model/splitFact",
+        url: "/ecm/model/splitFact",
         type: 'POST',
         dataType:"json",
         data: {"caseID": cid, "text": str},
@@ -353,7 +353,7 @@ function getJoints() {
     });
 
     $.ajax({
-        url: "/model/extractJoints",
+        url: "/ecm/model/extractJoints",
         type: 'POST',
         data: JSON.stringify({'facts':fList,'bodies':bList,'caseID':cid}),
         contentType: "application/json; charset=utf-8",
@@ -541,7 +541,7 @@ function exportToModel() {
     });
 
     $.ajax({
-        url:"/model/deleteFactsAndJoints",
+        url:"/ecm/model/deleteFactsAndJoints",
         type:'POST',
         data: {"caseID":cid},
         // dataType:"json",
@@ -568,7 +568,7 @@ function exportToModel() {
 
                 $.ajax({
                     type: "post",
-                    url: "/model/saveFact",
+                    url: "/ecm/model/saveFact",
                     data: JSON.stringify(f),
                     // dataType:"json",
                     contentType: "application/json; charset=utf-8",
@@ -584,7 +584,7 @@ function exportToModel() {
                             var jc = jointsSpans.eq(i).find('label').eq(0).text();
                             $.ajax({
                                 type: "post",
-                                url: "/model/saveJoint",
+                                url: "/ecm/model/saveJoint",
                                 data: JSON.stringify({"caseID":cid,"name":jc,"content":jc,'factID':factID,'x':joint_x,'y':y}),
                                 // dataType:"json",
                                 contentType: "application/json; charset=utf-8",

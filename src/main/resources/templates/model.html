@@ -34,9 +34,9 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         if($.session.get('username')==null){
-            window.location.href="/login";
+            window.location.href="/ecm/login";
         }else if($.session.get('cid')==null){
-            window.location.href="/manage";
+            window.location.href="/ecm/manage";
         }
         /*]]>*/
     </script>
@@ -95,7 +95,7 @@
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                    <a class="navbar-brand" href="/manage" style="left: 0;">证据链关系图建模工具</a> </div>
+                    <a class="navbar-brand" href="/ecm/manage" style="left: 0;">证据链关系图建模工具</a> </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
@@ -112,16 +112,16 @@
             </div>
             <ol class="breadcrumb" style="font-size: 19px;">
                 <li>
-                    <a href="/upload">质证与采信</a>
+                    <a href="/ecm/upload">质证与采信</a>
                 </li>
                 <li><strong>
-                    <a class="active" href="/model">证据链建模</a></strong>
+                    <a class="active" href="/ecm/model">证据链建模</a></strong>
                 </li>
                 <li >
-                    <a href="/logic-new">说理逻辑</a>
+                    <a href="/ecm/logic-new">说理逻辑</a>
                 </li>
                 <li >
-                    <a href="/text">说理语段</a>
+                    <a href="/ecm/text">说理语段</a>
                 </li>
 
             </ol>
@@ -596,7 +596,7 @@
         if(confirm('是否确认退出？'))
         {
             $.session.remove('username');
-            window.location.href = '/login';
+            window.location.href = '/ecm/login';
         }
     });
 

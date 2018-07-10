@@ -80,7 +80,7 @@
 
             $.ajax({
                 type:"post",
-                url:"/checkLogin",
+                url:"/ecm/checkLogin",
                 data:{"username":$('#userName').val(),"password":$('#userPwd').val()},
                 // dataType:"json",
                 async:false,
@@ -97,7 +97,7 @@
 					}else{
                         $('#failInfo').css('display','none');
                         $.session.set("username",data);
-                        window.location.href = "/manage";
+                        window.location.href = "/ecm/manage";
 					}
 
                 },error: function(XMLHttpRequest, textStatus, errorThrown) {
