@@ -1,5 +1,16 @@
 $(function(){
     var cid = $.session.get('cid');
+    var username = $.session.get('username');
+    $('#userLabel').text(username.substring(0,1)+"法官");
+
+    $('#exist_click').click(function () {
+        if(confirm('是否确认退出？'))
+        {
+            $.session.remove('username');
+            window.location.href = '/ecm/login';
+        }
+    });
+
     $.ajax({
         url: "/ecm/text/getTextContent",
         type: 'POST',

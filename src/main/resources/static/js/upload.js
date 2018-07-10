@@ -5,7 +5,7 @@ var caseInfoStr = $.session.get("caseInfo");
 var caseInfo = JSON.parse(caseInfoStr);
 //hide
 $(function(){
-    $('#userLabel').text(username);
+    $('#userLabel').text(username.substring(0,1)+"法官");
     $('#exist_click').click(function () {
         if(confirm('是否确认退出？'))
         {
@@ -17,7 +17,7 @@ $(function(){
     $("#caseNum").text(caseInfo.cNum);
     $("#caseBrief").text("交通肇事罪");
     $("#caseName").text(caseInfo.cname);
-    $("#underTaker").text(username);
+    $("#underTaker").text("林法官");
     $("#caseDate").text(caseInfo.fillingDate);
     $("#importCaseId").val(cid);
     $.ajax({
