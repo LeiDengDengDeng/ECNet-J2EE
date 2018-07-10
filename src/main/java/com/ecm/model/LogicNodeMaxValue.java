@@ -12,6 +12,11 @@ public class LogicNodeMaxValue implements Serializable{
     public LogicNodeMaxValue(int maxY, int maxNodeID) {
         this.maxY = maxY;
         this.maxNodeID = maxNodeID;
+
+    }
+
+    public LogicNodeMaxValue(int maxNodeID) {
+        this.maxNodeID = maxNodeID;
     }
 
     public int getMaxY() {

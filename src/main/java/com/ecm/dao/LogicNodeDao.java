@@ -23,6 +23,9 @@ public interface LogicNodeDao extends JpaRepository<LogicNode, Integer> {
 
     void deleteByCaseID(int caseID);
 
+    @Query(value = "select count(node.id) from LogicNode node where node.caseID = ?1 and node.type=?2")
+    int getLogicNodeMaxValueByCaseID(int caseID, int type);
+
     @Query(value = "select new com.ecm.model.LogicNodeMaxValue(max(node.y),max(node.nodeID)) from LogicNode node where node.caseID = ?1")
     LogicNodeMaxValue getLogicNodeMaxValueByCaseID(int caseID);
 }

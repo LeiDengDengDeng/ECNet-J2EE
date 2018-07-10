@@ -186,10 +186,11 @@ public class LogicServiceImpl implements LogicService {
     }
 
     private LogicNode generateNode(int caseID, int parentNodeID, String detail, int type) {
+      //  LogicNodeMaxValue maxValueWithType = getLogicNodeMaxValue(caseID,type);
         LogicNodeMaxValue maxValue = getLogicNodeMaxValue(caseID);
-
         int nodeID = maxValue.getMaxNodeID() + 1;
-        String topic = types[type] + nodeID;
+        int topicID=getLogicNodeMaxValue(caseID,type)+1;
+        String topic = types[type] +topicID;
         int x = 80;
         int y = maxValue.getMaxY() + 50;
 
@@ -197,6 +198,16 @@ public class LogicServiceImpl implements LogicService {
         return node;
     }
 
+    private int getLogicNodeMaxValue(int caseID,int type) {
+        int maxValue;
+        try {
+            maxValue = logicNodeDao.getLogicNodeMaxValueByCaseID(caseID,type);
+        } catch (org.springframework.dao.InvalidDataAccessApiUsageException e) {
+            // 对应案件不存在节点时
+            maxValue = 0;
+        }
+        return maxValue;
+    }
     private LogicNodeMaxValue getLogicNodeMaxValue(int caseID) {
         LogicNodeMaxValue maxValue;
         try {
