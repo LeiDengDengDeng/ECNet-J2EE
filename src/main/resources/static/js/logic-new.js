@@ -85,8 +85,8 @@ $(document).ready(function () {
     $('#save-btn').click(function () {
         saveData();
     });
-    $('#excel-btn').attr("href", "/logic/generateExcel?caseID=" + cid);
-    $('#xml-btn').attr("href", "/logic/generateXML?caseID=" + cid);
+    $('#excel-btn').attr("href", "/ecm/logic/generateExcel?caseID=" + cid);
+    $('#xml-btn').attr("href", "/ecm/logic/generateXML?caseID=" + cid);
 
     // 每五秒自动保存
     // setInterval("saveData()",5000);

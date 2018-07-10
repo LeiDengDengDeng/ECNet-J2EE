@@ -245,13 +245,13 @@ $(document).ready(function(){
         stage.saveImageInfo(undefined, undefined, "证据链模型图");
     });
     $('#saveExcel-btn').click(function () {
-        saveAll(true,"/model/exportExcel?cid="+cid);
-        // window.location.href="/model/exportExcel?cid="+cid;
+        saveAll(true,"/ecm/model/exportExcel?cid="+cid);
+        // window.location.href="/ecm/model/exportExcel?cid="+cid;
 
     });
     $('#saveXML-btn').click(function () {
-        saveAll(true,"/model/exportXML?cid="+cid);
-        // window.location.href="/model/exportXML?cid="+cid;
+        saveAll(true,"/ecm/model/exportXML?cid="+cid);
+        // window.location.href="/ecm/model/exportXML?cid="+cid;
 
     });
     $('#revoke-btn').click(function () {
@@ -418,7 +418,7 @@ function saveAll(isAsync,url) {
     if(isAsync==true){
         $.ajax({
             type: "post",
-            url: "/model/saveAll",
+            url: "/ecm/model/saveAll",
             data: JSON.stringify(dList),
             // dataType:"json",
             contentType: "application/json; charset=utf-8",
@@ -464,7 +464,7 @@ function saveAll(isAsync,url) {
 
         $.ajax({
             type: "post",
-            url: "/model/saveAll",
+            url: "/ecm/model/saveAll",
             data: JSON.stringify(dList),
             // dataType:"json",
             contentType: "application/json; charset=utf-8",
@@ -503,7 +503,7 @@ function saveHead(node) {
 
     $.ajax({
         type: "post",
-        url: "/model/saveHead",
+        url: "/ecm/model/saveHead",
         data: JSON.stringify(h),
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -534,7 +534,7 @@ function deleteHeadData(id) {
 
     $.ajax({
         type: "post",
-        url: "/model/deleteHead",
+        url: "/ecm/model/deleteHead",
         data: {"id":id},
         // dataType:"json",
         // contentType: "application/json; charset=utf-8",
@@ -560,7 +560,7 @@ function deleteHeadData(id) {
 function updateHeads(hList) {
     $.ajax({
         type: "post",
-        url: "/model/saveHeaders",
+        url: "/ecm/model/saveHeaders",
         data: JSON.stringify(hList),
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -586,7 +586,7 @@ function updateHeads(hList) {
 function updateBody(data) {
     $.ajax({
         type: "post",
-        url: "/model/saveBody",
+        url: "/ecm/model/saveBody",
         data: JSON.stringify(data),
         dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -618,7 +618,7 @@ function saveBody(node) {
 
     $.ajax({
         type: "post",
-        url: "/model/saveBody",
+        url: "/ecm/model/saveBody",
         data: JSON.stringify(bd),
         dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -651,7 +651,7 @@ function deleteBodyData(id) {
 
     $.ajax({
         type: "post",
-        url: "/model/deleteBody",
+        url: "/ecm/model/deleteBody",
         data: {"id":id},
         // dataType:"json",
         // contentType: "application/json; charset=utf-8",
@@ -685,7 +685,7 @@ function saveJoint(node) {
 
     $.ajax({
         type: "post",
-        url: "/model/saveJoint",
+        url: "/ecm/model/saveJoint",
         data: JSON.stringify(j),
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -717,7 +717,7 @@ function deleteJointData(id) {
 
     $.ajax({
         type: "post",
-        url: "/model/deleteJoint",
+        url: "/ecm/model/deleteJoint",
         data: {"id":id},
         // dataType:"json",
         // contentType: "application/json; charset=utf-8",
@@ -747,7 +747,7 @@ function saveFact(node) {
 
     $.ajax({
         type: "post",
-        url: "/model/saveFact",
+        url: "/ecm/model/saveFact",
         data: JSON.stringify(f),
         // dataType:"json",
         contentType: "application/json; charset=utf-8",
@@ -779,7 +779,7 @@ function deleteFactData(id) {
 
     $.ajax({
         type: "post",
-        url: "/model/deleteFact",
+        url: "/ecm/model/deleteFact",
         data: {"id":id},
         // dataType:"json",
         // contentType: "application/json; charset=utf-8",

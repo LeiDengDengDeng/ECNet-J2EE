@@ -30,7 +30,7 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         if($.session.get('username')==null){
-            window.location.href="/login";
+            window.location.href="/ecm/login";
         }
         /*]]>*/
     </script>
@@ -248,7 +248,7 @@ const num_p_page = 10;
         if(confirm('是否确认退出？'))
         {
             $.session.remove('username');
-            window.location.href = '/login';
+            window.location.href = '/ecm/login';
         }
     });
 
@@ -351,7 +351,7 @@ const num_p_page = 10;
                 '", "fillingDate":"'+$(this).parent().parent().find('td:eq(3)').text()+
                 '", "undertaker":"'+$(this).parent().parent().find('td:eq(4)').text()+'"}';
             $.session.set("caseInfo",caseInfo);
-            window.location.href = "/upload";
+            window.location.href = "/ecm/upload";
         });
     }
     function getCase(type,page) {
@@ -360,7 +360,7 @@ const num_p_page = 10;
             refresh_table(page);
         }else {
             $.ajax({
-                url:"/case/getAll",
+                url:"/ecm/case/getAll",
                 type:'POST',
                 data:{"username":username},
                 success:function (data) {
@@ -378,7 +378,7 @@ const num_p_page = 10;
 
     function searchCase() {
         $.ajax({
-            url:"/case/search",
+            url:"/ecm/case/search",
             type:'POST',
             data:{"username":username,"casename":$('#searchInput').val()},
             success:function (data) {

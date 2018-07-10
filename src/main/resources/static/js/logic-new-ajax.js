@@ -4,7 +4,7 @@
 function loadLogicNodes() {
     $.ajax({
         type: "GET",
-        url: "/logic/getAll",
+        url: "/ecm/logic/getAll",
         data: {caseID: cid},
         async: false,
         success: function (data) {
@@ -24,7 +24,7 @@ function loadLogicNodes() {
 function saveLogicNodes(data) {
     $.ajax({
         type: "POST",
-        url: "/logic/saveAll?caseID=" + cid,
+        url: "/ecm/logic/saveAll?caseID=" + cid,
         data: data,
         contentType: "application/json",
         success: function (data) {

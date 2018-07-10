@@ -35,7 +35,7 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         if($.session.get('username')==null){
-            window.location.href="/login";
+            window.location.href="/ecm/login";
         }
         /*]]>*/
     </script>
@@ -88,7 +88,7 @@
                         <li class="menu-label"><a id="userLabel" title="查看或修改个人信息" data-toggle="modal" data-target="#seeUserInfo">个人信息</a></li>
                         <li><a id='exist_click'>退出登录</a></li>
                     </ul>
-                    <form id="excelForm" action="/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
+                    <form id="excelForm" action="/ecm/evidence/importExcel" method="post" enctype="multipart/form-data" class="navbar-form navbar-right" role="">
                         <div class="input-group">
                             <input type="text" name="ajxh" id="importCaseId" class="hidden form-control" value="41722">
                             <input type="file" name="file" class="form-control">
@@ -100,16 +100,16 @@
             </div>
             <ol class="breadcrumb" style="font-size: 19px">
                 <li><strong>
-                    <a class="active" href="/upload">质证与采信</a></strong>
+                    <a class="active" href="/ecm/upload">质证与采信</a></strong>
                 </li>
                 <li>
-                    <a href="/model">证据链建模</a>
+                    <a href="/ecm/model">证据链建模</a>
                 </li>
                 <li >
-                    <a href="/logic-new">说理逻辑</a>
+                    <a href="/ecm/logic-new">说理逻辑</a>
                 </li>
                 <li >
-                    <a href="/text">说理语段</a>
+                    <a href="/ecm/text">说理语段</a>
                 </li>
 
             </ol>

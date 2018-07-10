@@ -10,7 +10,7 @@ $(function(){
         if(confirm('是否确认退出？'))
         {
             $.session.remove('username');
-            window.location.href = '/login';
+            window.location.href = '/ecm/login';
         }
     });
 
@@ -21,7 +21,7 @@ $(function(){
     $("#caseDate").text(caseInfo.fillingDate);
     $("#importCaseId").val(cid);
     $.ajax({
-        url:"/evidence/getContent",
+        url:"/ecm/evidence/getContent",
         type:'GET',
         data:{"ajxh":cid},
         success:function (data) {
@@ -162,7 +162,7 @@ function   bodyRemove(body){
     var bodyid=$(body).attr("bodyid");
     console.log("bodyid"+bodyid);
     $.ajax({
-        url:"/evidence/deleteBody",
+        url:"/ecm/evidence/deleteBody",
         type:'POST',
         data:{"id":bodyid},
         success:function(data) {
@@ -259,7 +259,7 @@ function mySplit(num) {
     }
     loading(num);
     $.ajax({
-        url:"/evidence/document",
+        url:"/ecm/evidence/document",
         type:'POST',
         data:{"type":num-1,"ajxh":cid,"text":str},
         success:function(data) {
@@ -320,7 +320,7 @@ function myHead(num) {
     var html="";
     loading(num);
     $.ajax({
-        url:"/evidence/createHead",
+        url:"/ecm/evidence/createHead",
         type:'POST',
         data:{"ajxh":cid,"head":"","document_id":document_id[num-1]},
         success:function(data) {
@@ -357,7 +357,7 @@ function addHead(span) {
     var document_id=$(span).attr("documentid");
     var bodyid=$(span).attr("bodyid");
     $.ajax({
-        url:"/evidence/addHead",
+        url:"/ecm/evidence/addHead",
         type:'POST',
         data:{"ajxh":cid,"head":"","document_id":document_id,"body_id":bodyid},
         success:function(data) {
@@ -379,7 +379,7 @@ function updateHead(lablel) {
     if(orginal!=head){
 
         $.ajax({
-            url:"/evidence/updateHead",
+            url:"/ecm/evidence/updateHead",
             type:'POST',
             data:{"head":head,"id":id},
             success:function(data) {
@@ -408,7 +408,7 @@ function myDelete(num) {
 //新增
 function myAdd(num) {
     $.ajax({
-        url:"/evidence/addBody",
+        url:"/ecm/evidence/addBody",
         type:'POST',
         data:{"ajxh":cid,"type":5,"body":"","document_id":document_id[num-1]},
         success:function(data) {
@@ -455,7 +455,7 @@ function myUpdateBody(input) {
     var id = $(input).attr("bodyid"); //对应id
     var body=$(input).val();
     $.ajax({
-        url:"/evidence/updateBodyById",
+        url:"/ecm/evidence/updateBodyById",
         type:'POST',
         data:{"body":body,"id":id},
         success:function(data) {
@@ -471,7 +471,7 @@ function myUpdateType(select) {
     var type=$(select).val();
 
     $.ajax({
-        url:"/evidence/updateTypeById",
+        url:"/ecm/evidence/updateTypeById",
         type:'POST',
         data:{"type":type,"id":id},
         success:function(data) {
@@ -502,7 +502,7 @@ function myUpdateTrust(select) {
 
     console.log(id);console.log(trust);
     $.ajax({
-        url:"/evidence/updateTrustById",
+        url:"/ecm/evidence/updateTrustById",
         type:'POST',
         data:{"trust":trust,"id":id},
         success:function(data) {
@@ -518,7 +518,7 @@ function deleteHead(remove){
     var id=$(remove).attr("headid");
     console.log("headid"+id);
     $.ajax({
-        url:"/evidence/deleteHead",
+        url:"/ecm/evidence/deleteHead",
         type:'POST',
         data:{"id":id},
         success:function(data) {
@@ -538,7 +538,7 @@ function uploadExcel(){
 
     $('#excelForm').submit(      //ajax方式提交表单
         {
-            url: '/evidence/importExcel',
+            url: '/ecm/evidence/importExcel',
             type: 'post',
             beforeSubmit: function () {},
             success: function (data) {

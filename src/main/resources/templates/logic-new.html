@@ -24,9 +24,9 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         if ($.session.get('username') == null) {
-            window.location.href = "/login";
+            window.location.href = "/ecm/login";
         } else if ($.session.get('cid') == null) {
-            window.location.href = "/manage";
+            window.location.href = "/ecm/manage";
         }
         /*]]>*/
     </script>
@@ -60,16 +60,16 @@
             </div>
             <ol class="breadcrumb" style="font-size: 19px">
                 <li>
-                    <a href="/upload">质证与采信</a>
+                    <a href="/ecm/upload">质证与采信</a>
                 </li>
                 <li>
-                    <a href="/model">证据链建模</a>
+                    <a href="/ecm/model">证据链建模</a>
                 </li>
                 <li>
-                    <strong><a class="active" href="#">说理逻辑</a></strong>
+                    <strong><a class="active" href="/ecm/logic-new">说理逻辑</a></strong>
                 </li>
                 <li>
-                    <a href="/text">说理语段</a>
+                    <a href="/ecm/text">说理语段</a>
                 </li>
 
             </ol>
@@ -427,7 +427,7 @@
     $('#exist_click').click(function () {
         if (confirm('是否确认退出？')) {
             $.session.remove('username');
-            window.location.href = '/login';
+            window.location.href = '/ecm/login';
         }
     });
     /*]]>*/
