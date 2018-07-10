@@ -5,7 +5,7 @@ var caseInfoStr = $.session.get("caseInfo");
 var caseInfo = JSON.parse(caseInfoStr);
 //hide
 $(function(){
-    $('#userLabel').text(username);
+    $('#userLabel').text(username.substring(0,1)+"法官");
     $('#exist_click').click(function () {
         if(confirm('是否确认退出？'))
         {

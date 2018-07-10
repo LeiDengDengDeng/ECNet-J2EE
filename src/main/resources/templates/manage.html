@@ -98,12 +98,12 @@
                 </div>
                 <footer class="message_footer">
                     <nav>
-                        <div class="btn-toolbar operation" role="toolbar">
-                            <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
-                            <div class="btn-group" role="group">
-                                <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
-                            </div>
-                        </div>
+                        <!--<div class="btn-toolbar operation" role="toolbar">-->
+                            <!--<div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>-->
+                            <!--<div class="btn-group" role="group">-->
+                                <!--<button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <ul class="pagination pagenav" id="page-switch">
                             <li class="disabled"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
                             <li class="active"><a>1</a></li>
@@ -191,7 +191,7 @@
 <script th:src="@{js/ref/admin-scripts.js}"></script>
 <script>
     var username = $.session.get('username');
-    $('#userLabel').text(username);
+    $('#userLabel').text(username.substring(0,1)+"法官");
 //是否确认删除
 var dat_restore = [];
 var dat_type = '';
