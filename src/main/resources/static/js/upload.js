@@ -17,7 +17,7 @@ $(function(){
     $("#caseNum").text(caseInfo.cNum);
     $("#caseBrief").text("交通肇事罪");
     $("#caseName").text(caseInfo.cname);
-    $("#underTaker").text(username);
+    $("#underTaker").text("林法官");
     $("#caseDate").text(caseInfo.fillingDate);
     $("#importCaseId").val(cid);
     $.ajax({
