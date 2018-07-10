@@ -6,6 +6,8 @@ import com.ecm.model.Evidence_Head;
 import com.ecm.model.Text;
 import com.ecm.util.ImportXMLUtil;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public interface TextService {
@@ -15,4 +17,5 @@ public interface TextService {
     Text updateText(Text text);
 
 
+    void writeToPDF(Text text, String filePath) throws IOException;
 }

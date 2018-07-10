@@ -108,9 +108,8 @@ public class ModelManageServiceImpl implements ModelManageService {
         String str = "";
 
         for(int i = 0;i<list.size();i++){
-            str+="("+(i+1)+")"+list.get(i);
+            str+="("+(i+1)+")"+list.get(i)+"\n";
         }
-
         return str;
     }
 
@@ -120,7 +119,7 @@ public class ModelManageServiceImpl implements ModelManageService {
         String str = "";
 
         for(int i = 0;i<list.size();i++){
-            str+="("+(i+1)+")"+list.get(i).getContent();
+            str+="("+(i+1)+")"+list.get(i).getContent()+"\n";
         }
 
         return str;

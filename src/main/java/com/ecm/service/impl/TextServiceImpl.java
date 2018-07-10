@@ -5,33 +5,34 @@ import com.ecm.keyword.manager.HeadCreator;
 import com.ecm.keyword.manager.KeyWordCalculator;
 import com.ecm.keyword.reader.ExcelUtil;
 import com.ecm.model.*;
+import com.ecm.model.Text;
 import com.ecm.service.EvidenceService;
 import com.ecm.service.LogicService;
 import com.ecm.service.ModelManageService;
 import com.ecm.service.TextService;
 import com.ecm.util.ImportXMLUtil;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfDocumentInfo;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.*;
+import com.itextpdf.kernel.color.Color;
+
+import com.itextpdf.layout.property.HorizontalAlignment;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import java.io.File;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-import static com.ecm.keyword.reader.ExcelUtil.getExcelWorkbook;
-import static com.ecm.keyword.reader.ExcelUtil.getSheetByNum;
 
 @Service
 public class TextServiceImpl implements TextService {
@@ -76,5 +77,104 @@ public class TextServiceImpl implements TextService {
             text.setId(id);
         }
         return textDao.save(text);
+    }
+
+    @Override
+    public void writeToPDF(Text text, String filePath) throws IOException {
+
+        //1、创建流对象
+        PdfWriter pdfWriter=new PdfWriter(new File(filePath));
+
+        //2、创建文档对象
+        PdfDocument pdfDocument=new PdfDocument(pdfWriter);
+
+        //3、创建内容文档对象
+
+        Document document=new Document(pdfDocument, PageSize.A4);
+        PdfDocumentInfo documentInfo=pdfDocument.getDocumentInfo();
+        documentInfo.setCreator("ECM");
+
+        //事实
+        Paragraph paragraph=new Paragraph("事实段");
+
+        //设置字体，解决中文显示问题
+        PdfFont font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+        paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+        paragraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+        //、创建内容
+        paragraph=new Paragraph(text.getFact());
+
+        //设置字体，解决中文显示问题
+        font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+      //  paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+        paragraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+
+        //证据
+         paragraph=new Paragraph("证据段");
+
+        //设置字体，解决中文显示问题
+        font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+        paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+        paragraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+        //、创建内容
+        paragraph=new Paragraph(text.getEvidence());
+
+        //设置字体，解决中文显示问题
+        font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+       // paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+        //结果
+        paragraph=new Paragraph("裁判分析段");
+
+        //设置字体，解决中文显示问题
+        font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+        paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+        paragraph.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+        //、创建内容
+        paragraph=new Paragraph(text.getResult());
+        //设置字体，解决中文显示问题
+        font= PdfFontFactory.createFont("STSongStd-Light","UniGB-UCS2-H",true);
+        paragraph.setFont(font);
+      //  paragraph.setBackgroundColor(Color.LIGHT_GRAY);
+
+
+        //将内容写入文档
+
+        document.add(paragraph);
+
+        document.close();
+
+        System.out.println("ok!!!");
+
     }
 }

@@ -111,8 +111,5 @@ public class LogicController {
         }
         return "";
     }
-    @RequestMapping(value="/getResultContents")
-    public String getFactContents(@RequestParam("caseID") int caseID){
-        return logicService.getResultContents(caseID);
-    }
+
 }
