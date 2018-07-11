@@ -15,7 +15,7 @@ public interface TextService {
     Text getText(int cid);
     Text findTextByCid(int cid);
     Text updateText(Text text);
-
+    void writeToWord(Text text, String filePath) throws IOException;
 
     void writeToPDF(Text text, String filePath) throws IOException;
 }

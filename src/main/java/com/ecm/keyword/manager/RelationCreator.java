@@ -12,7 +12,7 @@ import java.net.URL;
 public class RelationCreator {
     public static JSONObject getJoints(JSONObject data) throws IOException {
 
-        URL url = new URL("http://114.212.240.199:5000/getFactLinkpoints");
+        URL url = new URL("http://localhost:5000/getFactLinkpoints");
         // 建立http连接
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         // 设置允许输出

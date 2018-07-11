@@ -42,12 +42,20 @@ function edit(){
     $('#factPara').attr("contenteditable",true);
     $('#resultPara').attr("contenteditable",true);
 }
-function download() {
+function downloadWord() {
     var cid=$.session.get('cid');
     var evidence=$("#evidencePara").text();
     var fact=$("#factPara").text();
     var result=$("#resultPara").text();
-    var url="/text/exportPDF?cid="+cid+"&evidence="+evidence+"&fact="+fact+"&result="+result;
+    var url="/ecm/text/exportWord?cid="+cid+"&evidence="+evidence+"&fact="+fact+"&result="+result;
+    window.location.href=url;
+}
+function downloadPDF() {
+    var cid=$.session.get('cid');
+    var evidence=$("#evidencePara").text();
+    var fact=$("#factPara").text();
+    var result=$("#resultPara").text();
+    var url="/ecm/text/exportPDF?cid="+cid+"&evidence="+evidence+"&fact="+fact+"&result="+result;
     window.location.href=url;
 }
 function update(){
