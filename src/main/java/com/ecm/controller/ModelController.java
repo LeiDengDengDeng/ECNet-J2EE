@@ -188,7 +188,7 @@ public class ModelController {
         List<MOD_Fact> facts = new ArrayList<MOD_Fact>();
 
         int index = 0;
-        String[] tests=text.split(SplitType_Fact.getType(text).getRegex());
+        String[] tests=text.split("。");
         for(String str:tests) {
             if (!str.isEmpty()) {
                 MOD_Fact fact = new MOD_Fact();
