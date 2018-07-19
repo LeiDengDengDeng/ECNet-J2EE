@@ -13,4 +13,14 @@ public interface CaseDao extends JpaRepository<Case, Integer> {
 
     @Query(value = "select c from Case c where c.name like %?1%")
     public List<Case> findByNameLike(String name);
+
+    public void deleteById(int id);
+
+    public Case save(Case c);
+
+    @Query(value = "select c from Case c where c.id<>?1 and c.caseNum = ?2")
+    public Case findOtherCaseByCaseNum(int id,String caseNum);
+
+    @Query(value = "select max(c.id) from Case c")
+    public int getMaxID();
 }

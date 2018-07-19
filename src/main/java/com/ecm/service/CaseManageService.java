@@ -1,5 +1,8 @@
 package com.ecm.service;
+import com.ecm.model.Case;
 import net.sf.json.JSONArray;
+
+import java.util.List;
 
 public interface CaseManageService {
 
@@ -12,4 +15,14 @@ public interface CaseManageService {
     public JSONArray getRawCases(String username);
 
     public JSONArray findCasesByName(String username,String casename);
+
+    public Case saveCase(Case c);
+
+    public Case updateCase(Case c);
+
+    public void deleteCases(List<Integer> cases);
+
+    public Case getCaseById(int id);
+
+    public boolean isCaseNumExisted(int id,String caseNum);
 }

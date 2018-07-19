@@ -127,11 +127,12 @@ public class ModelController {
     @RequestMapping(value="/saveAll")
     public void saveAll(@RequestBody Evidence_Data all){
 
+        modelManageService.deleteAll(all.getCaseID());
         modelManageService.saveHeaders(all.getHeaders());
         modelManageService.saveBodies(all.getBodies());
         modelManageService.saveJoints(all.getJoints());
         modelManageService.saveFacts(all.getFacts());
-        modelManageService.deleteArrowsByCid(all.getCaseID());
+//        modelManageService.deleteArrowsByCid(all.getCaseID());
         modelManageService.saveArrows(all.getArrows());
         saveInLogic(all.getLinks(),all.getCaseID());
     }

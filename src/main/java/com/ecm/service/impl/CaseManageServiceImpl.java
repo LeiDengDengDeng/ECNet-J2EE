@@ -9,7 +9,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -51,12 +53,55 @@ public class CaseManageServiceImpl implements CaseManageService {
 
     @Override
     public JSONArray getFinishedCases(String username) {
-        return null;
+        JSONArray res = new JSONArray();
+        List<Judgment> judges = judgmentDao.getAllByName(username);
+
+        for(int i = 0;i<judges.size();i++){
+            JSONObject jsonObject = new JSONObject();
+
+            Judgment j = judges.get(i);
+            Case c = caseDao.findById(Integer.parseInt(j.getCid()));
+
+//            Timestamp fillingDate = c.getFillingDate();
+            Timestamp closingDate = c.getClosingDate();
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            if(closingDate!=null&&closingDate.before(now)){
+                jsonObject.put("cid",j.getCid());
+                jsonObject.put("caseNum",c.getCaseNum());
+                jsonObject.put("cname",c.getName());
+                jsonObject.put("type",c.getType());
+                jsonObject.put("fillingDate",c.getFillingDate().toString());
+                jsonObject.put("manageJudge",j.getRealName());
+                res.add(jsonObject);
+            }
+        }
+        return res;
     }
 
     @Override
     public JSONArray getProcessingCases(String username) {
-        return null;
+        JSONArray res = new JSONArray();
+        List<Judgment> judges = judgmentDao.getAllByName(username);
+
+        for(int i = 0;i<judges.size();i++){
+            JSONObject jsonObject = new JSONObject();
+
+            Judgment j = judges.get(i);
+            Case c = caseDao.findById(Integer.parseInt(j.getCid()));
+
+            Timestamp closingDate = c.getClosingDate();
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            if(closingDate==null||closingDate.after(now)){
+                jsonObject.put("cid",j.getCid());
+                jsonObject.put("caseNum",c.getCaseNum());
+                jsonObject.put("cname",c.getName());
+                jsonObject.put("type",c.getType());
+                jsonObject.put("fillingDate",c.getFillingDate().toString());
+                jsonObject.put("manageJudge",j.getRealName());
+                res.add(jsonObject);
+            }
+        }
+        return res;
     }
 
     @Override
@@ -87,5 +132,46 @@ public class CaseManageServiceImpl implements CaseManageService {
             }
         }
         return res;
+    }
+
+    @Override
+    @Transactional
+    public Case saveCase(Case c) {
+        int id = caseDao.getMaxID()+1;
+        c.setId(id);
+        Judgment j = new Judgment();
+        j.setCid(id+"");
+        j.setIsJudge("0");
+        j.setIsUndertaker("Y");
+        j.setJid("0");
+        j.setRealName("林世开");
+        judgmentDao.save(j);
+        return caseDao.save(c);
+    }
+
+    @Override
+    @Transactional
+    public Case updateCase(Case c) {
+        return caseDao.save(c);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCases(List<Integer> cases) {
+        for(int i = 0;i<cases.size();i++){
+            int cid = cases.get(i);
+            caseDao.deleteById(cid);
+            judgmentDao.deleteByCid(cid+"");
+        }
+    }
+
+    @Override
+    public Case getCaseById(int id) {
+        return caseDao.findById(id);
+    }
+
+    @Override
+    public boolean isCaseNumExisted(int id, String caseNum) {
+        return (caseDao.findOtherCaseByCaseNum(id, caseNum)!=null);
     }
 }

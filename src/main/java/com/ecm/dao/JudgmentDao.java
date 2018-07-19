@@ -14,4 +14,8 @@ public interface JudgmentDao extends JpaRepository<Judgment, JudgmentPK> {
 
     @Query(value = "select j.realName from Judgment j where j.cid = ?1")
     public List<String> getNameByCid(String cid);
+
+    public void deleteByCid(String cid);
+
+    public Judgment save(Judgment judgment);
 }

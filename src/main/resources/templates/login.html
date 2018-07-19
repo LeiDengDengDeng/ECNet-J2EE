@@ -67,7 +67,7 @@
         $('#failInfo').css('display','none');
     }
 
-    $('#signinSubmit').click(function(){
+    function checkLogin(e){
         if($('#userName').val() === ''){
             $('#failInfo').text('用户名不能为空');
             $('#failInfo').css('display','block');
@@ -90,15 +90,15 @@
                         $('#failInfo').text('用户名不存在');
                         $('#failInfo').css('display','block');
 
-					}else if(data=='wrong'){
+                    }else if(data=='wrong'){
                         $('#failInfo').text('用户名或密码错误');
                         $('#failInfo').css('display','block');
 
-					}else{
+                    }else{
                         $('#failInfo').css('display','none');
                         $.session.set("username",data);
                         window.location.href = "/ecm/manage";
-					}
+                    }
 
                 },error: function(XMLHttpRequest, textStatus, errorThrown) {
                     alert(XMLHttpRequest.status);
@@ -107,7 +107,20 @@
                 }
             });
         }
-    });
+    }
+
+    document.onkeyup = function (e) {
+        if (window.event)//如果window.event对象存在，就以此事件对象为准
+            e = window.event;
+        var code = e.charCode || e.keyCode;
+        if (code == 13) {
+            checkLogin(e);
+        }
+    };
+
+	$('#signinSubmit').click(function (e) {
+			checkLogin(e);
+	});
 </script>
 </body>
 </html>

@@ -15,7 +15,7 @@ public class LoginController {
     private UserManageService userService;
 
     @RequestMapping(value="/checkLogin")
-    public String getAllCourses(@RequestParam("username") String username, @RequestParam("password") String password){
+    public String checkLogin(@RequestParam("username") String username, @RequestParam("password") String password){
 //        String password_true = userService.getPassword(username);
         User user = userService.getUserByName(username);
 

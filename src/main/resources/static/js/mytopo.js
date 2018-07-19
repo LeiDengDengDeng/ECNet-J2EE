@@ -408,9 +408,9 @@ function saveAll(isAsync,url) {
                         }
                     }
                 }
+                logicL[bid] = fids;
             }
         }
-        logicL[bid] = fids;
     }
 
     var dList = {'caseID':cid,'headers':hList,'bodies':bList,'joints':jList,'facts':fList,'arrows':aList,'links':logicL};
