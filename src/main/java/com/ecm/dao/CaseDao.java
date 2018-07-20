@@ -23,4 +23,6 @@ public interface CaseDao extends JpaRepository<Case, Integer> {
 
     @Query(value = "select max(c.id) from Case c")
     public int getMaxID();
+
+    public Case findByCaseNum(String caseNum);
 }

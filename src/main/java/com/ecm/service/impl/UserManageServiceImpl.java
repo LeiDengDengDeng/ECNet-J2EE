@@ -49,4 +49,9 @@ public class UserManageServiceImpl implements UserManageService {
     public void updateUserInfoById(String id, String name, String realName, String role) {
         userDao.updateUserInfoById(id, name, realName, role);
     }
+
+    @Override
+    public boolean isRealNameExisted(String name) {
+        return (userDao.findUserByRealName(name)!=null);
+    }
 }

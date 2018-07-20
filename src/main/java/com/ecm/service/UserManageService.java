@@ -17,4 +17,6 @@ public interface UserManageService {
     public boolean isNameExisted(String id,String name);
 
     public void updateUserInfoById(String id,String name,String realName,String role);
+
+    public boolean isRealNameExisted(String name);
 }

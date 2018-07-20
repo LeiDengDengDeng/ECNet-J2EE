@@ -1,5 +1,6 @@
 package com.ecm.service;
 import com.ecm.model.Case;
+import com.ecm.model.Judgment;
 import net.sf.json.JSONArray;
 
 import java.util.List;
@@ -20,9 +21,13 @@ public interface CaseManageService {
 
     public Case updateCase(Case c);
 
+    public Judgment saveJudgment(Judgment judgment);
+
     public void deleteCases(List<Integer> cases);
 
     public Case getCaseById(int id);
 
     public boolean isCaseNumExisted(int id,String caseNum);
+
+    public boolean isCaseNumExisted(String caseNum);
 }

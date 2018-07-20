@@ -41,7 +41,7 @@ function getCookie(name) {
 var checkall=document.getElementsByName("checkbox[]");  
 //全选
 function select(){
-	for(var $i=0;$i<checkall.length;$i++){  
+	for(var $i=0;$i<checkall.length;$i++){
 		checkall[$i].checked=true;  
 	}  
 };

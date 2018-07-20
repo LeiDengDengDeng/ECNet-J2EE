@@ -139,13 +139,6 @@ public class CaseManageServiceImpl implements CaseManageService {
     public Case saveCase(Case c) {
         int id = caseDao.getMaxID()+1;
         c.setId(id);
-        Judgment j = new Judgment();
-        j.setCid(id+"");
-        j.setIsJudge("0");
-        j.setIsUndertaker("Y");
-        j.setJid("0");
-        j.setRealName("林世开");
-        judgmentDao.save(j);
         return caseDao.save(c);
     }
 
@@ -153,6 +146,11 @@ public class CaseManageServiceImpl implements CaseManageService {
     @Transactional
     public Case updateCase(Case c) {
         return caseDao.save(c);
+    }
+
+    @Override
+    public Judgment saveJudgment(Judgment judgment) {
+        return judgmentDao.save(judgment);
     }
 
     @Override
@@ -173,5 +171,10 @@ public class CaseManageServiceImpl implements CaseManageService {
     @Override
     public boolean isCaseNumExisted(int id, String caseNum) {
         return (caseDao.findOtherCaseByCaseNum(id, caseNum)!=null);
+    }
+
+    @Override
+    public boolean isCaseNumExisted(String caseNum) {
+        return (caseDao.findByCaseNum(caseNum)!=null);
     }
 }
