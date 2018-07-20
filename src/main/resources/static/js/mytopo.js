@@ -635,7 +635,7 @@ function saveBody(node) {
             bodyList[node.id] = {'node':node,"documentid":data['documentid'], "type":data['type'],
                 "committer":data['committer'],"reason":data['reason'],"conclusion":data['trust'],
                 "isDefendant":data['isDefendant'],"logicNodeID":data['logicNodeID']};
-            bodyIndex = data+1;
+            bodyIndex = data.id+1;
             // removeLoading("链体保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             // alert("save body");
@@ -762,7 +762,7 @@ function saveFact(node) {
             factList[node.id] = null;
             node.id = data.id;
             factList[node.id] = {'node':node,'logicNodeID':data['logicNodeID'],'textID':data['textID'],'confirm':data['confirm']};
-            factIndex = data+1;
+            factIndex = data.id+1;
             $('#factSelector').append("<option value='"+data.id+"'>"+node.text+"</option>");
             // removeLoading("事实节点保存成功");
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -2160,11 +2160,11 @@ function deleteArrow(arrow) {
 function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
 
     if(id==null)
-        id = headerIndex++;
+        id = -1;
 
     if(name==null||name.length==0){
         if(content==null||content.length==0)
-            name = '链头'+(id+1);
+            name = '链头'+(++headerIndex);
         else if(content.length>10)
             name = content.substring(0,10);
         else
@@ -2264,11 +2264,11 @@ function deleteHeader(headerID) {
 function drawBody(isNew,x,y,id,name,content,detail,isinit){
 
     if(id==null)
-        id = bodyIndex++;
+        id = -1;
 
     if(name==null||name.length==0){
         if(content==null||content.length==0)
-            name = '链体'+(id+1);
+            name = '链体'+(++bodyIndex);
         else if(content.length>10)
             name = content.substring(0,10);
         else
@@ -2390,11 +2390,11 @@ function deleteBody(bodyID) {
 function drawJoint(isNew,x,y,id,name,content,isinit){
 
     if(id==null)
-        id = jointIndex++;
+        id = -1;
 
     if(name==null||name.length==0){
         if(content==null||content.length==0)
-            name = '联结点'+(id+1);
+            name = '联结点'+(++jointIndex);
         else if(content.length>10)
             name = content.substring(0,10);
         else
@@ -2478,11 +2478,11 @@ function deleteJoint(jointID) {
 //绘制事实，返回事实节点
 function drawFact(isNew,x,y,id,name,content,logicNodeID,textID,confirm,isinit) {
     if(id==null)
-        id = factIndex++;
+        id = -1;
 
     if(name==null||name.length==0){
         if(content==null||content.length==0)
-            name = '事实节点'+(id+1);
+            name = '事实节点'+(++factIndex);
         else if(content.length>10)
             name = content.substring(0,10);
         else
@@ -2809,7 +2809,8 @@ function initGraph(trusts,freeHeaders,facts,freeJoints,arrows) {
 
     for(var i = 0;i<arrows.length;i++){
         var arrow = arrows[i];
-        addArrow(headerList[arrow['nodeFrom_hid']],jointList[arrow['nodeTo_jid']],arrow['id'],arrow['name'],arrow['content']);
+        if(headerList[arrow['nodeFrom_hid']]!=null&&jointList[arrow['nodeTo_jid']]!=null)
+            addArrow(headerList[arrow['nodeFrom_hid']],jointList[arrow['nodeTo_jid']],arrow['id'],arrow['name'],arrow['content']);
     }
 
     updateFactListofGraph();

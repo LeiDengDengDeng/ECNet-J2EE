@@ -165,7 +165,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void saveBodies(List<Evidence_Body> bodies) {
         for(int i = 0;i<bodies.size();i++){
             Evidence_Body body = bodies.get(i);
-            if(body.getLogicNodeID()>=0){
+            if(logicService.getNode(body.getLogicNodeID())!=null){
                 logicService.modEvidenceOrFactNode(body.getLogicNodeID(),body.getBody());
             }else{
                 int lid = logicService.addEvidenceOrFactNode(body.getCaseID(),body.getBody(),0);
@@ -219,7 +219,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     public void saveFacts(List<MOD_Fact> facts) {
         for(int i = 0;i<facts.size();i++){
             MOD_Fact fact = facts.get(i);
-            if(fact.getLogicNodeID()>=0){
+            if(logicService.getNode(fact.getLogicNodeID())!=null){
                 logicService.modEvidenceOrFactNode(fact.getLogicNodeID(),fact.getContent());
             }else{
                 int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
@@ -315,15 +315,21 @@ public class ModelManageServiceImpl implements ModelManageService {
     }
 
     @Override
-    @Async
+//    @Async
     public void saveLogicLinks(HashMap<Integer, List<Integer>> list, int cid) {
         for(int bid : list.keySet()){
-            int eid = getLogicNodeIDofBody(bid);
-            List<Integer> arr = list.get(bid);
-            for(int i = 0;i<arr.size();i++){
-                int fid = arr.get(i);
-                int factID = getFactByID(fid).getLogicNodeID();
-                logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
+            if(evidenceBodyDao.findById(bid)!=null){
+                int eid = getLogicNodeIDofBody(bid);
+                List<Integer> arr = list.get(bid);
+                for(int i = 0;i<arr.size();i++){
+                    int fid = arr.get(i);
+                    MOD_Fact fact = factDao.findById(fid);
+
+                    if(fact!=null){
+                        int factID = fact.getLogicNodeID();
+                        logicService.addLinkForEvidenceAndFactNode(cid,eid,factID);
+                    }
+                }
             }
         }
     }

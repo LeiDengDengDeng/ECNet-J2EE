@@ -102,7 +102,7 @@ public class ModelController {
     @RequestMapping(value="/saveFact")
     public MOD_Fact saveFact(@RequestBody MOD_Fact fact){
 
-        if(fact.getLogicNodeID()>=0){
+        if(logicService.getNode(fact.getLogicNodeID())!=null){
             logicService.modEvidenceOrFactNode(fact.getLogicNodeID(),fact.getContent());
         }else{
             int lid = logicService.addEvidenceOrFactNode(fact.getCaseID(),fact.getContent(),1);
@@ -127,12 +127,12 @@ public class ModelController {
     @RequestMapping(value="/saveAll")
     public void saveAll(@RequestBody Evidence_Data all){
 
-        modelManageService.deleteAll(all.getCaseID());
+//        modelManageService.deleteAll(all.getCaseID());
         modelManageService.saveHeaders(all.getHeaders());
         modelManageService.saveBodies(all.getBodies());
         modelManageService.saveJoints(all.getJoints());
         modelManageService.saveFacts(all.getFacts());
-//        modelManageService.deleteArrowsByCid(all.getCaseID());
+        modelManageService.deleteArrowsByCid(all.getCaseID());
         modelManageService.saveArrows(all.getArrows());
         saveInLogic(all.getLinks(),all.getCaseID());
     }
