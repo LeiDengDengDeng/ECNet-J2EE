@@ -52,8 +52,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     private MOD_FactDocDao factDocDao;
     @Autowired
     private LogicService logicService;
-//    @Autowired
-//    private LogicNodeDao logicNodeDao;
+    @Autowired
+    private LogicNodeDao logicNodeDao;
 
     @Override
     public JSONObject getEvidences(int cid) {
@@ -249,6 +249,7 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Override
     @Transactional
     public void deleteFactByCid(int cid) {
+        logicNodeDao.deleteByCaseIDAndType(cid,1);
         factDao.deleteAllByCaseID(cid);
     }
 

@@ -23,6 +23,8 @@ public interface LogicNodeDao extends JpaRepository<LogicNode, Integer> {
 
     void deleteByCaseID(int caseID);
 
+    void deleteByCaseIDAndType(int caseID,int type);
+
     @Query(value = "select count(node.id) from LogicNode node where node.caseID = ?1 and node.type=?2")
     int getLogicNodeMaxValueByCaseID(int caseID, int type);
 
