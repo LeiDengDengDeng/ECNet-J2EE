@@ -1,7 +1,7 @@
 var textID = -1;
 // var factList_div = {};
 var divIndex1 = 0;
-// var divIndex2 = 0;
+var divIndex2 = 0;
 $(function(){
     var caseInfoStr = $.session.get("caseInfo");
     var caseInfo = JSON.parse(caseInfoStr);
@@ -265,9 +265,9 @@ function splitFacts() {
             
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             // alert("save joint");
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            // alert(XMLHttpRequest.status);
+            // alert(XMLHttpRequest.readyState);
+            // alert(textStatus);
         }
     });
 }
@@ -295,10 +295,33 @@ function addFactTxtField(id,content,confirm,joints) {
 }
 
 function addFactElmt() {
+
     addFactTxtField(divIndex1++,"",1,null);
+
+    // $.ajax({
+    //     url: "/ecm/model/addFact",
+    //     type: 'POST',
+    //     dataType:"json",
+    //     data: {"caseID": cid, "textID": textID},
+    //     beforeSend: function (data) {
+    //         //这里判断，如果没有加载数据，会显示loading
+    //         if (data.readyState == 0) {
+    //
+    //         }
+    //     },
+    //     success: function (data) {
+    //
+    //         addFactTxtField(data[i]['id'],data[i]['content'],data[i]['confirm'],null);
+    //         if(data[i]['id']>divIndex1){
+    //             divIndex1 = data[i]['id']+1;
+    //         }
+    //
+    //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //     }
+    // });
 }
 
-function getJoints() {
+function exportJoints() {
     var bList = [];
     for(var bid in bodyList){
         var body = bodyList[bid];
@@ -329,13 +352,22 @@ function getJoints() {
         var factID = $(this).attr("data-factID");
         var content = $(this).find('input').eq(0).val();
         var confirm = $(this).find('button').eq(0).val();
-        fList.push({"id":factID,'caseID':cid,'content':content,'textID':textID,'confirm':confirm});
+        var jList = [];
+        var jointsSpans = $(".headList[data-factID='"+factID+"']").find('.head_chain');
+        for(var i = 0;i<jointsSpans.length;i++) {
+
+            var jc = jointsSpans.eq(i).find('label').eq(0).text();
+            if(jc!=null){
+                jList.push(jc);
+            }
+        }
+        fList.push({"id":factID,'caseID':cid,'content':content,'textID':textID,'confirm':confirm,'jointList':jList});
     });
 
     $('body').loading({
         loadingWidth:240,
         title:'请稍候...',
-        name:'extractJoints',
+        name:'exportJoints',
         animateIn:'none',
         discription:'这是一个描述...',
         direction:'row',
@@ -353,7 +385,7 @@ function getJoints() {
     });
 
     $.ajax({
-        url: "/ecm/model/extractJoints",
+        url: "/ecm/model/exportJoints",
         type: 'POST',
         data: JSON.stringify({'facts':fList,'bodies':bList,'caseID':cid}),
         contentType: "application/json; charset=utf-8",
@@ -422,7 +454,7 @@ function getJoints() {
                 }
             }
             updateFactListofGraph();
-            removeLoading('extractJoints');
+            removeLoading('exportJoints');
             saveAll(true,null);
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             // console.log(XMLHttpRequest.status);
@@ -430,7 +462,52 @@ function getJoints() {
             // console.log(textStatus);
         }
     });
+}
 
+function extractJoints() {
+    var fList = [];
+    $(".evibody").each(function () {
+
+        var factID = $(this).attr("data-factID");
+        var content = $(this).find('input').eq(0).val();
+        var confirm = $(this).find('button').eq(0).val();
+        fList.push({"id":factID,'caseID':cid,'content':content,'textID':textID,'confirm':confirm});
+    });
+
+    $('#importFacts').loading({
+        loadingWidth:240,
+        title:'请稍候...',
+        name:'extractJoints',
+        animateIn:'none',
+        discription:'这是一个描述...',
+        direction:'row',
+        type:'origin',
+        originBg:'#71EA71',
+        originDivWidth:30,
+        originDivHeight:30,
+        originWidth:4,
+        originHeight:4,
+        smallLoading:false,
+        titleColor:'#388E7A',
+        loadingBg:'#312923',
+        loadingMaskBg:'rgba(22,22,22,0.2)',
+        mustRelative: true
+    });
+
+    $.ajax({
+        url: "/ecm/model/extractJoints",
+        type: 'POST',
+        data: JSON.stringify(fList),
+        dataType:'json',
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            for(var i = 0;i<data.length;i++){
+                addJointDiv(data[i]['id'],data[i]['content'],data[i]['factID']);
+            }
+            removeLoading('extractJoints');
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        }
+    });
 }
 
 function removeAllFactsInGraph() {
@@ -448,9 +525,9 @@ function removeAllFactsInGraph() {
 }
 
 function updateFactConfirm(select) {
-
+    var factID=$(select).attr("data-factID");
     var confirm=1;
-    console.log($(select).val());
+    // console.log($(select).val());
 
     if($(select).val()==0){
         $(select).removeClass("btn-success");
@@ -465,11 +542,48 @@ function updateFactConfirm(select) {
         $(select).val(0);
         confirm=0;
     }
+
+    // $.ajax({
+    //     url: "/ecm/model/updateFactConfirm",
+    //     type: 'POST',
+    //     // dataType:"json",
+    //     data: {"fid": factID, "confirm": confirm},
+    //     beforeSend: function (data) {
+    //         //这里判断，如果没有加载数据，会显示loading
+    //         if (data.readyState == 0) {
+    //
+    //         }
+    //     },
+    //     success: function (data) {
+    //
+    //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //     }
+    // });
 }
 
 function removeFactDiv(fact){
     var factID=$(fact).attr("data-factID");
-    console.log("factID"+factID);
+
+    // $.ajax({
+    //     url: "/ecm/model/deleteFact",
+    //     type: 'POST',
+    //     // dataType:"json",
+    //     data: {"id": factID},
+    //     beforeSend: function (data) {
+    //         //这里判断，如果没有加载数据，会显示loading
+    //         if (data.readyState == 0) {
+    //
+    //         }
+    //     },
+    //     success: function (data) {
+    //
+    //         $(".headList[data-factID='"+factID+"']").remove();
+    //         $(".evibody[data-factID='"+factID+"']").remove();
+    //
+    //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //     }
+    // });
+    // console.log("factID"+factID);
     // deleteFact(factID);
     // $("#factSelector option[value='"+factID+"']").remove();
     $(".headList[data-factID='"+factID+"']").remove();
@@ -481,25 +595,37 @@ function createJointHtml(factID,joints){
     if(joints!=null)
     for(var j=0;j<joints.length;j++){
         html+="<span data-jointID='"+joints[j].id+"' class='head_chain'><label style='font:inherit;min-width: 25px;'>"
-            +joints[j].content+"</label></span>";
+            +joints[j].content+"</label><span class='glyphicon glyphicon-remove  headRemove' onclick='removeJointDiv(this)'></span></span>";
     }
 
+    html+="<span class='glyphicon glyphicon-plus headRemove addHead' onclick='newJointDiv(this)'></span>"
     html+="</div>";
     $(".evibody[data-factID='"+factID+"']").after(html);
 
 }
 
-// function removeJointDiv(remove) {
-//     var id=$(remove).attr("data-jointID");
-//     console.log("jointid"+id);
-//     // deleteJoint(id);
-//     $(".head_chain[data-jointID='"+id+"']").remove();
-// }
+function removeJointDiv(remove) {
+    var id=$(remove).parent().attr("data-jointID");
+    console.log("jointid"+id);
+    // deleteJoint(id);
+    $(".head_chain[data-jointID='"+id+"']").remove();
+}
+
+function newJointDiv(joint) {
+    var jointID = ++divIndex2;
+    var factID = $(joint).parent().attr("data-factID");
+    var  html="<span data-jointID='"+jointID+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'></label>" +
+        "<span class='glyphicon glyphicon-remove  headRemove' onclick='removeJointDiv(this)'></span></span>";
+    $(joint).before(html);
+}
 
 function addJointDiv(jointID,jcontent,factID) {
     // var id=divIndex2++;
-    var  html="<span data-jointID='"+jointID+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'>"+jcontent+"</label></span>";
-    $(".headList[data-factID='"+factID+"']").append(html);
+    if(jointID>divIndex2)
+        divIndex2 = jointID;
+    var  html="<span data-jointID='"+jointID+"' class='head_chain'><label contenteditable style='font:inherit;min-width: 25px;'>"+jcontent+"</label>" +
+        "<span class='glyphicon glyphicon-remove  headRemove' onclick='removeJointDiv(this)'></span></span>";
+    $(".headList[data-factID='"+factID+"']").find('.addHead').before(html);
 }
 
 function clearFactDiv() {
@@ -540,7 +666,7 @@ function exportToModel() {
         mustRelative: true
     });
 
-    $.ajax({
+        $.ajax({
         url:"/ecm/model/deleteFactsAndJoints",
         type:'POST',
         data: {"caseID":cid},
@@ -570,11 +696,13 @@ function exportToModel() {
                     type: "post",
                     url: "/ecm/model/saveFact",
                     data: JSON.stringify(f),
-                    // dataType:"json",
+                    dataType:"json",
                     contentType: "application/json; charset=utf-8",
                     // async: true,
                     success: function (data) {
+
                         factID = data['id'];
+                        $(this).attr("data-factID",factID);
                         if(confirm==1){
                             fnode = drawFact(false,fact_x,fy,data['id'],data['name'],data['content'],data['logicNodeID'],data['textID'],data['confirm'],true);
                         }
@@ -590,6 +718,7 @@ function exportToModel() {
                                 contentType: "application/json; charset=utf-8",
                                 async: false,
                                 success: function (data) {
+                                    jointsSpans.eq(i).attr("data-jointID",data);
                                     if(confirm==1){
 
                                         jnode = drawJoint(false,joint_x,y,data,"",jc,true);

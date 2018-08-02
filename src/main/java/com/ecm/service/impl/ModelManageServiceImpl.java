@@ -1,6 +1,7 @@
 package com.ecm.service.impl;
 
 import com.ecm.dao.*;
+import com.ecm.keyword.manager.KeyWordAnalysis;
 import com.ecm.keyword.manager.KeyWordCalculator;
 import com.ecm.keyword.manager.RelationCreator;
 import com.ecm.model.*;
@@ -31,6 +32,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -360,8 +362,9 @@ public class ModelManageServiceImpl implements ModelManageService {
         for(Object factobj:facts){
             JSONObject factjobj = (JSONObject) factobj;
             MOD_Fact fact = new MOD_Fact();
+            String factContent = factjobj.getString("content");
             fact.setTextID(factjobj.getInt("textID"));
-            fact.setContent(factjobj.getString("content"));
+            fact.setContent(factContent);
             fact.setCaseID(factjobj.getInt("caseID"));
             fact.setConfirm(factjobj.getInt("confirm"));
 
@@ -370,8 +373,43 @@ public class ModelManageServiceImpl implements ModelManageService {
                 fact.setLogicNodeID(lid);
                 fact = factDao.save(fact);
 
-                KeyWordCalculator keyWordCalculator = new KeyWordCalculator();
-                HashMap<String, List<String>> res = keyWordCalculator.calcKeyWord(fact.getContent());
+                KeyWordAnalysis keyWordAnalysis = new KeyWordAnalysis();
+                HashMap<String, List<String>> res = new HashMap<>();
+                JSONArray js = factjobj.getJSONArray("jointList");
+                List<String> howMuchs = new ArrayList<>();
+                List<String> whens = new ArrayList<>();
+                List<String> whos = new ArrayList<>();
+                List<String> whats = new ArrayList<>();
+                List<String> wheres = new ArrayList<>();
+
+                for(int m = 0;m<js.size();m++){
+                    String jstr = js.getString(m);
+                    if(jstr!=null&&factContent.contains(jstr)){
+                        if(keyWordAnalysis.isHowMuch(jstr)){
+                            howMuchs.add(jstr);
+                            System.out.println("how much:"+jstr);
+                        }
+                        else if(keyWordAnalysis.isWhen(jstr)){
+                            whens.add(jstr);System.out.println("when:"+jstr);
+                        }
+                        else if(keyWordAnalysis.isWho(jstr)){
+                            whos.add(jstr);System.out.println("who:"+jstr);
+                        }
+                        else if(keyWordAnalysis.isWhat(jstr)){
+                            whats.add(jstr);System.out.println("what:"+jstr);
+                        }
+                        else if(keyWordAnalysis.isWhere(jstr)){
+                            wheres.add(jstr);System.out.println("where:"+jstr);
+                        }
+                    }
+                }
+
+                res.put("how much",howMuchs);
+                res.put("when",whens);
+                res.put("who",whos);
+                res.put("what",whats);
+                res.put("where",wheres);
+
                 JSONObject fobj = new JSONObject();
                 fobj.put("id", fact.getId());
                 fobj.put("content", fact.getContent());
@@ -496,6 +534,36 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Transactional
     public void updateBodyTrustById(int bid) {
         evidenceBodyDao.updateTrustById(1,bid);
+    }
+
+    @Override
+    public void updateFactConfirmById(int fid, int confirm) {
+        factDao.updateConfirmById(fid, confirm);
+    }
+
+    @Override
+    public List<MOD_Joint> extractJoints(List<MOD_Fact> facts) {
+        List<MOD_Joint> joints = new ArrayList<>();
+        int index = 0;
+
+        for(int i = 0;i<facts.size();i++){
+            MOD_Fact fact = facts.get(i);
+            int factID = fact.getId();
+            KeyWordCalculator keyWordCalculator = new KeyWordCalculator();
+            HashMap<String, List<String>> res = keyWordCalculator.calcKeyWord(fact.getContent());
+
+            for(String str:res.keySet()){
+                List<String> slist = res.get(str);
+                for(int j = 0;j<slist.size();j++){
+                    MOD_Joint joint = new MOD_Joint();
+                    joint.setFactID(factID);
+                    joint.setContent(slist.get(j));
+                    joint.setId(index++);
+                    joints.add(joint);
+                }
+            }
+        }
+        return joints;
     }
 
     @Override

@@ -80,4 +80,8 @@ public interface ModelManageService {
     public JSONObject getFactLinkpoints(int cid,JSONArray facts, JSONArray bodies);
 
     public void updateBodyTrustById(int bid);
+
+    public void updateFactConfirmById(int fid,int confirm);
+
+    public List<MOD_Joint> extractJoints(List<MOD_Fact> facts);
 }

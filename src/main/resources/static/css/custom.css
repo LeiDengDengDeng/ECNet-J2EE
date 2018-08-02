@@ -23,11 +23,35 @@
     margin-left: 2%;
     padding: 3px;
     margin-top: 5px;
+    white-space:nowrap;
 }
 
 .head_div{
     margin-top: 6px;
     font-size: 14px;
+}
+
+/*.head_chain {*/
+    /*display: inline-block;*/
+    /*border: 1px solid black;*/
+    /*margin-left: 2%;*/
+    /*padding: 3px;*/
+    /*margin-top: 1%;*/
+    /*white-space:nowrap;*/
+/*}*/
+.myRemove { color:rgba(0,0,0,0); transition:0.5s; }
+.myRemove:hover { color:rgba(78,78,78,1); }
+.headRemove { color:rgba(0,0,0,0); transition:0.5s; }
+.headRemove:hover { color:rgba(78,78,78,1); }
+
+.headList{
+    margin-top: -2%;
+}
+
+.addHead{
+
+    padding-left: 1%;
+
 }
 
 .menu_graph{

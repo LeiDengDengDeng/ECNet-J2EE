@@ -124,6 +124,12 @@ public class ModelController {
 
     }
 
+    @RequestMapping(value="/updateFactConfirm")
+    public void updateFactConfirm(@RequestParam("fid") int fid,@RequestParam("confirm") int confirm){
+
+        modelManageService.updateFactConfirmById(fid, confirm);
+    }
+
     @RequestMapping(value="/saveAll")
     public void saveAll(@RequestBody Evidence_Data all){
 
@@ -197,6 +203,7 @@ public class ModelController {
                 fact.setCaseID(caseID);
                 fact.setContent(str);
                 fact.setTextID(factDocID);
+//                fact = modelManageService.saveFact(fact);
                 facts.add(fact);
                 index++;
             }
@@ -205,7 +212,13 @@ public class ModelController {
     }
 
     @RequestMapping(value="/extractJoints")
-    public JSONObject extractJoints(@RequestBody JSONObject data){
+    public List<MOD_Joint> extractJoints(@RequestBody List<MOD_Fact> facts){
+
+        return modelManageService.extractJoints(facts);
+    }
+
+    @RequestMapping(value="/exportJoints")
+    public JSONObject exportJoints(@RequestBody JSONObject data){
 
         return modelManageService.getFactLinkpoints(data.getInt("caseID"),data.getJSONArray("facts"),data.getJSONArray("bodies"));
     }
