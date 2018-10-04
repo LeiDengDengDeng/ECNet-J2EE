@@ -53,6 +53,8 @@ public class ModelManageServiceImpl implements ModelManageService {
     @Autowired
     private MOD_FactDocDao factDocDao;
     @Autowired
+    private MOD_SketchDao sketchDao;
+    @Autowired
     private LogicService logicService;
     @Autowired
     private LogicNodeDao logicNodeDao;
@@ -100,6 +102,9 @@ public class ModelManageServiceImpl implements ModelManageService {
         res.put("freeJoints",jointDao.findAllByFactIDAndCaseID(-1,cid));
         res.put("arrows",arrowDao.findAllByCaseID(cid));
         res.put("factDoc",factDocDao.findByCaseID(cid));
+
+        List<MOD_Sketch> sketchList = sketchDao.findAllByCaseID(cid);
+        res.put("sketch",sketchList);
 
         return res;
     }
@@ -564,6 +569,21 @@ public class ModelManageServiceImpl implements ModelManageService {
             }
         }
         return joints;
+    }
+
+    @Override
+    public void saveSketch(List<MOD_Sketch> sketchList) {
+        for(int i = 0;i<sketchList.size();i++){
+            MOD_Sketch sketch = sketchList.get(i);
+            if(sketch.getBodyID()>=0||sketch.getFactID()>=0)
+                sketchDao.save(sketch);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteSketchListByCaseID(int caseID) {
+        sketchDao.deleteAllByCaseID(caseID);
     }
 
     @Override

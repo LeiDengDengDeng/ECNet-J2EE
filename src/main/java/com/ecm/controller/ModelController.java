@@ -141,6 +141,8 @@ public class ModelController {
         modelManageService.deleteArrowsByCid(all.getCaseID());
         modelManageService.saveArrows(all.getArrows());
         saveInLogic(all.getLinks(),all.getCaseID());
+        modelManageService.deleteSketchListByCaseID(all.getCaseID());
+        modelManageService.saveSketch(all.getSketches());
     }
 
     public void saveInLogic(HashMap<Integer,List<Integer>> list, int cid){
@@ -230,5 +232,11 @@ public class ModelController {
     @RequestMapping(value="/getFactContents")
     public String getFactContents(@RequestParam("caseID") int caseID){
         return modelManageService.getEvidencesList(caseID);
+    }
+
+    @RequestMapping(value="/saveSketchList")
+    public void saveSketchList(@RequestBody List<MOD_Sketch> sketchList){
+        modelManageService.deleteSketchListByCaseID(sketchList.get(0).getCaseID());
+        modelManageService.saveSketch(sketchList);
     }
 }

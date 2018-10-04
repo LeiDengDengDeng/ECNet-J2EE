@@ -84,4 +84,8 @@ public interface ModelManageService {
     public void updateFactConfirmById(int fid,int confirm);
 
     public List<MOD_Joint> extractJoints(List<MOD_Fact> facts);
+
+    public void saveSketch(List<MOD_Sketch> sketchList);
+
+    public void deleteSketchListByCaseID(int caseID);
 }

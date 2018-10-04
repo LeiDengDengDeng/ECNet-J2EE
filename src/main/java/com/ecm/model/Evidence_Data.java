@@ -12,6 +12,7 @@ public class Evidence_Data {
     private List<MOD_Fact> facts;
     private List<MOD_Arrow> arrows;
     private HashMap<Integer,List<Integer>> links;
+    private List<MOD_Sketch> sketches;
 
     public int getCaseID() {
         return caseID;
@@ -67,5 +68,13 @@ public class Evidence_Data {
 
     public void setLinks(HashMap<Integer, List<Integer>> links) {
         this.links = links;
+    }
+
+    public List<MOD_Sketch> getSketches() {
+        return sketches;
+    }
+
+    public void setSketches(List<MOD_Sketch> sketches) {
+        this.sketches = sketches;
     }
 }

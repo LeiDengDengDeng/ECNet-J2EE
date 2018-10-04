@@ -88,13 +88,9 @@ $(document).ready(function(){
         tranX_scene = scene.translateX;
         tranY_scene = scene.translateY;
         // console.log(tranX_scene+'@@'+tranY_scene);
-    });
-
-    stage.addEventListener("mouseup", function(event){
-        console.log("mouse up");
 
         if(event.button == 2){
-            console.log ('松开右键');
+            console.log ('按下右键');
 
             if(!isNodeClicked_right){
                 $("#nodeMenu").hide();
@@ -114,6 +110,32 @@ $(document).ready(function(){
                 }).show();
             }
         }
+    });
+
+    stage.addEventListener("mouseup", function(event){
+        console.log("mouse up");
+
+        // if(event.button == 2){
+        //     console.log ('松开右键');
+        //
+        //     if(!isNodeClicked_right){
+        //         $("#nodeMenu").hide();
+        //         $("#nodeMenu2").hide();
+        //         $("#nodeMenu3").hide();
+        //         $("#linkMenu").hide();
+        //         $("#arrowMenu").hide();
+        //
+        //         $('.evidence').css('background-color', 'white');
+        //         $('.evidence_plaintiff').css('background-color', '#5ed7e5');
+        //         $('.evidence').find('.head_chain').css('background-color', 'white');
+        //         $('.evidence_plaintiff').find('.head_chain').css('background-color', '#5ed7e5');
+        //
+        //         $("#stageMenu").css({
+        //             top: getMousePosition_rdiv(event).y,
+        //             left: getMousePosition_rdiv(event).x
+        //         }).show();
+        //     }
+        // }
 
         if(event.button == 0){
             console.log ( '松开左键');
@@ -173,8 +195,8 @@ $(document).ready(function(){
             }
         }
     });
-    this.addEventListener("keyup", function(event){
-    });
+    // this.addEventListener("keyup", function(event){
+    // });
 
     $("#boxSelection").change(function() {
 
@@ -413,7 +435,8 @@ function saveAll(isAsync,url) {
         }
     }
 
-    var dList = {'caseID':cid,'headers':hList,'bodies':bList,'joints':jList,'facts':fList,'arrows':aList,'links':logicL};
+    var sketchList = getSketchList();
+    var dList = {'caseID':cid,'headers':hList,'bodies':bList,'joints':jList,'facts':fList,'arrows':aList,'links':logicL,'sketches':sketchList};
 
     if(isAsync==true){
         $.ajax({
@@ -1983,6 +2006,7 @@ function bindRightPanel() {
         var fid = $('#fact-panel').attr('data-fid');
         factList[fid]['node'].text = $('#fact-name').val();
         factList[fid]['node'].content = $('#fact-content').val();
+        $("#factSelector option[value='"+fid+"']").text($('#fact-name').val());
     });
 
     $('#fact-reset-btn').click(function () {
@@ -2058,7 +2082,7 @@ function addLink(nodeFrom,nodeTo,id){
         link.strokeColor = 'gray';
         link.node_type = 'link';
 
-        link.addEventListener('mouseup', function(event){
+        link.addEventListener('mousedown', function(event){
             handleNodeMenu(event,'link');
         });
 
@@ -2134,7 +2158,7 @@ function addArrow(nodeFrom,nodeTo,id,name,content) {
             $('#arrow-panel').attr('data-aid',arrow.id);
         });
 
-        arrow.addEventListener('mouseup', function(event){
+        arrow.addEventListener('mousedown', function(event){
             handleNodeMenu(event,'arrow');
         });
 
@@ -2211,17 +2235,18 @@ function drawHeader(isNew,x,y,id,name,content,keyText,isinit){
         $('#head-panel').removeAttr("hidden");
         $('#head-panel').attr('data-hid',circleNode.id);
 
-        highlightEvidence();
+        highlightEvidence(0);
     });
 
-    circleNode.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'header');
-    });
+    // circleNode.addEventListener('mouseup', function(event){
+    //     handleNodeMenu(event,'header');
+    // });
     circleNode.addEventListener('mousedown', function(event){
         // console.log(this.x+"&&"+this.y);
         x_origin = this.x;
         y_origin = this.y;
         sourceNode = this;
+        handleNodeMenu(event,'header');
     });
 
     circleNode.addEventListener('mouseover', function(event){
@@ -2342,16 +2367,17 @@ function drawBody(isNew,x,y,id,name,content,detail,isinit){
         $('#body-panel').removeAttr("hidden");
         $('#body-panel').attr('data-bid',node.id);
 
-        highlightEvidence();
+        highlightEvidence(0);
     });
-    node.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'body');
-    });
+    // node.addEventListener('mouseup', function(event){
+    //     handleNodeMenu(event,'body');
+    // });
     node.addEventListener('mousedown', function(event){
         // console.log(this.x+";"+this.y);
         x_origin = this.x;
         y_origin = this.y;
         sourceNode = this;
+        handleNodeMenu(event,'body');
     });
     node.addEventListener('mouseover', function(event){
        nodeMouseOver(this,1);
@@ -2435,14 +2461,15 @@ function drawJoint(isNew,x,y,id,name,content,isinit){
         $('#joint-panel').attr('data-jid',node.id);
     });
 
-    node.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'joint');
-    });
+    // node.addEventListener('mouseup', function(event){
+    //     handleNodeMenu(event,'joint');
+    // });
     node.addEventListener('mousedown', function(event){
         // console.log(this.x+"**"+this.y);
         x_origin = this.x;
         y_origin = this.y;
         sourceNode = this;
+        handleNodeMenu(event,'joint');
     });
 
     node.addEventListener('mouseover', function(event){
@@ -2532,14 +2559,15 @@ function drawFact(isNew,x,y,id,name,content,logicNodeID,textID,confirm,isinit) {
         $('#fact-panel').attr('data-fid',node.id);
     });
 
-    node.addEventListener('mouseup', function(event){
-        handleNodeMenu(event,'fact');
-    });
+    // node.addEventListener('mouseup', function(event){
+    //     handleNodeMenu(event,'fact');
+    // });
     node.addEventListener('mousedown', function(event){
         // console.log(this.x+"**"+this.y);
         x_origin = this.x;
         y_origin = this.y;
         sourceNode = this;
+        handleNodeMenu(event,'fact');
     });
 
     node.addEventListener('mouseover', function(event){
@@ -2567,10 +2595,14 @@ function deleteFact(factID) {
 }
 
 //点击图元左侧列表相应证据高亮
-function highlightEvidence() {
+function highlightEvidence(type) {
     $('.evidence').css('background-color', 'white');
     $('.evidence_plaintiff').css('background-color', '#5ed7e5');
-    var nodeList_selected = scene.selectedElements;
+    var nodeList_selected = [];
+    if(type==0)
+        nodeList_selected = scene.selectedElements;
+    if(type==1)
+        nodeList_selected = scene_sketch.selectedElements;
 
     if(nodeList_selected.length>=1){
 

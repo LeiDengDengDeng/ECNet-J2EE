@@ -105,6 +105,9 @@
     border-radius: 6px 0 6px 6px;
 }
 
+.menu-label{
+    cursor: pointer;
+}
 .menu-label:hover{
     background: rgba(59, 59, 59, 0.2);
 }

@@ -62,6 +62,7 @@ function initEvidences() {
                 textID = data['factDoc']['id'];
                 initFactsDiv(data['factDoc']['text'],data['facts']);
             }
+            initSketch(data['sketch']);
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.status);
             alert(XMLHttpRequest.readyState);
