@@ -49,7 +49,7 @@ function queryFrequencyLaws() {
 
     $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8088/frequency",
+        url: "http://114.212.240.10:8087/frequency",
         data: {content: cause, limit: 20},
         success: function (data) {
             var laws = [];
@@ -76,7 +76,7 @@ function queryLawSumLaws() {
 
     $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8088/lawSum",
+        url: "http://114.212.240.10:8087/lawSum",
         data: {cause: cause},
         success: function (data) {
             var laws = [];
@@ -103,7 +103,7 @@ function queryMindLaws(detail) {
 
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:5000/query",
+        url: "http://114.212.240.10:8088/query",
         data: {content: detail},
         success: function (data) {
             $('#id_loading').hide();
@@ -121,7 +121,7 @@ function queryLawContent(law) {
     var content;
     $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8088/law",
+        url: "http://114.212.240.10:8087/law",
         async: false,
         data: {law: law},
         success: function (data) {
@@ -138,7 +138,7 @@ function queryLawContent(law) {
 function queryVagueArticles(input){
     $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8088/law/vagueQuery",
+        url: "http://114.212.240.10:8087/law/vagueQuery",
         data: {input: input},
         success: function (data) {
             autoComParams.hints = data;

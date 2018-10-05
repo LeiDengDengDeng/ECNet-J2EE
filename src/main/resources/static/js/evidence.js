@@ -3,6 +3,11 @@ var textID = -1;
 var divIndex1 = 0;
 var divIndex2 = 0;
 $(function(){
+    var dom = document.getElementById ('canvasDiv');
+    dom.oncontextmenu = function (){
+        return false;
+    }
+
     var caseInfoStr = $.session.get("caseInfo");
     var caseInfo = JSON.parse(caseInfoStr);
     $("#caseNum").text(caseInfo.cNum);
